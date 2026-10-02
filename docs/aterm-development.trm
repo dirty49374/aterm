@@ -1,0 +1,724 @@
+@knowledge aterm_development
+// # Aterm design - One responsibility each, and what each must not do
+@viewpoints design specification
+
+@description {
+  Aterm architecture, module boundaries, build workflow, repository development rules and browser rendering examples.
+}
+@scope {
+  This Knowledge specifies module responsibilities and the boundaries between
+  them. Dependencies and cross-module obligations belong here; internal
+  algorithms remain implementation choices constrained by the public aterm Knowledge.
+  Build, verification, local executable selection and repository delivery rules belong here.
+  Browser rendering examples belong in the examples Group and exercise the public Explorer contract without redefining it.
+  This Knowledge is development-only and must not be required by shipped guidance.
+}
+
+module _Syntax_Module_ = {
+  The module that turns one file's text into Term Declarations, Relations and diagnostics, and does nothing else.
+.relations
+  produces _aterm:Term_Declaration_
+  realizes _aterm:Syntax_
+  references _aterm:Schema_
+.contract
+  - Term Kind grammar, qualified identity and selector matching must have one pure mechanism shared by parsing, indexing, authoring and browser Term Declaration identity.
+  - _Syntax_Module_ must produce its result from the supplied text and _aterm:Schema_ alone.
+  - _Syntax_Module_ must reach no outside resource: no filesystem, no process, no clock.
+  - _Syntax_Module_ must depend on no other module.
+  - _Syntax_Module_ must report malformed source as diagnostics in its result, never by throwing.
+  - Separate file coordination, Knowledge header reading, Declaration structure reading and Section content interpretation. Structural readers must preserve source coordinates; Section interpretation must consume the collected source without advancing the file cursor.
+
+  ### Deliberately unconstrained
+  - The Markdown library is unconstrained; no rule may be inferred from the one in use.
+  - Knowledge Description and Scope must use one metadata-block parser and retain separate content and source bounds. Header prose must not create Term Declaration references or graph edges.
+.remarks
+  Terminology migration: Knowledge metadata uses IKnowledgeText and IKnowledgeScope; the shared authored token context is trm. Header parsing, source bounds and token matching rules are preserved.
+  This is the only module that may be reused by a different tool without carrying anything else.
+  Refactor: parser.ts coordinates header-reader.ts, declaration-reader.ts and section-interpreter.ts. parsing-source.ts owns line normalization, input position and source slices; header preflight uses that same cursor. Existing parsing results, diagnostic ordering, Reference locations and legacy syntax are preserved. Error Recovery asymmetry, first-Schema fallback and unknown-section attachment remain observed behavior pending a separate semantic decision; this refactor does not endorse them as new requirements.
+  Verification: .local/trials/parser-srp-2026-10-02 retains exact before/after output comparisons for six corpus files, 600 generated mixed/malformed inputs and the twelve Retell scenarios. Parser tests exercise repeated-call state isolation, duplicate metadata consumption and diagnostic phase ordering through the public API.
+  Verification: YAML and JSON sections use the same literal Term-token positions as Markdown, so reference validation, rename and Knowledge transfer preserve one identity mechanism. Structured syntax rejects duplicate keys, aliases and encoded Term spellings that cannot be rewritten by source position.
+  Behavior preservation: declaration section reading now separates section boundaries from source-line attachment. The recovery cursor, unknown-section behavior, inline reference columns and diagnostic order are unchanged; 800 generated inputs match the previous parser exactly.
+}
+
+module _Home_Module_ = {
+  The module that selects one _aterm:Home_ and reads its configuration, and does nothing else.
+.relations
+  produces _aterm:Configuration_
+  realizes _aterm:Home_
+  realizes _aterm:Configuration_
+  depends_on _File_Adapter_
+  references _Syntax_Module_
+.contract
+  - _Home_Module_ must decide the home from the option, the environment and the directory tree, and must read no Knowledge source file.
+  - _Home_Module_ must reach the filesystem only through _File_Adapter_.
+  - _Home_Module_ may depend on _Syntax_Module_ for Schema and the pure external-selection validator shared with query options; it must not depend on query execution or server transport.
+  - _Home_Module_ must report a missing or invalid home and configuration by throwing.
+  - The configuration reader must expose resolved Viewpoint binding paths to an optional observer before loading their contents, including missing or invalid bindings. It must retain ownership of configuration parsing and path resolution.
+
+  ### Deliberately unconstrained
+  - The configuration file format is unconstrained; callers must not parse it themselves.
+}
+
+module _Corpus_Module_ = {
+  The module that turns configured and enabled default sources into the admitted Knowledges of one scan, and does nothing else.
+.relations
+  references _aterm:Viewpoint_
+  produces _Corpus_Scan_Result_
+  realizes _aterm:Corpus_
+  depends_on _File_Adapter_
+  references _Query_Module_
+  depends_on _Syntax_Module_
+.contract
+  - _Corpus_Module_ must discover files, resolve each file's declared Viewpoints (_aterm:Viewpoint_) and parse admitted files through _Syntax_Module_.
+  - Package configuration belongs to Home Module; scanning must use each source's own bindings. Ordinary scans and guidance composition must share physical-path merging with supplied snapshots taking precedence; implicit package Knowledges retain their read-only provenance.
+  - _Corpus_Module_ must reach the filesystem only through _File_Adapter_.
+  - _Corpus_Module_ must not depend on or re-export _Query_Module_; indexing and query file selection read a scan on the query side, never the reverse.
+  - _Corpus_Module_ must report an unreadable source or an unclassified file as a diagnostic, never by throwing.
+.remarks
+  Candidate scans reuse the same parser and admission rules with explicit text replacement/deletion overlays; validation must not write temporary source files.
+}
+
+module _Query_Module_ = {
+  The module that answers read questions over the Knowledges of one scan, and does nothing else.
+.relations
+  references _Jq_Module_
+  realizes _aterm:GraphQL_Query_
+  reads _Corpus_Scan_Result_
+  produces _Query_Result_
+  realizes _aterm:Query_Service_
+  realizes _aterm:Corpus_Index_
+  references _Authoring_Module_
+  references _aterm:Group_
+.contract
+  - Project supplied corpus data to JSON and delegate jq evaluation through an injected capability. Worker creation, package asset loading and deadlines belong to _Jq_Module_; Query Module must not import its runtime implementation.
+  - The common GraphQL schema, projections, cursor validation and demand bounds must execute over a supplied validated IndexedCorpus. Every adapter must share that executor; resolvers must not scan or own transport behavior. Viewpoint-specific Term Kinds remain vocabulary data. Collection predicates and sort keys share one bounded selection mechanism over explicit JSON projections; native selectors, predicate, stable ordering and pagination apply in that order.
+  - Discovery chunk construction and lexical/hybrid ranking must be pure functions of supplied Term Declarations and supplied vector distances. Native inference and cache access belong outside this module.
+  - Section reference resolution, cycle validation, context collection and pure content expansion must have one shared mechanism over supplied Term Declarations. Markdown presentation and Guide composition must use it without filesystem access or arbitrary Term Kind selection.
+  - _Query_Module_ must compute its answer from supplied corpus data and explicit query inputs alone. Derived retrieval features must be supplied, never fetched. It must own the indexed corpus that builds one symbol table from admitted Knowledges and resolves file selectors into their index identities.
+  - _Query_Module_ must index each canonical qualified Term ID to its single Term Declaration and validate uniqueness by (Knowledge ID, local Term name). Term Kind is an attribute; all readers and authoring candidates must use the same invariant.
+  - _Query_Module_ must provide one authored _aterm:Group_ hierarchy derived from supplied Term Declaration metadata for CLI and browser consumers. Construction must preserve caller data and remain independent of rendering and filtering.
+  - _Query_Module_ must reach no outside resource: no filesystem, no process, no clock.
+  - _Query_Module_ must not write; every change belongs to _Authoring_Module_.
+  - _Query_Module_ must report an invalid corpus by throwing, except for the check operation.
+.remarks
+  Chosen: move IndexedCorpus into query-module instead of weakening the dependency rule.
+  Corpus scanning remains independent of query construction. Existing scanner, query,
+  file-selection and authoring tests verify preserved behavior across this boundary.
+  Behavior preservation: TermDeclarationReader retains one corpus preparation and ambiguity boundary, with separate identity resolution and operation result construction. SearchSpace is still established before exact selector resolution. Differential comparison covers 340 requests, including errors, filters, required context, paths and reference occurrences.
+}
+
+module _Retrieval_Module_ = {
+  The module that combines pure discovery ranking with embedded inference and reusable local vector storage.
+.relations
+  depends_on _Query_Module_
+  depends_on _File_Adapter_
+  realizes _aterm:Discover_Terms_
+  realizes _aterm:Prepare_Semantic_Index_
+.contract
+  - The application must supply one validated corpus selection; this module must not scan or reinterpret source Knowledges.
+  - The module must use Query Module chunk construction and ranking and File Adapter inference and vector storage.
+  - Source snapshots and query filters must select candidates independently of retained cache records.
+  - Lexical discovery must bypass all native Model and cache initialization.
+  - Native resources must be lazy, shared per Model cache where appropriate and released or idle when unused; query failures must not affect ordinary reads.
+}
+
+module _Authoring_Module_ = {
+  The module that plans and saves requested Term Declaration, Knowledge and Viewpoint changes, raw Workspace text changes and selected external Term-token replacements, and reports what changed.
+.relations
+  realizes _aterm:Source_Authoring_
+  realizes _aterm:Workspace_File_Access_
+  depends_on _Skill_Module_
+  reads _Corpus_Scan_Result_
+  produces _Corpus_Draft_
+  produces _Corpus_Diff_
+  takes _Authoring_Lock_
+  realizes _aterm:Edit_Term_Declarations_
+  realizes _aterm:Compare_Corpus_Revisions_
+  depends_on _File_Adapter_
+  depends_on _Git_Adapter_
+  depends_on _Query_Module_
+  depends_on _Syntax_Module_
+.contract
+  - A Knowledge transfer must retain each Term Declaration's Term Kind owner and qualify its opener when necessary in the destination vocabulary.
+  - _Authoring_Module_ must validate every semantic corpus candidate through _Syntax_Module_ and _Query_Module_ before the first write. External text replacements must use the validated Term identity map and join the same guarded save plan, without parsing external files as Knowledges.
+  - _Authoring_Module_ must reach the filesystem only through _File_Adapter_ and Git only through _Git_Adapter_.
+  - _Authoring_Module_ must hold one exclusive lock for the whole operation and release it on every path.
+  - _Authoring_Module_ must report a refused or partial change by throwing, naming the files already saved.
+  - Whole-source validation must share the corpus check mechanism; raw Workspace text operations must remain independent of semantic validity.
+.remarks
+  Terminology migration: SourceAuthoring, ISourceAuthoringRequest and ISourceAuthoringResult name whole Knowledge/Viewpoint source operations; checkCorpus remains their shared semantic validation path.
+  Refactor: SourceAuthoring coordinates baseline validation, source planning, candidate validation, derived-impact analysis and save under one Home lock. KnowledgeSourcePlan owns Knowledge paths and bounded header patching; ViewpointSourcePlan owns Viewpoint source plus configuration bindings. Both produce one SourcePlan shape. SourceSave performs the existing ordered version-checked writes and partial-save reporting; checkCorpus remains the same shared public validation function in source-validation.ts. Public request/result shapes, diagnostic order and source bytes are preserved.
+  Verification: .local/trials/source-authoring-srp-2026-10-02 retains 116 exact before/after comparisons of results, errors and Workspace file bytes for create/edit/delete, header patches, preview, refusal and mixed line endings. Tests exercise config preflight failure before Viewpoint creation and config replacement conflict after its source was saved, including lock release. Existing SourceAuthoring dry-run skips save-time version preflight while Term editing performs it; this behavior difference is recorded for a separate storage-policy decision, not introduced or resolved by this refactor.
+  Refactor: AtermEditor coordinates one locked operation. DeclarationDraft owns the evolving candidate, baseline diagnostics and change comparison; DeclarationPatches applies ordered Add/Update/Delete blocks; IdentityChange maps and rewrites rename/move identities; GuardedSave owns source policy, all-file version preflight and ordered replacement. Planning performs no writes. Formatting and external replacements join the same candidate and guarded save path. Existing validation, warning behavior, result ordering and non-crash-atomic failure reporting are preserved.
+  Verification: .local/trials/editor-srp-2026-10-02 compares exact results, errors and saved bytes against the previous editor for edit, rename, Knowledge rename, move, format, dry-run and refusal scenarios with BOM/LF/CRLF. Public tests cover a later-file preflight conflict, a replacement-time conflict after the first save and lock release on both paths. Removed the obsolete Workflow-budget mention; whole-source validation still uses checkCorpus and current Skill validation.
+  Verification: derived_from impact traversal follows changed identities through rename and move, combines baseline and candidate edges, and reports transitive targets without rewriting prose.
+  Behavior preservation: ContextPatch separates framing, block headers, hunk lines and completed-block validation. Identity staging separates moved-block extraction from guarded candidate publication, retaining source coordinates, BOM/EOL and destination Term Kind qualification. Patch grammar differential tests and authoring tests verify the existing refusal and save boundaries.
+}
+
+adapter _File_Adapter_ = {
+  The only component permitted to read, write or lock a file, and it interprets no content.
+.relations
+  carries _Authoring_Lock_
+.contract
+  - Native Model loading and SQLite cache access must be encapsulated in this adapter alongside general file access. Callers supply a guarded Home cache path; native libraries may access only their derived cache files. Model downloads must be enabled only by explicit preparation.
+  - _File_Adapter_ must guard every path against escaping its selected source and against symbolic links in either the source root or descendants. It must provide byte reads, directory entries and file metadata to external selection without interpreting language syntax.
+  - _File_Adapter_ must provide recursive and shallow native directory observation with changed relative paths, plus canonical path resolution to the server; the server owns watcher lifecycle and reconciliation policy. Initial watch failures must throw and asynchronous watcher failures must be exposed to the caller.
+  - _File_Adapter_ must refuse a write or deletion whose stored content version no longer matches the file.
+  - All writes, deletions and authoring locks must reject Git metadata paths through one shared check. Authoring planners must apply that check before returning a dry-run or saving any planned file.
+  - Private adapters may request a fresh temporary directory with guaranteed cleanup and read-only links to opaque data; these primitives must not become operator-addressed filesystem commands.
+  - _File_Adapter_ must not parse, validate or interpret any file it moves.
+  - _File_Adapter_ must report every failure by throwing.
+
+  ### Deliberately unconstrained
+  - The hash algorithm and the locking primitive are unconstrained; callers must not depend on either.
+.remarks
+  Naming this the only gate is the point. A module that opens a file itself is the defect
+  this Term exists to make visible.
+}
+
+adapter _Git_Adapter_ = {
+  The component that owns isolated, read-only Git execution and its private control metadata.
+.relations
+  uses _File_Adapter_
+.contract
+  - _Git_Adapter_ must expose only revision, diff and file-list reads, selected by its caller. Every invocation must use the same isolation mechanism; a comparison may reuse one private context across its reads.
+  - _Git_Adapter_ must never stage, check out or write source repository content. Its isolated control directory must retain needed refs, index, reflogs and shallow metadata, with read-only access to object data and cleanup after success or failure.
+  - The source repository's config, includes, hooks and attributes must not become executable settings. Only validated storage-format metadata may be retained from the primary config; attribute-driven conversions must be disabled in the private context.
+  - Subprocesses must receive a constructed environment, without inherited Git configuration, repository overrides, trace destinations or dynamic-loader hooks. Executable search must exclude the selected repository, including path aliases. Global/system config, replacement objects, lazy fetch, interactive prompts and optional repository locks must be disabled.
+  - _Git_Adapter_ must return standard output unchanged and report a failure by throwing.
+
+  ### Deliberately unconstrained
+  - How the process is spawned is unconstrained; callers must not depend on it.
+.remarks
+  Behavior preservation: isolated repository preparation separates the filtered process environment, validated primary configuration and metadata copying. The private control directory, read budgets, disabled hooks/includes/protocols, object format checks and cleanup remain unchanged.
+}
+
+module _Command_Module_ = {
+  The module that declares the command line and projects one invocation into a corpus query or an explicit Workspace, setup, installation or UI request.
+.relations
+  produces _aterm:Operation_Request_
+  references _aterm:Control_UI_
+  realizes _aterm:Command_
+  depends_on _Process_Adapter_
+.contract
+  - _Command_Module_ must declare each command's argument syntax, options and help in one place.
+  - _Command_Module_ must reach no outside resource except through _Process_Adapter_.
+  - _Command_Module_ must not select the home, run a query or render a result.
+  - _Command_Module_ must report invalid input by throwing.
+
+  ### Deliberately unconstrained
+  - The command-line parsing library is unconstrained; no rule may be inferred from the one in use.
+  - Each command declaration must own its full CLI path and operation projection. Registration derives groups and leaves mechanically; groups print help without invoking the application. The bootstrap init command uses the same leaf mechanism at root.
+
+  - UI command declarations must validate and project inputs without contacting the server; the shared invocation adapter performs dispatch and presentation.
+  - Each command declaration must expose MCP eligibility. The same registry, help and input projection serve local CLI, stdio and HTTP execution.
+.remarks
+  Verification: discovery and Index command declarations share validation, help registration and structured output with existing commands.
+  Verification: every nested command group has explicit help; missing group metadata fails registration directly instead of invoking a library getter by accident.
+  Chosen: resource command migration preserves existing query semantics and adds Knowledge and Skill discovery. CLI examples, generated Skill documents, local/HTTP reads and refusal behavior are verified together.
+}
+
+module _Presentation_Module_ = {
+  The module that renders one result as text, Markdown, JSON or YAML, and does nothing else.
+.relations
+  reads _Query_Result_
+  reads _Corpus_Diff_
+.contract
+  - Markdown must be a reading of supplied results, using the shared section expansion mechanism. It must not add hyperlinks, fetch referenced files or modify authored sections. Copyability applies to default Aterm text; Markdown uses Term Declaration and section headings.
+  - _Presentation_Module_ must render from the supplied result alone and must change no value in it.
+  - _Presentation_Module_ must reach no outside resource; it returns text to its caller.
+  - _Presentation_Module_ must not decide an exit status or read a file.
+  - _Presentation_Module_ must keep text output copyable, so that printed Term Declarations parse again.
+
+  - Default Skill readings and explicit Markdown output must use one renderer; method bodies and composed Viewpoint content must not have a second Skill-specific text layout. Structured formats remain unchanged.
+  - Knowledge results must render a compact listing or a whole-Knowledge reading with reader-facing Description, writer-facing Scope and Term Declaration inventory. Knowledge listing must show Description and must never synthesize it from Scope. Skill inventory must distinguish readable identity, source and manifest ownership; corpus Skill readings and installed documents must share one body renderer.
+
+  - All flat list commands must share table column definitions and display-width alignment for text and Markdown, with one item per row and headers for empty results.
+  - Direct Viewpoint readings must pass through the source supplied by the result, preserving its full content and ending. Method Skill composition continues to render parsed questions and guidance.
+  - Generated readings must separate context and content with headings and blank lines, including Scope and Declarations; Aterm context headings remain comments for copyability.
+.remarks
+  Chosen: default discovery text and Markdown share the table renderer with Term and Score columns, preserving rank order. Detail retains Term and Score headings followed by every distinct eligible Definition and source evidence; JSON/YAML retain all Definitions and evidence.
+  Chosen: ranked discovery renders candidate identity, Term Kind, evidence and source location without reordering or interpreting retrieval scores as probabilities. Index results render readiness metadata.
+  Chosen: resource command migration preserves existing query semantics and adds Knowledge and Skill discovery. CLI examples, generated Skill documents, local/HTTP reads and refusal behavior are verified together.
+  Verification: Workflow views render bounded task guidance; reminders render authored cues. Only export includes complete composition and provenance. Structured output and Text/Markdown preserve that boundary.
+  Behavior preservation: Workspace result formatting now belongs to this module. Raw file readings retain exact bytes, file lists retain aligned tables, previews retain complete results and ordinary text write summaries omit source bodies.
+}
+
+adapter _Process_Adapter_ = {
+  The only component permitted to touch the running process, and it decides nothing about a query.
+.contract
+  - _Process_Adapter_ must own argument reading, standard input, the working directory, the environment, lifecycle signals and the exit status.
+  - _Process_Adapter_ must not interpret a Term, a selector or a result.
+  - _Process_Adapter_ must end output quietly when the downstream pipe closes.
+}
+
+value _TRM_File_Snapshot_ = {
+  A snapshot of one .trm source file, retained even when its Knowledge cannot be parsed.
+.relations
+  stores _aterm:Knowledge_
+.invariants
+  - Retain the file's workspace-relative path, absolute path, owning source, text and byte-derived content version.
+  - Retain source-owned authoring policy and read-only provenance independently of whether parsing succeeds.
+  - Parsed content is optional; a file without parsed content must not be treated as an admitted Knowledge.
+  - Physical file identity and the declared Knowledge ID are distinct; a file rename must not change Knowledge identity.
+.remarks
+  ITrmFile is the shared physical source representation. Knowledge remains the modeled subject; this value represents its storage snapshot, including invalid input needed for diagnostics and repair.
+}
+
+value _Corpus_Scan_Result_ = {
+  The result of one scan of configured and enabled package sources: their .trm file snapshots and every diagnostic about the scan.
+.relations
+  has_member _TRM_File_Snapshot_
+  references _aterm:Viewpoint_
+.invariants
+  - A _Corpus_Scan_Result_ must carry the _TRM_File_Snapshot_ values in path order and the diagnostics in path order.
+  - A source file without a bound _aterm:Viewpoint_ must produce a diagnostic and must not become an admitted Knowledge.
+  - Two scan results from unchanged sources must be equal, including both orders.
+  - Every diagnostic must name a path inside a selected source, or the source itself.
+  - A file that cannot be parsed must retain its source snapshot and an error diagnostic; only parsed files may enter the Knowledge index.
+.remarks
+  This is the single value that crosses from the outside world into computation.
+  Everything downstream is a function of it.
+  Chosen: IScanResult.trmFiles and AtermApplication.trmFiles expose physical file snapshots; IndexedCorpus admits parsed snapshots into its trmFiles collection. No compatibility alias retains the previous collection name.
+}
+
+value _Query_Result_ = {
+  What one read operation returns: the Term Declarations, edges, maps or occurrences it selected, with the diagnostics of its corpus.
+.relations
+  references _Presentation_Module_
+  references _Corpus_Scan_Result_
+  references _aterm:Operation_Request_
+.invariants
+  - _Query_Result_ must name which operation produced it, so that presentation needs no other input.
+  - _Query_Result_ must carry no file handle, no configuration and no path that presentation must resolve.
+  - A _Query_Result_ carrying an error diagnostic is returned only by the checking operation.
+  - Every Term named in a _Query_Result_ is declared in the _Corpus_Scan_Result_ it came from.
+  - The same operation over an equal _Corpus_Scan_Result_ returns an equal _Query_Result_.
+.remarks
+  This Term exists because the retelling could not say what _Presentation_Module_ presents.
+  _aterm:Operation_Request_ had no counterpart.
+
+  The invariant that a result names its own operation was written before the code met it:
+  presentation was handed the command name beside the result. Preserved as stated and made
+  true instead, so the operation now travels on the result; the exit status of checking reads
+  it there too. Verified by the presentation tests, which supply an operation with the result
+  and no invocation at all.
+}
+
+value _Corpus_Draft_ = {
+  The whole candidate corpus an authoring operation has built and not yet saved.
+.invariants
+  - _Corpus_Draft_ must hold, for every touched source file, the text before and the text after.
+  - _Corpus_Draft_ must be validated as one corpus, never Knowledge by Knowledge.
+  - A _Corpus_Draft_ is judged complete or refused; no part of it reaches a file alone.
+  - Every source file in a _Corpus_Draft_ carries the content version it was read at.
+  - A rehearsal and a save build the same _Corpus_Draft_ from the same input.
+.remarks
+  The SPEC calls this a candidate five times and never names it.
+}
+
+value _Corpus_Diff_ = {
+  The comparison of the working tree against one base commit, over the Aterm files under the sources.
+.relations
+  references _aterm:Workspace_
+.invariants
+  - _Corpus_Diff_ must name the resolved base commit and the files it covers.
+  - _Corpus_Diff_ must remain producible when the corpus is invalid.
+  - Every file in a _Corpus_Diff_ lies inside a configured source and inside the repository at _aterm:Workspace_.
+  - A _Corpus_Diff_ never reflects a staging or checkout that producing it caused.
+}
+
+specification.concept _Authoring_Lock_ = {
+  The exclusive right to write inside one _aterm:Home_, held for the whole of one authoring operation.
+.relations
+  references _aterm:Home_
+.contract
+  - _Authoring_Lock_ must be taken before the first write and released whether the operation succeeds or fails.
+  - _Authoring_Lock_ must refuse rather than wait when another holder is active, and must name the retained lock.
+  - At most one holder exists per _aterm:Home_ at any moment.
+  - No read operation takes it, and no read operation is blocked by it.
+.remarks
+  The SPEC states that _aterm:Home_ holds this and never names it. Naming it makes the
+  unanswered question visible: what a reader observes while it is held.
+}
+
+module _External_Text_Module_ = {
+  The module that selects explicitly requested external text snapshots and finds literal text or Term tokens without adding them to the corpus.
+.relations
+  realizes _aterm:External_Files_
+  realizes _aterm:External_Occurrence_
+  depends_on _File_Adapter_
+.contract
+  - _External_Text_Module_ must read filesystem bytes and metadata only through _File_Adapter_.
+  - _External_Text_Module_ must not write files, parse code languages or construct a Term index; it supplies text snapshots and pure matching to the application and authoring modules.
+  - _External_Text_Module_ must return file-selection warnings and refuse selected unreadable or invalid text before a write plan is saved.
+.remarks
+  Chosen: keep external selection out of corpus-module so opting into source text cannot
+  introduce Term Declarations or change reference resolution. Authoring owns the shared save procedure.
+}
+
+module _Server_Module_ = {
+  The module that owns the HTTP and WebSocket transport, UI Session registration and command delivery, filesystem observation and resident application lifecycle for one Home.
+.relations
+  realizes _aterm:HTTP_Server_
+  realizes _aterm:Control_UI_
+  references _aterm:UI_Session_
+  references _aterm:UI_Command_
+  realizes _aterm:Corpus_Snapshot_
+  realizes _aterm:Dispatch_Query_
+.contract
+  - The server module must delegate Home parsing, corpus scanning and queries to their existing application components; it must not reimplement query or authoring semantics.
+  - The server module must implement trailing debounce and external source observation using the shared external file selector and exact-token matcher. The server module must own HTTP and watcher resources and release them on close. Snapshot data feeds reads; authoring reloads sources under its Home lock. The read-only query endpoint refuses writes; the MCP extension executes eligible commands and forces snapshot reconciliation before returning.
+  - Native file monitoring must own selected-root and ancestor watches, filter unrelated events and reattach after directory replacement. Watch failures must be reported, with retries limited to observation setup; idle operation must not trigger periodic corpus scans. Home parsing must expose Viewpoint paths before their contents load so monitoring can recover a new invalid binding.
+  - MCP and command parsing belong to the CLI transport adapter; the core server supplies an extension boundary and owns its lifecycle without depending on CLI or the MCP SDK.
+  - CLI transport adapters must share one MCP tool service and one HTTP host construction path. Hosted stdio must reuse this server's snapshot, watcher and UI service; standalone stdio must use the existing CLI dispatch without creating a second server runtime.
+  - The application must not depend on server transport; the server and CLI dispatch must depend on the application.
+  - UI message schemas must be shared across HTTP validation and browser protocol; Session and command lifecycle must be independent of socket transport. Server close must release browser sockets and their timers as well as watcher resources.
+.remarks
+  Behavior preservation: HTTP request handling delegates GraphQL, browser assets and protocol API requests while retaining origin checking before extension dispatch, route precedence, authorization before body parsing, body limits, Home matching and endpoint-specific error envelopes.
+}
+
+specification.concept _Repository_Development_Policy_ in policies = {
+  The repository policy governing development, verification, packaging, publication and deployment of Aterm's implementation and owning Knowledge.
+.relations
+  applies _aterm:Specification_Synchronization_Rule_
+.contract
+  - Read the owning Term Declarations and Scope with the local CLI before implementation; apply _aterm:Specification_Synchronization_Rule_.
+  - Use Node.js 24 or later and pnpm 10.26.2 as declared in package.json.
+  - Run pnpm install for dependencies, pnpm build for TypeScript and browser assets, pnpm check for implementation and test typechecking, and pnpm test for the complete test suite.
+  - Provide pnpm complexity as an informational report of ESLint classic Cyclomatic Complexity and SonarJS Cognitive Complexity for authored implementation sources in Core, CLI, Web UI and tooling; exclude tests, type declarations, dependencies and generated assets.
+  - Report each metric independently with score and source location, ranked highest first. --top limits text rankings; --json retains all measurements. Complexity scores must not fail the build; unreadable or unparseable input and unrecognized diagnostics must fail measurement visibly rather than imply success.
+  - Use pnpm aterm or the checkout-bound aterm-dev link after building. Neither invocation builds automatically.
+  - Treat global aterm as an independently installed snapshot; local builds must not silently update it.
+  - Executable selection must not be treated as Home selection; use the intended cwd or --home explicitly.
+  - Run corpus check before and after authoring; inspect the code and Knowledge diffs together and run behavior-relevant verification.
+  - Keep AGENTS.md as the shared instruction entrypoint and CLAUDE.md as its relative symlink; change the source Term Declarations of generated Skills rather than installed snapshots.
+  - Every change to Aterm-provided Skills must receive an independent Aterm Skill Reviewer pass before authoritative apply, accepted commit, installation or publication. The author cannot approve their own change; unavailable review leaves a draft and an explicit blocker.
+  - Review scope includes additions, deletions, descriptions, prerequisite edges, bodies, Reminders, TOCs and shared-source or renderer changes affecting consumer guidance. User-authored Skills are exempt unless their task or project policy requires review.
+  - Review must compare stated intent with complete baseline and candidate readings, identify changed, removed, added and accidentally omitted information, and distinguish intentional simplification from unsupported loss. Optional suggestions must not block acceptance.
+  - Retain frozen packets, content hashes, reviewer identities and pass/revise reports under .local/trials/skill-reviews. A pass applies only to its exact packet; changed sources or dependencies require renewed affected reviews, and the applied result must match the accepted candidate.
+  - Keep the Aterm Skill Reviewer role in .agents/reviewers/aterm-skill-reviewer.md; Codex and Claude entrypoints must load that same role. This repository authoring gate must not add runtime restrictions on user-authored Skills.
+  - Ship packages/core/docs/aterm.trm, vending-machine.trm and skills.trm in full. Development Knowledge must not be required by package Skill reference closure.
+  - When global installation is requested, deploy to a staging directory and copy regular files to independent inodes before replacing the snapshot; pnpm deploy may hardlink workspace files.
+  - Preserve package-relative symlinks and the previous installation until standalone smoke checks pass. Do not globally install as a routine build side effect.
+  - Original Aterm code and documentation use 0BSD; dependencies retain their licenses. Browser packaging must preserve license and notice files for every bundled dependency, including transitive inputs and copied layout engines, and fail when license text is missing. Runtime package dependencies remain separately installed with their notices.
+  - Keep local trials, review evidence, scratch files and archived configuration under ignored .local/. Generated runtime state and Agent installations remain ignored in their required locations.
+  - Publish the CLI and Core as @aterm/cli and @aterm/core with one shared release version; keep the root Workspace private. Preserve the chosen release version when moving to a new registry; do not reuse a published version there.
+  - CLI --version and MCP client/server implementation versions must read the installed CLI package metadata through one shared adapter; a separate hardcoded version must not drift from the release.
+  - Published packages must declare Node.js 24 or later and explicitly include built runtime files; Core must also include shipped Knowledges, Viewpoints, Skill resources and browser assets. Do not include Workspace configuration, credentials, tests or development-only Knowledges.
+  - Pack with pnpm so the workspace dependency becomes an exact Core release version. Build and check the corpus and implementation before packing; inspect and smoke-test the tarballs outside the checkout before publication.
+  - Publish Core before CLI to https://registry.npmjs.org with public access. Keep registry credentials outside the repository, exclude repository .npmrc files, and verify installation and execution from the intended registry after publication.
+  - Build deployment images from an explicit published release and a digest-pinned base; record the resulting image digest. Limit the build context to container packaging files and exclude credentials and Workspace data.
+  - Run the server image as a non-root user with one persistent Workspace. Initialize an absent Home through the shared initializer; keep built-in Viewpoints in the package rather than copying them into Home. Preserve existing configuration, local Viewpoints and corpus files across restarts and upgrades.
+  - Keep one active server per persistent Workspace and avoid overlapping replicas during replacement. State container ports, proxy origins, writable paths, MCP authority and health semantics in the deployment contract.
+  - Verify HTTP MCP, packaged browser assets, GraphQL through CLI/MCP/HTTP, persistent writes, clean shutdown and recovery from invalid configuration in the built image before pushing its version or rollout tags.
+  - Keep a tested version tag and record its digest before delivery. Publishing an image for a later deployment must not move an automatic-rollout tag; update such a tag only when rollout is requested.
+.remarks
+  - Verification: 0.0.13 retains protocol 24 and ships independently reviewed Naming and repeated Term-based Retell guidance with behavior-preserving refactors. Container smoke compares MCP Skill tool counts with the actual packaged Skill inventory rather than a stale fixed total. No data migration is required from 0.0.12.
+  - Verification: 0.0.12 retains protocol 24 and adds pre-jq Knowledge selection on Relation collections. The production-sized Trip example returns its dated Terms and direct connections without materializing unrelated Knowledges; input bounds remain unchanged. Recheck the exact example on the backed-up corpus before production cutover.
+  - Verification: 0.0.11 packages the GraphQL workspace and reviewed Skill guidance under protocol 24. Container smoke checks /queries and typed bindings through CLI, MCP and HTTP, and reads both updated Skills; browser-local Query storage requires no persistent Workspace migration.
+  - Chosen: public semantics live in the shipped aterm Knowledge; architecture and repository delivery obligations live here.
+  - Chosen: tooling/complexity is a private development package with pinned analyzers and its own supported TypeScript parser runtime. It does not replace the application's TypeScript compiler or ship with Core or CLI. Per-function targets are Cognitive <= 15 and Cyclomatic <= 10; review Cognitive 16-30 and Cyclomatic 11-20, and prioritize values above 30 and 20 respectively. These signals do not fail builds or justify arbitrary extraction. Compare extracted responsibilities as well as coordinators, preserve behavior and explain the resulting flow through its Terms. Cognitive rows contain positive scores only; Cyclomatic rows include explicit functions and implicit class initializers/static blocks, so their counts and scores are not interchangeable.
+  - The aterm-dev symlink points at this checkout's packages/cli/dist/entry.js; verify its target before relying on it from another checkout.
+  - Chosen: the public repository retains the @aterm package names and current version. Package publishConfig selects the official npm registry and public access; no repository .npmrc supplies routing or credentials.
+  - Chosen: deploy/container packages the published CLI for Linux amd64 on Node 24 Debian slim, with UID/GID 1000 and /data as the Workspace. Explicit listener flags keep the MCP repair endpoint reachable when persistent configuration is invalid; the first-boot public origin never overwrites an existing Home.
+  - Chosen: container health probes test transport availability; invalid configuration remains remotely repairable. Monitor snapshot readiness separately instead of restarting or hiding the repair endpoint.
+  - Chosen: deploy/container/smoke.mjs is the reusable image verification entrypoint; version metadata comes from the image label and must agree with CLI and MCP. Per-release trial directories retain evidence without redefining the smoke procedure.
+  - Verification correction: an unchanged latest tag does not establish that no rollout occurred. Release 0.0.5 triggered Keel configured with force and no match-tag despite only its version tag being pushed. Check effective deployment automation before publication and distinguish registry state from observed runtime state; a matching version tag can also be a rollout trigger.
+  - Verification correction: the 0.0.8 image smoke uses unified Skill TOCs, protocol 23, termKinds and GraphQL termDeclarations. It also verifies the packaged jq worker, collection where/orderBy, Viewpoint/Term Kind connections and updated reading Skill. It retains fresh bootstrap, persistent writes, recovery and Git isolation checks; prior API spellings are not release compatibility requirements.
+  - Chosen: this existing deployment upgrade requires a complete persistent Workspace backup and restoration check, isolated candidate validation, and the previous immutable image digest before live replacement. Migration must preserve authored project content and declare intentional configuration or vocabulary changes.
+}
+
+concept _Markdown_Example_ in examples = {
+  A sample Term Declaration for visually checking Markdown rendering in _aterm:Explorer_, including syntax highlighting, Mermaid and Term navigation.
+.relations
+  references _aterm:Explorer_
+  references _Syntax_Module_
+.remarks
+  Chosen: this development-only sample illustrates the existing Explorer contract.
+
+  # Markdown rendering examples
+
+  ## Try it
+
+  - Read this Term Declaration in Term Declarations, then in Graph Details.
+  - Resize the pane to check code, table and diagram overflow.
+  - Use Copy on a code block and compare the original whitespace.
+  - Open Mermaid source to compare the diagram with its text.
+  - Switch between Actual size and Fit width on a diagram.
+  - The final error example is intentionally invalid Mermaid; the Aterm Knowledge remains valid.
+
+  ## Text and Term links
+
+  **Strong**, *emphasis*, ~~strikethrough~~ and `inline code`.
+
+  - Local Term link: _Syntax_Module_.
+  - Cross-Knowledge Term link: _aterm:Explorer_.
+  - Strong Term link: **_Syntax_Module_**.
+  - Literal Term spelling in inline code: `_Syntax_Module_`.
+  - Self-reference: _Markdown_Example_.
+  - External link: [Mermaid documentation](https://mermaid.js.org/).
+  - Escaped formatting: \*literal asterisks\*.
+
+  > A blockquote can contain **strong text** and a Term link: _Syntax_Module_.
+  >
+  > - A nested list stays inside the quote.
+  > - Each item remains independently readable.
+
+  ## Heading levels
+
+  ### Heading 3
+
+  A short paragraph under heading 3.
+
+  #### Heading 4
+
+  A short paragraph under heading 4.
+
+  ##### Heading 5
+
+  A short paragraph under heading 5.
+
+  ###### Heading 6
+
+  A short paragraph under heading 6.
+
+  ## Lists and task lists
+
+  3. An ordered list can start at three.
+     - One nested item.
+       - One more nested level.
+  4. The next ordered item is four.
+
+  - [x] A checked task is visibly checked.
+  - [ ] An unchecked task remains unchecked.
+  - [ ] Task checkboxes are read-only in this reader.
+
+  ## Table alignment
+
+  | Feature | Example | Count |
+  | :--- | :---: | ---: |
+  | Term link | _Syntax_Module_ | 1 |
+  | Cross-Knowledge link | _aterm:Explorer_ | 2 |
+  | Inline formatting | **strong** and `code` | 123 |
+  | Status | ~~old~~ current | 1234 |
+
+  ---
+
+  ## Syntax highlighting
+
+  ### TypeScript
+
+  - Keywords, types, strings and numbers use different colors.
+  - The Term spelling inside the string stays literal.
+  - The long line scrolls inside its code block.
+
+  ```typescript
+  interface Item {
+    name: string;
+    price: number;
+  }
+
+  const item: Item = { name: "_Syntax_Module_", price: 1200 };
+  const description = "This deliberately long line verifies that code scrolls horizontally inside a narrow Graph Details pane without widening the application shell.";
+  console.log(item.name, item.price, description);
+  ```
+
+  ### YAML
+
+  ```yaml
+  server:
+    host: 127.0.0.1
+    port: 43127
+    debounceMs: 200
+  externalSources:
+    core: packages/core/src/**/*.ts
+  ```
+
+  ### SQL
+
+  ```sql
+  SELECT name, price
+  FROM products
+  WHERE price >= 1000
+  ORDER BY name;
+  ```
+
+  ### Aterm
+
+  - A trm fence distinguishes directives, Term Kind, Group, Term, Relation and section notation.
+  - Section references and daggers are colored without expanding them.
+  - Copy preserves the original Aterm source.
+
+  ```trm
+  // A complete sample Knowledge.
+  @knowledge example
+  @viewpoints specification skill
+  @description {
+    A product and the procedure that validates it.
+  }
+  @scope {
+    Define product naming and its validation example.
+  }
+
+  specification.concept _Product_ in catalog = {
+    A product identified by its name.
+  .relations
+    references _Validate_Product_
+  .contract
+    - A product must have a nonempty name.
+  }
+
+  skill.procedure _Validate_Product_ in catalog.checks = {
+    Validates the name of one _Product_.
+  .relations
+    references _Product_
+  .procedure
+    _Product_.contract†
+    1. Read the product name.
+    2. Reject an empty name.
+  }
+  ```
+
+  - The aterm fence label selects the same highlighter.
+
+  ```aterm
+  concept _Note_ = { A short example Term Declaration. }
+  ```
+
+  ### Plain code and unknown languages
+
+  Indented code remains literal.
+
+      _Syntax_Module_ is not a link inside this block.
+
+  - An unknown language falls back to literal code.
+  - Tilde fences work like backtick fences.
+
+  ~~~unknown_language
+  <strong>This stays literal, including its brackets.</strong>
+  _Syntax_Module_ stays literal too.
+  ~~~
+
+  ## Mermaid flowchart
+
+  - Expand Mermaid source to see keyword, arrow, label and comment colors.
+
+  ```mermaid
+  flowchart LR
+    %% Read the source without executing it.
+    A[Read the request] --> B{Covered by Spec?}
+    B -->|Yes| C[Implement]
+    B -->|No| D[Update Spec]
+    D --> C
+    C --> E[Verify]
+  ```
+
+  ## Mermaid sequence diagram
+
+  ```mermaid
+  sequenceDiagram
+    participant Reader
+    participant Browser
+    participant Server
+    Reader->>Browser: Select a Term
+    Browser->>Server: Query current Term Declaration
+    Server-->>Browser: Term Declaration and Relations
+    Browser-->>Reader: Render Markdown
+  ```
+
+  ## Mermaid ER diagram
+
+  ```mermaid
+  erDiagram
+    KNOWLEDGE ||--o{ ENTRY : contains
+    TERM ||--|{ ENTRY : defines
+    ENTRY ||--o{ RELATION : declares
+  ```
+
+  ## Literal HTML
+
+  - Raw HTML appears as text, without changing the page.
+
+  <strong>This is literal HTML, not a bold element.</strong>
+
+  ## Intentional Mermaid error
+
+  - Expect a local error with Mermaid source already expanded.
+  - The next valid diagram still renders.
+
+  ```mermaid
+  flowchart LR
+    A[Missing closing bracket --> B
+  ```
+
+  ```mermaid
+  flowchart LR
+    A[An earlier diagram failed] --> B[This diagram still renders]
+  ```
+}
+
+
+
+
+module _Skill_Module_ = {
+  The module that validates skill declarations and renders separate Markdown entrypoints, Skill bodies and reminders.
+.relations
+  realizes _aterm:Skill_Reading_
+  realizes _aterm:Skill_
+  references _aterm:Guidance_Catalog_
+  depends_on _Query_Module_
+  depends_on _Syntax_Module_
+.contract
+  - Keep reading and prerequisite validation pure; put package/Home composition and manifest-owned installation in separate components of this module.
+  - Accept projected Term Declarations and parsed Relations from the application's combined _aterm:Guidance_Catalog_, retaining its Home snapshot; the pure reading component performs no filesystem, process or network access.
+  - Select requires declarations from the Term's single Term Declaration; duplicate Term declarations must fail the shared validation boundary.
+  - Use the same declaration and prerequisite validator for corpus validation, discovery, entrypoint, body and reminder reading; do not branch on task names.
+  - The Skill module consumes this TOC renderer for the common Skill catalog shared by discovery, reading, MCP and installation. File writes and lifecycle ownership remain in the existing Skill installer.
+  - Derive entrypoint reading order and its batch command from the existing prerequisite resolver; do not duplicate authored dependency data. Body reading must not repeat entrypoint navigation.
+  - Reuse section expansion for Markdown bodies and authored reminders; report missing reminders explicitly without substituting body content. Keep transport and CLI table presentation outside this module.
+.remarks
+  Behavior preservation: installation separates pure inventory planning, managed-file preflight and mutation, versioned manifest persistence, and lifecycle orchestration. Rendering and prerequisite resolution are unchanged.
+  Verification: recovery retains prior and intended hashes before pointer changes; external command failures keep possibly deployed names. Failed preflight and journal writes leave pointers unchanged. A concurrent pointer change is refused, and failure to finalize the manifest remains retryable without overwriting user edits.
+}
+
+module _Jq_Module_ = {
+  The runtime module that evaluates supplied JSON with embedded jq in an isolated, bounded worker.
+.relations
+  realizes _aterm:Jq_Query_
+  serves _Query_Module_
+.contract
+  - Own runtime asset loading, worker lifecycle, execution deadlines, output and memory bounds and per-process concurrency.
+  - Receive an already projected JSON value and program; never discover a Home, scan corpus files or reinterpret section schemas.
+  - Supply evaluation to the application composition root; Query Module receives that capability rather than importing this module.
+  - Keep host filesystem and environment inaccessible to the jq program. Trusted package asset loading must not accept a path from the request.
+.remarks
+  Chosen: a packaged ES module worker runs unchanged from source and distribution. The build copies that module alongside compiled runtime code; request text is never evaluated as JavaScript.
+  Chosen: pinned jq-wasm host-bridge hooks bound writes and memory growth and provide an empty environment. Missing expected hooks fail closed; dependency upgrades require the isolation and limit tests.
+}
+
+module _Invocation_Module_ = {
+  The module that executes a registered command by coordinating request dispatch, Home selection, publication and presentation within its supplied execution context.
+.relations
+  uses _Command_Module_
+  depends_on _Home_Module_
+  depends_on _Query_Module_
+  depends_on _Authoring_Module_
+  depends_on _Skill_Module_
+  depends_on _Server_Module_
+  depends_on _Presentation_Module_
+  depends_on _Process_Adapter_
+  realizes _aterm:Command_
+.contract
+  - Execute the registered command through the same invocation mechanism for CLI and MCP. Enforce transport and option eligibility before reading deferred command input or executing its request.
+  - Select the Home and execution route; delegate domain operations and result rendering to their owners. A supplied execution context may provide the application, Query dispatch, UI dispatch and post-write publication.
+  - Use a command's packaged fallback only when opening the application fails because no Home exists; propagate other failures.
+  - Await configured publication after an attempted corpus or Workspace write, including a failed attempt that may have saved files. Do not publish reads or dry-runs. Input and preparation failures before an attempted write do not publish.
+  - For Workspace writes, report saved status independently of subsequent corpus diagnostics. A successful raw file save remains successful even if the saved source cannot be parsed.
+  - Own foreground runtime startup and cleanup through the process lifecycle adapter. Hosted MCP keeps announcements off protocol stdout; standalone MCP does not acquire ownership of an existing server.
+  - Record execution progress and render only after required publication completes. Return a nonzero status for failed checks, GraphQL errors and unapplied UI commands; viewing a UI command's status is a read.
+.remarks
+  Chosen: this names the existing invocation responsibility. Command declarations remain projections; they do not select a Home, execute requests or render results.
+  Behavior preservation: CommandInvocation now selects routes, with separate Query, Workspace and runtime execution responsibilities. Workspace presentation belongs to CliOutput. Publication remains in finally blocks, and Usage Log phase ordering is unchanged.
+  Verification: failure-path tests cover awaited publication, preview exclusions, raw-save diagnostics, exact file bytes and MCP refusal before deferred input. Differential comparison and the CLI/MCP integration suite cover preserved public behavior.
+}

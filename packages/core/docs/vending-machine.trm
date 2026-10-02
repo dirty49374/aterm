@@ -1,0 +1,140 @@
+@knowledge vending_machine
+// # Vending machine - Coins in, one product out
+@viewpoints specification
+
+@description {
+  Vending machine concepts, purchase flows and operating rules.
+}
+@scope {
+  This Knowledge is a worked specification of a vending machine for the Guides
+  and Viewpoint examples. It covers the stated stock, credit, purchase, refund
+  and restocking rules, and the logical structure of one machine. It does not
+  specify hardware construction or an implementation in the aterm tool.
+}
+
+concept _Vending_Machine_ in machine.concepts = {
+  The complete dispensing system that coordinates an _Inventory_System_ and a _Payment_System_ to perform _Purchase_Product_.
+.relations
+  has_part _Inventory_System_
+  has_part _Payment_System_
+  has_member _Purchase_Product_
+.contract
+  - A _Vending_Machine_ must coordinate every invocation of _Purchase_Product_ using its own _Inventory_System_ and _Payment_System_.
+.remarks
+  Chosen: the two subsystems describe logical responsibility boundaries, not hardware assemblies.
+}
+
+concept _Inventory_System_ in inventory.concepts = {
+  The subsystem organizing the _Slot_ stock, _Product_ kinds and _Restock_Slot_ operation available within one machine.
+.relations
+  has_member _Slot_
+  has_member _Product_
+  has_member _Restock_Slot_
+.contract
+  - An _Inventory_System_ must associate each _Slot_ with the stock of its own machine.
+.remarks
+  Chosen: membership groups stock data and operations by responsibility; it does not make an operation a physical part.
+  Price and stock count remain properties of _Slot_.
+}
+
+concept _Payment_System_ in payment.concepts = {
+  The subsystem organizing accepted _Coin_ input, available _Credit_, _Insert_Coin_ and _Refund_Credit_ within one machine.
+.relations
+  has_member _Coin_
+  has_member _Credit_
+  has_member _Insert_Coin_
+  has_member _Refund_Credit_
+.contract
+  - A _Payment_System_ must maintain a _Credit_ balance belonging to its own machine.
+  - A _Payment_System_ must not share that balance with another machine.
+.remarks
+  Chosen: membership expresses the payment responsibility scope, not physical composition.
+  Non-goal: coin-validation hardware and the denominations selected for refunds.
+}
+
+concept _Slot_ in inventory.concepts = {
+  A position in the machine that holds a stock of one _Product_ at one price.
+.relations
+  contains _Product_
+.contract
+  - A _Slot_ must contain at most one _Product_ kind.
+  - A _Slot_ stock count must not be negative.
+  - A _Slot_ price must be a positive amount.
+  - A _Slot_ with a stock count of zero is empty.
+.remarks
+  Price belongs to the _Slot_, not the _Product_: the same drink can cost more in the front row.
+}
+
+concept _Product_ in inventory.concepts = {
+  A named kind of item that the machine can dispense.
+}
+
+concept _Coin_ in payment.concepts = {
+  One physical piece of money with a denomination.
+}
+
+concept _Credit_ in payment.concepts = {
+  The amount inserted and not yet spent or refunded.
+.contract
+  - _Credit_ must not be negative.
+  - _Credit_ must be zero when the machine is idle.
+}
+
+procedure _Insert_Coin_ in payment.procedures = {
+  The operation that turns an inserted _Coin_ into _Credit_.
+.relations
+  accepts _Coin_
+  increases _Credit_
+.contract
+  - _Insert_Coin_ must accept one _Coin_ per operation.
+  - _Insert_Coin_ must return a _Coin_ of an unknown denomination without changing _Credit_.
+  - _Insert_Coin_ must increase _Credit_ by the value of the accepted _Coin_.
+.remarks
+  Chosen: an unknown denomination is returned, not swallowed. The account did not decide it.
+}
+
+procedure _Purchase_Product_ in machine.procedures = {
+  The operation that delivers one item of the selected _Product_ from a _Slot_ in exchange for _Credit_.
+.relations
+  dispenses from _Slot_
+  delivers _Product_
+  decreases _Credit_
+.contract
+  ### Selection and refusal
+  - _Purchase_Product_ must take exactly one selected _Slot_.
+  - _Purchase_Product_ must refuse when the selected _Slot_ is empty.
+  - _Purchase_Product_ must refuse when _Credit_ is below the _Slot_ price.
+
+  ### Successful purchase
+  - _Purchase_Product_ must deliver one item of the selected _Product_ from the _Slot_ when it does not refuse.
+  - _Purchase_Product_ must decrease the _Slot_ stock count by one when it delivers.
+  - _Purchase_Product_ must decrease _Credit_ by the _Slot_ price when it delivers.
+
+  ### Refusal
+  - _Purchase_Product_ must not change _Credit_ or any _Slot_ when it refuses.
+.remarks
+  The customer is told why the invocation of _Purchase_Product_ was refused; the display is not modeled here.
+}
+
+procedure _Refund_Credit_ in payment.procedures = {
+  The operation that returns the unspent _Credit_ in physical coins, each a _Coin_.
+.relations
+  returns _Coin_
+  clears _Credit_
+.contract
+  - _Refund_Credit_ must return physical coins whose total value equals the _Credit_ at the moment of the request; each returned item is a _Coin_.
+  - _Refund_Credit_ must set _Credit_ to zero.
+.remarks
+  Non-goal: which denominations make up the returned amount.
+}
+
+procedure _Restock_Slot_ in inventory.procedures = {
+  The operator's operation that refills one _Slot_.
+.relations
+  replenishes _Slot_
+  preserves _Credit_
+  assigns _Product_
+.contract
+  - _Restock_Slot_ must set the _Product_ and stock count of the _Slot_ together.
+  - _Restock_Slot_ must not change _Credit_.
+}

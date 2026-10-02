@@ -1,0 +1,33 @@
+# Aterm home configuration. Relative paths resolve against the parent directory of .aterm/.
+sources:
+  - docs
+  # The tool's own Knowledges ship with the package and are read where they ship.
+  - packages/core/docs
+useDefaultKnowledge: true
+# This repository authors the packaged resources.
+allowDefaultWrites: true
+useViewpoints: [specification, generic, domain, skill]
+viewpoints:
+  design: ./viewpoints/design.md
+
+server:
+  host: 0.0.0.0
+  port: 43127
+  debounceMs: 200
+  watchExternal: true
+externalSources:
+  core: packages/core/src/**/*.ts
+  cli: packages/cli/src/**/*.ts
+
+skills:
+  sync: |
+    if [[ -n "$ATERM_REMOVED_SKILL_NAMES" ]]; then
+      npx --yes --package skills --call 'skills remove --skill $ATERM_REMOVED_SKILL_NAMES --yes'
+    fi
+    if [[ -n "$ATERM_SKILL_NAMES" ]]; then
+      npx --yes --package skills --call 'skills add "$ATERM_SKILLS_DIR" --skill $ATERM_SKILL_NAMES --agent claude-code codex --yes'
+    fi
+  uninstall: |
+    if [[ -n "$ATERM_REMOVED_SKILL_NAMES" ]]; then
+      npx --yes --package skills --call 'skills remove --skill $ATERM_REMOVED_SKILL_NAMES --yes'
+    fi

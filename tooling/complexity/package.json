@@ -1,0 +1,14 @@
+{
+  "name": "@aterm/complexity-tooling",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "report": "node report.mjs"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "8.71.0",
+    "eslint": "10.11.0",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "typescript": "6.0.3"
+  }
+}

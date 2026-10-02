@@ -1,0 +1,396 @@
+@knowledge skill_foundations
+// # Skill: generic vocabulary
+@viewpoints generic
+
+@description {
+  Skills, Principles, Rules and Procedures with GOOD and BAD examples.
+}
+@scope {
+  - Define Skill and the Agent role that applies it.
+  - Define reusable guidance independently of its inclusion in a Skill.
+  - Explain how Skills connect guidance and supporting Resources.
+  - Distinguish applicability, preconditions and completion evidence.
+  - Explain authoring quality through short principles and GOOD/BAD examples.
+  - Treat content roles as overlapping classifications.
+  - Keep Procedure optional within a Skill.
+  - Use examples as illustrations, not universal execution contracts.
+  - Exclude runtime activation, packaging and installation.
+  - Exclude Guide migration and specialized Viewpoint migration.
+  - Exclude Evaluation machinery and particular precedence policies.
+}
+
+term _Skill_ = {
+  A reusable unit of organized knowledge and guidance that a _Skill_User_ applies to understand, judge or perform a particular range of work.
+.relations
+  references _aterm:Consistent_Naming_Principle_
+  references _Constraint_
+  references _Explanation_
+  references _Principle_
+  references _Evidence_Based_Completion_Principle_
+  references _Explicit_Applicability_Principle_
+  references _Procedure_
+  references _Resource_
+  references _Rule_
+  references _Skill_User_
+.classification
+  concept
+.description
+  ## Explanation
+
+  - A Skill provides guidance rather than denoting acquired ability.
+  - A Skill organizes independently meaningful Terms around one purpose.
+  - Purpose identifies the work the Skill supports.
+  - Boundary identifies what the Skill covers.
+  - Its possible content roles are not a mandatory checklist.
+  - A Skill can connect _Explanation_, _Principle_, _Rule_, _Constraint_, _Procedure_ and _Resource_.
+  - Several Skills can use the same guidance without owning separate copies.
+  - A Skill can consist of Principles without a Procedure.
+  - A reference identifies guidance but does not apply it automatically.
+
+  ## Principles
+
+  - Apply _Explicit_Applicability_Principle_ when describing when to use the Skill.
+  - Apply _aterm:Consistent_Naming_Principle_ when naming the Skill and its subjects.
+  - Use _Evidence_Based_Completion_Principle_ when defining its completion claims.
+  - Keep each Skill focused on a coherent purpose.
+  - Include knowledge that changes an actual decision.
+  - Keep the context needed for a decision accessible with its guidance.
+  - Prescribe exact actions when consistency depends on them.
+  - More steps or stronger wording do not establish higher quality.
+  - Teach a reusable approach rather than one task's answer.
+  - Explain when referenced guidance or Resources are needed.
+  - Preserve useful judgment where several approaches are valid.
+  - Evaluate usefulness against a baseline on representative tasks.
+  - Inspect how the Agent used the guidance.
+  - Use qualitative review for outcomes that depend on judgment.
+  - Include nearby tasks where the Skill should not apply.
+
+  ## Examples
+
+  - Context: choosing API names without changing implementation.
+  - BAD: apply the coding workflow because the request mentions an API.
+  - GOOD: apply naming guidance because the decision concerns names.
+  - Context: API design and database design use the same naming criterion.
+  - BAD: maintain a separate copy of that criterion inside each Skill.
+  - GOOD: both Skills follow _aterm:Consistent_Naming_Principle_.
+  - Context: a Skill supports naming decisions through Principles.
+  - BAD: add an execution sequence merely to make it look like a Skill.
+  - GOOD: provide the Principles with contrasting naming examples.
+  - Context: a reporting Skill accepts different reporting periods.
+  - BAD: always filter for June because the sample report used June.
+  - GOOD: use the period requested for the current report.
+}
+
+term _Skill_User_ = {
+  The Agent in the role of applying a _Skill_.
+.relations
+  references _Skill_
+  references _Skill_Application_
+.classification
+  role
+.description
+  - The role performs _Skill_Application_.
+  - Writing or installing a Skill does not itself constitute applying it.
+  - Example: an Agent choosing an API name with naming guidance is a Skill User.
+}
+
+term _Skill_Application_ = {
+  The use of a _Skill_ by a _Skill_User_ for understanding, judgment or action in a particular situation.
+.relations
+  references _Evidence_Based_Completion_Principle_
+  references _Explicit_Applicability_Principle_
+  references _Skill_
+  references _Skill_User_
+.classification
+  activity
+.description
+  - Use _Explicit_Applicability_Principle_ to determine whether the guidance fits.
+  - A precondition states what must hold before the relevant action can proceed.
+  - The particular guidance determines how to handle a missing precondition.
+  - Example: a rename request establishes applicability.
+  - Example: write access is a precondition for changing the file.
+  - Apply referenced guidance under its stated conditions.
+  - Reading a reference does not execute a Procedure.
+  - Understanding or judgment can be a complete application.
+  - Use _Evidence_Based_Completion_Principle_ to assess completion claims.
+  - Result Validation checks a particular result against its requirements.
+  - Skill Evaluation assesses the usefulness of the guidance.
+  - No universal output artifact or test format is required.
+  - Applying guidance does not guarantee the intended outcome.
+  - Resolve conflicting instructions through an explicitly applicable precedence policy.
+  - Obtain clarification when applicable instructions leave the decision unresolved.
+  - Reference order does not establish precedence.
+}
+
+term _Explanation_ = {
+  Content that makes a subject understandable through its meaning, context or reasons.
+.relations
+  references _Procedure_
+  references _Resource_
+  references _Rule_
+  references _Skill_
+.classification
+  concept
+.description
+  - Explanation can exist independently of a _Skill_.
+  - A Skill can use Explanation without a _Procedure_.
+  - A _Resource_ can carry Explanation.
+  - Example: describing how a reference resolves explains the model.
+  - Example: requiring a reference to resolve states a _Rule_.
+  - One passage can both explain a reason and state a Rule.
+}
+
+term _Principle_ = {
+  A reusable criterion for judging decisions or guiding behavior.
+.relations
+  references _aterm:Consistent_Naming_Principle_
+  references _Constraint_
+  references _Evidence_Based_Completion_Principle_
+  references _Explicit_Applicability_Principle_
+  references _Rule_
+  references _Skill_
+.classification
+  concept
+.description
+  ## Explanation
+
+  - A Principle can exist independently of a _Skill_.
+  - A Skill follows a Principle for the decisions it governs.
+  - A _Rule_ can express a Principle for a specific condition.
+  - A Principle can also express a _Constraint_.
+  - These roles can overlap without becoming separate copies of the guidance.
+
+  ## Examples
+
+  - _aterm:Consistent_Naming_Principle_ governs names across API design and implementation.
+  - _Explicit_Applicability_Principle_ governs where guidance applies.
+  - _Evidence_Based_Completion_Principle_ governs claims that work is complete.
+  - Principle: avoid unnecessary waiting.
+  - Rule: start independent operations concurrently when overlap is safe.
+}
+
+term _Constraint_ = {
+  A condition that limits acceptable states, results or behavior.
+.relations
+  references _Principle_
+  references _Rule_
+  references _Skill_
+.classification
+  concept
+.description
+  - A Constraint can exist independently of a _Skill_.
+  - A _Rule_ can require behavior that preserves a Constraint.
+  - A _Principle_ can provide the reason for a Constraint.
+  - Constraint: every reference resolves to a declared Term.
+  - Rule: update references when renaming their target Term.
+  - A recommendation does not automatically impose a Constraint.
+}
+
+term _Procedure_ = {
+  A described method for performing work through actions and their control flow.
+.relations
+  references _Evidence_Based_Completion_Principle_
+  references _Explicit_Applicability_Principle_
+  references _Skill_
+  has_part _Step_
+.classification
+  concept
+.description
+  ## Explanation
+
+  - A Procedure can exist independently of a _Skill_.
+  - A Skill can use a Procedure when its application requires action.
+  - A _Step_ describes a meaningful part of the work.
+  - Control flow can include order, branches and repetition.
+  - The Procedure describes instructions rather than an execution occurrence.
+
+  ## Principles
+
+  - Apply _Explicit_Applicability_Principle_ to branches and optional actions.
+  - Use _Evidence_Based_Completion_Principle_ for continuation and completion checks.
+  - State the intended outcome before describing the actions.
+  - Identify the tool or environment where the actions take place.
+  - State necessary inputs before the actions that consume them.
+  - State preconditions before actions that depend on them.
+  - Explain how missing prerequisites affect continuation.
+  - Connect each dependent Step to the result it needs.
+  - Keep one meaningful action or decision in each Step.
+  - Explain the purpose of actions whose necessity is unclear.
+  - Mark required, optional and conditional actions explicitly.
+  - State where each branch continues.
+  - Run required Validation before dependent actions.
+  - Bind a reused Procedure's inputs and expected result at its use.
+  - State the destination of a failed check.
+  - State what justifies another attempt.
+  - State when repetition stops.
+  - Inspect partial effects before repeating a failed write.
+  - Report what remains incomplete when stopping.
+  - Exercise normal and failure paths when reviewing the Procedure.
+
+  ## Examples
+
+  - Context: a referenced mapping must be valid before it is used.
+  - BAD: create mapping → apply mapping → validate mapping.
+  - GOOD: create mapping → validate mapping → apply the valid mapping.
+  - Context: validation rejects the mapping.
+  - BAD: log the diagnostic → continue applying the mapping.
+  - GOOD: correct the rejected field → validate again before applying.
+  - Context: repeated attempts produce the same diagnostic with no supported correction.
+  - BAD: repeat the same attempt because validation has not passed.
+  - GOOD: stop and report the missing information needed to continue.
+  - Context: syntax checks pass after a semantic rename.
+  - BAD: claim completion solely because syntax is valid.
+  - GOOD: also verify that the renamed Term preserves the intended meaning.
+}
+
+term _Step_ = {
+  An instruction unit that describes a meaningful part of the work within a _Procedure_.
+.relations
+  references _Procedure_
+.classification
+  concept
+.description
+  - A Step is identified by its work rather than its ordinal position.
+  - A Step describes instructions rather than an execution occurrence.
+  - This model prescribes no input/output section schema or runtime Step protocol.
+  - A Procedure can serve as a Step inside a larger Procedure.
+  - The caller determines where that Step fits in its control flow.
+  - A separately useful unit can receive a Term before a second caller exists.
+  - A numbered line does not automatically need a separate Term.
+  - Example: Validate Field Mapping names the work.
+  - Example: Step 3 identifies only a position.
+}
+
+term _Rule_ = {
+  A direction that states required, prohibited or recommended behavior under specified conditions.
+.relations
+  references _aterm:Consistent_Naming_Principle_
+  references _Constraint_
+  references _Principle_
+  references _Explicit_Applicability_Principle_
+  references _Procedure_
+  references _Skill_
+.classification
+  concept
+.description
+  ## Explanation
+
+  - A Rule can exist independently of a _Skill_.
+  - A Skill or _Procedure_ applies a Rule where its conditions hold.
+  - A Rule can express a _Principle_ as concrete behavior.
+  - A Rule can preserve a _Constraint_.
+  - A Rule need not occupy a position in an execution sequence.
+
+  ## Principles
+
+  - Apply _Explicit_Applicability_Principle_ to the Rule's condition.
+  - Apply _aterm:Consistent_Naming_Principle_ to the subjects the Rule names.
+  - Keep each Rule focused on one decision.
+  - Identify the subject whose behavior the Rule directs.
+  - Distinguish obligations from recommendations.
+  - Emphasis alone does not turn a recommendation into an obligation.
+  - Explain why the directed behavior matters.
+  - Show how following the Rule differs from violating it.
+  - Compare compliance and violation under the same conditions.
+  - Use a judgment criterion where no objective threshold is justified.
+
+  ## Examples
+
+  - Context: API documentation already uses Graph Search Result for this meaning.
+  - BAD: introduce Search Outcome for the same meaning because it sounds better.
+  - GOOD: use Graph Search Result as required by _aterm:Consistent_Naming_Principle_.
+  - Context: both dependent and independent operations occur in the system.
+  - BAD Rule: execute asynchronous operations concurrently.
+  - GOOD Rule: execute independent operations concurrently when overlap is safe.
+  - Context: two reads are independent and safe to overlap.
+  - BAD application: wait for the first read before starting the second.
+  - GOOD application: start both reads before awaiting their results.
+}
+
+term _Resource_ = {
+  Supporting material that can be read, executed or used to perform work.
+.relations
+  references _Explanation_
+  references _Procedure_
+  references _Rule_
+  references _Skill_
+.classification
+  concept
+.description
+  - A Resource can exist independently of a _Skill_.
+  - A Skill identifies when and how to use a Resource.
+  - Referencing a Resource does not automatically load or execute it.
+  - Reference document: read it for relevant information.
+  - Script: execute it to perform an operation.
+  - Template: use it to shape an output.
+  - Asset: incorporate it into an output.
+  - These examples do not define a closed Resource taxonomy.
+  - A Resource can be bundled locally or referenced elsewhere.
+  - Resource describes the material's supporting role.
+  - _Explanation_, _Rule_ and _Procedure_ describe roles of its content.
+  - Example: a reference document can contain both Explanation and Rules.
+  - Availability of a required Resource can be a precondition.
+  - A required tool or permission is not automatically a Resource.
+  - A concrete Resource earns a Term through its useful identity or independent meaning.
+}
+
+term _Explicit_Applicability_Principle_ = {
+  The principle that guidance must identify the situations and decisions it governs.
+.relations
+  references _Procedure_
+  references _Rule_
+  references _Skill_
+.classification
+  principle
+.description
+  ## Explanation
+
+  - Applies when authoring or selecting guidance.
+  - _Skill_ selection, _Rule_ conditions and _Procedure_ branches use this criterion.
+  - Applicability identifies relevance rather than readiness to execute.
+
+  ## Principles
+
+  - State the condition before directing the affected behavior.
+  - Distinguish nearby situations that require different guidance.
+
+  ## Examples
+
+  - Context: changing an API name without changing its implementation.
+  - BAD: use coding guidance whenever an API is mentioned.
+  - GOOD: use naming guidance when choosing or reviewing an API name.
+  - Context: a Rule applies only to independent operations.
+  - BAD: infer independence from the presence of asynchronous calls.
+  - GOOD: check the operations' dependencies before applying the Rule.
+}
+
+term _Evidence_Based_Completion_Principle_ = {
+  The principle that a completion claim must be supported by evidence of the stated outcome.
+.relations
+  references _Procedure_
+  references _Skill_Application_
+.classification
+  principle
+.description
+  ## Explanation
+
+  - Applies when deciding whether work is complete.
+  - _Skill_Application_ uses it for the outcome of applying guidance.
+  - _Procedure_ uses it for the outcome of performing its actions.
+
+  ## Principles
+
+  - Match the evidence to the claim being made.
+  - State what a check does not establish.
+  - Distinguish completing a review from approving its subject.
+  - Report unresolved requirements without claiming full completion.
+
+  ## Examples
+
+  - Context: a review finds an unresolved reference.
+  - BAD: report that the reviewed corpus is valid because the review finished.
+  - GOOD: report a completed review with an unresolved-reference finding.
+  - Context: a structural check cannot assess whether a name has the intended meaning.
+  - BAD: use the passing check as the sole evidence for semantic correctness.
+  - GOOD: also compare the name with its definition and representative uses.
+}

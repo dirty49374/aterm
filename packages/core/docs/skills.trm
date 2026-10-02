@@ -1,0 +1,2713 @@
+@knowledge aterm_skills
+@viewpoints skill
+@description {
+  Shared prerequisite-based Skills for Aterm reading, authoring, modeling, vocabulary, implementation, runtime and browser presentation.
+}
+@scope {
+  Teach the supported Aterm tasks with reusable prerequisite-based Skills.
+  Keep one skill Term Kind, explicit prerequisite knowledge and example-led Markdown bodies.
+  Preserve source obligations, current inputs, execution conditions, stopping rules and verification limits.
+  Include shared notation, reading, authoring, modeling, vocabulary, runtime and UI knowledge.
+  Put Viewpoint-specific authoring guidance in its Viewpoint Markdown, not a dedicated operational Skill.
+  Selected Viewpoint guidance takes precedence over general Skill guidance within that vocabulary.
+  Keep examples directly beside the rules or steps they illustrate.
+  Include selected-catalog installation of generated TOC entrypoints through the existing Skill lifecycle.
+  Automatic execution remains outside this experiment.
+}
+
+skill _Aterm_Basics_Skill_ = {
+  A Skill for understanding Aterm and selecting guidance for every intended task effect.
+.relations
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Method_Selection_Principle_
+  derived_from _aterm:Skill_Reading_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Term_
+  derived_from _aterm:Term_Declaration_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Command_Reference_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Identity_Guide_
+  derived_from _aterm:TRM_Syntax_Reference_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Task_
+  derived_from _aterm:Execution_Environment_Guidance_
+  derived_from _aterm:Task_Classification_Rule_
+  derived_from _aterm:Relation_Semantics_Guide_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Reference_Integrity_Rule_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Term_
+  derived_from _aterm:Term_Declaration_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Command_Reference_
+  derived_from _aterm:Modeling_Method_Application_Procedure_
+  derived_from _aterm:Modeling_Method_Reference_
+  references _Naming_Skill_
+  references _Corpus_Reading_Skill_
+  references _Corpus_Authoring_Skill_
+  references _Corpus_Maintenance_Skill_
+  references _Model_Review_Skill_
+  references _Modeling_Skill_
+  references _Viewpoint_Authoring_Skill_
+  references _Specification_Implementation_Skill_
+  references _Runtime_Management_Skill_
+  references _Explorer_Presentation_Skill_
+.description
+  Use before Aterm work when notation, executable selection or the right task guidance is unfamiliar.
+.body
+  ## Aterm Overview
+
+  ### Why Terms Matter
+
+  Precise reasoning requires precise concepts.
+
+  When an important concept has no clear name, it is difficult for either a human or an LLM to focus on it as a distinct subject. It tends to remain implicit, gets mixed with nearby concepts, and eventually becomes ambiguity.
+
+  > **What is not named precisely tends to remain ambiguous.**
+
+  Aterm starts from the idea that important concepts should be explicitly identified by precise **Terms**.
+
+  The same Terms should then be used consistently in thinking, conversation, documentation, specifications, and code comments.
+
+  ### What Is Aterm?
+
+  **Aterm is a knowledge graph database that uses Terms as its keys.**
+
+  But more importantly, Aterm is a way to use those Terms to think clearly, develop knowledge, and connect ideas.
+
+  We name a concept so we can ask questions about it, improve our understanding, and use what we learn in other places.
+
+  A Term gives a concept a stable identity. Knowledge about that concept is attached to the Term, and Relations connect it to other Terms.
+
+  For example:
+
+  ```text
+  _Task_
+    ├── belongs to → _Task_List_
+    ├── has_state → _Completed_
+    └── completed by → _Complete_Task_
+  ```
+
+  Here, `has_state` says that a Task can be completed. It does not say that the Task is currently completed.
+
+  This is more than keyword indexing.
+
+  A Term identifies **what we are talking about**. Its single Term Declaration describes **what we know about it**. Relations describe **how it connects to other concepts**.
+
+  ### The Basic Idea
+
+  Aterm encourages a simple discipline:
+
+  1. Identify concepts that matter.
+  2. Give each concept a precise Term.
+  3. Describe what the Term means.
+  4. Connect it to related Terms.
+  5. Use those Terms consistently wherever the concepts appear.
+
+  The result is a knowledge graph that humans and agents can use as a shared vocabulary.
+
+  Instead of repeatedly reconstructing meaning from prose, an agent can start from explicit concepts and follow their definitions, rules, and relationships.
+
+  ### From the Overview to the Concepts
+
+  The next section, **Aterm Concepts**, introduces the basic vocabulary.
+
+  Then **Aterm by Example** uses that vocabulary to build a small knowledge model.
+
+  ## Aterm Concepts
+
+  Aterm is easiest to understand by starting with the **Term** and expanding outward.
+
+  ### Term
+
+  A **Term** is the stable identity of a concept we want to reason about.
+
+  ```text
+  _Task_
+  _Task_List_
+  _Complete_Task_
+  ```
+
+  A Term is not merely a word or search keyword. It identifies a particular concept within a Knowledge.
+
+  Think of it as answering:
+
+  > **What are we talking about?**
+
+  ### Term Declaration
+
+  A **Term Declaration** describes a Term using one Term Kind from a Viewpoint.
+
+  For example, an `entity` Term Declaration can describe what a Task is and what stays true about it.
+
+  Think of it as answering:
+
+  > **What do we know about this Term?**
+
+  A Term has exactly one Term Declaration within its Knowledge. Choose the Term Kind that fits the concept being described.
+
+  Each Term Declaration uses one Term Kind from one Viewpoint. For example, `domain.procedure` and `skill.procedure` are different Term Kinds, even though both use the word `procedure`.
+
+  A second declaration of the same Term is an error, even with a different Term Kind. The same local name may be used independently in different Knowledges.
+
+  ### Relation
+
+  A **Relation** says how one Term is connected to another.
+
+  ```text
+  _Task_ belongs to _Task_List_
+  ```
+
+  This has a direction: the Task belongs to the Task List.
+
+  Mentioning \_Task_List_ in a sentence is a **Reference**. Declaring belongs to \_Task_List_ in the Task's `.relations` section makes the connection explicit.
+
+  Other Terms referenced in a Term Declaration must also be declared in its `.relations` section.
+
+  Some Relation names have a shared meaning. For example:
+
+  ```text
+  _Task_ has_state _Completed_
+  ```
+
+  This says that completed is a possible State for a Task. It does not say which State a particular Task is in, or how it gets there. Those details belong in the Term Declaration.
+
+  Relations turn individually defined concepts into a knowledge graph.
+
+  They answer:
+
+  > **How is this concept connected to other concepts?**
+
+  ### Knowledge
+
+  A **Knowledge** brings together what we currently understand about a subject.
+
+  For a Todo application, that might include what a Task is, how completion works, and how Tasks belong to a Task List.
+
+  The Terms and their connections form a model of that subject. As our understanding changes, the Knowledge changes with it.
+
+  Think of it as answering:
+
+  > **What do we currently understand about this subject?**
+
+  Each Knowledge also has an ID that keeps its Terms separate from those in other Knowledges.
+
+  For example:
+
+  ```text
+  _todo:Task_
+  _inventory:Item_
+  ```
+
+  The Knowledge ID is part of the Term's identity, so Terms with the same local name can exist independently in different Knowledges.
+
+  We write each Knowledge in one `.trm` file. The file declares its Knowledge ID and selects the Viewpoints available to its Term Declarations.
+
+  The Knowledge ID does not have to match the filename. A file named `tasks.trm` can declare `@knowledge todo`; its Task is still \_todo:Task_.
+
+  ### Viewpoint
+
+  A **Viewpoint** defines a way of describing knowledge.
+
+  It provides the vocabulary of Term Kinds and the questions or sections appropriate to them.
+
+  For example, one Viewpoint may describe domain concepts while another describes instructions for an agent.
+
+  Think of it as answering:
+
+  > **From what perspective are we describing this knowledge?**
+
+  ### Term Kind
+
+  A **Term Kind** says what type of knowledge a Term Declaration represents within a Viewpoint.
+
+  Examples might include:
+
+  ```text
+  entity
+  concept
+  procedure
+  principle
+  ```
+
+  The Term Kind determines which sections and modeling questions are appropriate for the Term Declaration.
+
+  ### The Whole Model
+
+  ```text
+  Knowledge (stored in one .trm file)
+    ├── has a Knowledge ID
+    ├── selects Viewpoint(s)
+    │      └── provide Term Kinds
+    │
+    └── contains Term Declarations
+           ├── describe Terms in that Knowledge
+           ├── each use one Term Kind
+           └── declare Relations to other Terms
+  ```
+
+  The center of the model remains the Term:
+
+  ```text
+  Term → identity
+  Term Declaration → knowledge about that identity
+  Relation → connection between identities
+  ```
+
+  Now let's use these concepts to build a small Todo model.
+
+  ## Aterm by Example
+
+  Suppose we want to describe a very small Todo application.
+
+  We could begin with a sentence:
+
+  > A todo list contains tasks. A task can be completed.
+
+  This sounds simple. But what exactly is a Task, and what does completing one mean?
+
+  Aterm gives us a way to work through those questions.
+
+  ### Give the Concepts Names
+
+  We start with three Terms:
+
+  ```text
+  _Task_
+  _Task_List_
+  _Complete_Task_
+  ```
+
+  A Task is something we intend to do. A Task List collects Tasks. Complete Task is the operation that marks one as completed.
+
+  Now we can discuss each concept without wondering whether “item,” “thing to do,” and “task” mean the same thing.
+
+  ### Describe One Concept
+
+  We can begin with a small Term Declaration:
+
+  ```trm
+  entity _Task_ = {
+    One identified item of intended work.
+  }
+  ```
+
+  But a name and a short definition are only a starting point.
+
+  For example, suppose we change a Task's title from “Buy milk” to “Buy oat milk.”
+
+  > **Is it still the same Task?**
+
+  For our example, yes. The title changes, but the Task remains the same Task.
+
+  We have learned something useful about its identity.
+
+  ### Ask What the Operation Means
+
+  Next, we look at \_Complete_Task_.
+
+  We decide that a new Task starts incomplete, and completing it makes it completed.
+
+  Then we ask:
+
+  > **What happens if we complete a Task that is already completed?**
+
+  For this example, we choose a simple answer:
+
+  > It stays completed. Repeating the operation does not undo it.
+
+  That answer gives us a rule to write down:
+
+  ```trm
+  procedure _Complete_Task_ = {
+    Mark one _Task_ as completed.
+  .relations
+    changes _Task_
+  .rules
+    - Completing an already completed _Task_ leaves it completed.
+  }
+  ```
+
+  The `.relations` section connects the operation to the Task. The `.rules` section explains what should happen when we repeat it.
+
+  The Relation tells us what is connected. The rule tells us something important about how it behaves.
+
+  ### Decide What Needs Its Own Term
+
+  Should we also create \_Task_Title_?
+
+  In this small example, the title is simply a field of the Task. We do not yet have separate rules or questions that need a Term of their own.
+
+  The same applies to incomplete and completed. For now, we can describe them in the Task's `.states` section. If we later need to discuss those States separately, we can give them Terms too.
+
+  The goal is to make the model clearer. More Terms are useful only when they help us do that.
+
+  ### Put the Model Together
+
+  For this example, each Task belongs to one Task List, and a list can be empty. Completing a Task keeps its identity, title, and list unchanged.
+
+  We will leave reopening, deletion, and moving Tasks between lists for another example.
+
+  Here is the complete `.trm` file for our Knowledge. It brings the earlier pieces together, so it replaces those pieces rather than being appended to them.
+
+  ```trm
+  @knowledge todo
+  @viewpoints domain
+
+  entity _Task_ = {
+    One identified item of intended work.
+  .relations
+    belongs to _Task_List_
+  .invariants
+    - A Task belongs to exactly one _Task_List_.
+    - A Task has a title.
+    - Changing the title preserves the Task's identity.
+  .states
+    - A Task is either incomplete or completed.
+    - A new Task is incomplete.
+  }
+
+  entity _Task_List_ = {
+    One identified collection of Tasks.
+  .relations
+    contains _Task_
+  .invariants
+    - A Task List contains zero or more _Task_ items.
+  }
+
+  procedure _Complete_Task_ = {
+    Mark one _Task_ as completed.
+  .relations
+    changes _Task_
+  .invariants
+    - Completion preserves the _Task_'s identity, title, and list.
+  .rules
+    - Completing an already completed _Task_ leaves it completed.
+  }
+  ```
+
+  `@knowledge todo` gives this Knowledge its ID. `@viewpoints domain` selects the vocabulary used to describe it.
+
+  The Task's full name is \_todo:Task_. Inside this Knowledge, we can simply write \_Task_.
+
+  ### Use What We Have Learned
+
+  Now consider an implementation where clicking “Complete” twice makes the Task incomplete again.
+
+  We can point to the rule on \_Complete_Task_ and explain exactly why that behavior disagrees with our model.
+
+  Or suppose we later decide that completing a Task should remove it from its list. That would change something we have already stated, so we know which part of the model to revisit.
+
+  The Terms give us stable subjects for these conversations. Their Term Declarations hold the answers we currently accept, and their Relations help us follow the connections.
+
+  > **Name the concept. Ask a question. Make the answer clear. Use what you learn.**
+
+  With this example in mind, the next sections explain how to work with an Aterm corpus.
+
+  ## Start with the intended corpus
+
+  - Use this project's executable: `aterm-dev` or `pnpm aterm` in this checkout.
+  - Executable selection and Home selection are independent; `--home /project/.aterm` selects the corpus.
+  - A local build does not update the global installation. Rebuild changed code before using its results as evidence.
+  - Keep the original requested outcome when a task needs several Skills.
+  - Use Select by effect below when the intended semantic effect or sequence is unclear.
+  - Before each task, use `aterm skill remind <Skill...>` to recall its conditions and completion criteria.
+  - Use `aterm skill toc <Skill>` for the SKILL.md entrypoint and its prerequisite reading order.
+  - Use `aterm skill view <Skill...>` to read all needed bodies together, with the selected Skill last; omit prerequisites you already understand.
+  - A missing Reminder points back to view; it does not mean the Skill has no conditions. Consult toc when prerequisite knowledge is unfamiliar or forgotten.
+  - For a conditional route to another Skill, read its toc and unfamiliar prerequisite bodies before applying it; return to the original task with the requested evidence.
+  - Account for every intended effect of a compound task; do not silently drop work when changing routes.
+
+  ## Identities and notation
+
+  - A Term names a meaning; a Term Declaration defines it from one Term Kind's perspective.
+  - A Knowledge stores related Term Declarations and their current meaning in one .trm file.
+  - A Viewpoint supplies the available Term Kinds, section keys and modeling questions.
+  - Local references resolve within their Knowledge; cross-Knowledge references use a qualified ID.
+
+  ```trm
+  @knowledge inventory
+  @viewpoints domain
+  @description {
+    Stock identities and availability.
+  }
+  @scope {
+    Define stock identity and quantity; exclude screen layout.
+  }
+  entity _Stock_Item_ in stock = {
+    One tracked stock identity.
+  }
+  ```
+
+  - Section markers and closing braces start at column zero; indent body text two spaces.
+  - Knowledge IDs use lowercase_snake_case. Viewpoint names use letters, digits and hyphens, beginning with a letter.
+  - A Group such as `stock.inventory` organizes Term Declarations without changing their identity.
+  - Qualify colliding Term Kinds, for example `skill.procedure`; the owner must appear in @viewpoints.
+  - Each Term Declaration declares its non-self references in .relations, immediately after Definition.
+  - Another Term Declaration cannot provide those declarations.
+  - Distinguish a text reference, an ordinary assertion and structural Relations such as is_a, has_part and has_member.
+  - Relations assert connections; a reference or dagger does not execute an action.
+  - A section dagger expands a section at its written location; it does not imply a prerequisite order.
+
+  ## Follow the selected Viewpoint
+
+  - Before modeling, authoring or reviewing Terms, read the selected Viewpoint's complete Markdown with `aterm viewpoint view <name>`: both its schema and explanatory body.
+  - The selected Viewpoint Markdown takes precedence over general Skill guidance for its vocabulary, admission, naming, sections and authoring criteria.
+  - Use common Skills for the work; take Viewpoint-specific instructions from that document instead of requiring a dedicated Skill.
+  - A Skill example from another Viewpoint does not impose its Term Kinds, section names or writing conventions on this one.
+
+  > Generic offers definition, classification and description; do not add contract merely because a Skill example uses it.
+
+  - Follow the Viewpoint where guidance conflicts and report the mismatch so the shared guidance can be corrected.
+  - This precedence does not bypass user instructions, Knowledge Scope, executable schema/reference checks, guarded writes or required repository review. Report conflicts with those constraints before dependent writes.
+  - For several selected Viewpoints, apply each to the Term Kinds it owns; document order does not resolve conflicting guidance.
+
+  ## Obtain current inputs
+
+  ```sh
+  aterm term list '*Stock*'
+  aterm term view _inventory:Stock_Item_ --detail
+  aterm viewpoint view domain
+  ```
+
+  - Read the current owning Term Declarations, their Knowledge Scope, selected Term Kind schemas and relevant neighbors.
+  - Description tells readers what is present; Scope tells writers what must be covered.
+  - Reads ignore case by default; use --case-sensitive for exact case.
+  - Preserve returned canonical spelling in references and writes; quote globs and qualify ambiguous selectors.
+  - Unresolved questions remain explicit; an existing Term does not prove it owns the requested behavior.
+  - If parsing blocks reading, inspect diagnostic locations with file read, repair, then refresh the context.
+
+  ## CLI and MCP
+
+  - Examples use CLI spelling; MCP uses `aterm({cmd: "skill list"})` without the executable prefix.
+  - Pass source text through the MCP stdin argument; shell pipes and redirections are not executed.
+  - Remote paths belong to the server Workspace. CLI `--server URL` uses its MCP endpoint.
+  - MCP supports standalone stdio, stdio with `--with-server`, and the running server's `/mcp` endpoint.
+  - A server-backed read uses its snapshot; filesystem writes may be reflected after debounce.
+  - Runtime inputs and verification evidence must be obtained for the current task, even when these instructions are remembered.
+
+  ## Choose a useful method
+
+  - Skills supply knowledge and recommended methods. Choose the reasoning approach that best serves the task.
+  - Reorder or combine questions, test a counterexample, sketch a model or run an experiment when useful.
+  - Keep user intent, Scope, canonical identity, schemas, reference integrity, guarded writes and required review intact.
+  - Reuse current evidence; reading another Skill does not require repeating work that already established the needed result.
+  - Report material guidance gaps, contradictions and consequential departures with their impact. Minor method choices need no permission ritual.
+
+  > A State Transition example reveals a missing boundary faster than the question grid — use it and check relevant coverage.
+  >
+  > Skip reference validation because another method felt convincing — BAD.
+
+  ## Select by effect
+
+  1. Run skill list in the intended Home and read descriptions; return missing inventory information before guessing.
+  2. State the intended outcome and whether it changes identity, meaning, organization, vocabulary or runtime state.
+  3. Choose one Skill or a composition that covers every effect; classification itself does not perform that work.
+
+  > Rename Task and change completion rules: follow only the rename Skill — BAD.
+  >
+  > Select _Corpus_Maintenance_Skill_ (“Rename without changing meaning”) and _Specification_Implementation_Skill_ (“Establish ownership and preserve closure”); preserve both requested outcomes — GOOD.
+
+  | Intended effect | Skill and applicable section |
+  |---|---|
+  | Choose or review a canonical name | _Naming_Skill_ |
+  | Read, search, discover or trace impact | _Corpus_Reading_Skill_ |
+  | Write TRM, check structural validity or apply a reviewed change | _Corpus_Authoring_Skill_ |
+  | Clarify, rename, move, organize Knowledge or repair source | _Corpus_Maintenance_Skill_ |
+  | Prepare evidence or review ownership and coverage | _Model_Review_Skill_ |
+  | Create concepts or change meanings and ownership | _Modeling_Skill_ |
+  | Create or revise vocabulary | _Viewpoint_Authoring_Skill_, before modeling its subjects |
+  | Change Rules or implement behavior | _Specification_Implementation_Skill_ |
+  | Create, revise or review Terms in any Viewpoint, including Skill guidance | _Corpus_Authoring_Skill_ plus the selected Viewpoint Markdown; _Modeling_Skill_ or _Model_Review_Skill_ when needed |
+  | Configure, run services, prepare search or manage installed Skills | _Runtime_Management_Skill_ |
+  | Present Terms or Notes in the intended browser | _Explorer_Presentation_Skill_ |
+
+  - If no Skill covers a useful method, proceed within the authorized scope using available evidence. Report a material gap; propose reusable guidance through the common authoring Skills and the selected Viewpoint when it would help future work.
+  - After selection, follow Start with the intended corpus for reading and recall, and Obtain current inputs for the task context.
+  - For a first model, read the _Modeling_Skill_ TOC and unfamiliar prerequisites, including Naming and Model Review, before declaring the initial vocabulary.
+  - For a modeling task, use _Modeling_Skill_ for supported meaning, coverage and uncertainty. Classification alone does not require a model, a fixed Report or a corpus write.
+
+  Use the mapping when it helps explain the plan; a routine task needs no routing report. Keep material uncovered effects explicit.
+.reminder
+  - Confirm executable and Home independently; read current owners, writer Scope and the complete selected Viewpoint Markdown.
+  - Selected Viewpoint guidance takes precedence over general Skill guidance; report conflicts and preserve user instructions and required validation/review.
+  - Cover the intended effects with relevant guidance; choose a useful method and report material gaps without inventing a Skill prerequisite.
+  - Use toc and view for unfamiliar guidance, and remind before each task.
+  - A conditional route needs its guidance when the condition holds; reading is not execution.
+  - Remembered instructions never replace current inputs or verification evidence.
+}
+
+skill _Naming_Skill_ = {
+  A Skill for choosing names that identify their defined subjects.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Aterm_Basics_Skill_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Reference_Integrity_Rule_
+.description
+  Use when choosing or reviewing canonical names; settle a disputed meaning before renaming it.
+.body
+  ## Establish the naming context
+
+  - Assume the reader knows the project's purpose and its core domain concepts, but not the Definition of every supporting Term.
+  - In a new Knowledge, identify those core concepts from the account before using the first names as patterns for further Terms.
+  - Core concepts can keep their established short names when their meaning is clear within that Knowledge.
+
+  > A document collaboration project has Plugin and Document as its core concepts.
+  >
+  > Plugin and Document — GOOD; Document Plugin and Plugin Document add no distinction here.
+
+  - Name other subjects precisely enough for that reader to distinguish their roles in a sentence.
+
+  > The subject is the renderer supplied by a Plugin.
+  >
+  > Renderer — too little context; Plugin Renderer — GOOD.
+  >
+  > A position inside a Document: Anchor — unclear; Document Anchor — GOOD.
+
+  - Keep meaningful role modifiers; omit context already supplied by the Knowledge or its core concepts.
+
+  > Adoc Plugin Renderer — redundant project context; Plugin Renderer — sufficient.
+
+  - Read the initial names together in representative sentences; check both lost meaning and redundant qualifiers before propagating their pattern.
+  - A core concept is a shared reference point, not permission to omit a semantic head identifying a Principle, Command or other distinct subject.
+  - Do not invent hypothetical competing concepts merely to justify a longer name.
+
+  ## Name the subject
+
+  - Read the Definition and representative uses before choosing the name.
+  - Use one canonical name for one meaning within its vocabulary.
+
+  > Graph Search Result already names this meaning.
+  >
+  > Search Outcome for the same meaning — BAD.
+  >
+  > Graph Search Result — GOOD.
+
+  - Prefer an established English term; state a semantic difference before using it differently.
+  - Use noun phrases for subjects and criteria, verb phrases for acts.
+
+  > Act: Insert Coin — GOOD.
+
+  - Retain meaningful heads: Principle, Command, Event, Procedure, Workflow and Skill.
+
+  > Defined criterion: each obligation has one authoritative owner.
+  >
+  > Criterion: Ownership — BAD.
+  >
+  > Criterion: Single Owner Principle — GOOD.
+
+  > Command: Create Task — BAD.
+  >
+  > Command: Task Creation Command — GOOD.
+
+  > Event: Task Created — unclear subject.
+  >
+  > Event: Task Creation Event — explicit.
+
+  > Reusable guidance: Analyze Impact — BAD.
+  >
+  > Reusable guidance: Impact Analysis Skill — GOOD.
+
+  - Neither declaration Term Kind nor a surrounding follow/read/invoke supplies a missing identity.
+  - A familiar button or function label does not make it the proper name of another subject.
+  - Do not invent extra subjects merely to fill those roles.
+  - Let the Knowledge namespace provide the project context; retain meaningful modifiers.
+
+  > Graph and text retrieval coexist.
+  >
+  > Result — BAD.
+  >
+  > Graph Search Result — GOOD.
+
+  - Use natural English modifier and head-noun order.
+
+  > Adapter Git — BAD.
+  >
+  > Git Adapter — GOOD.
+
+  - Separate words with underscores and capitalize each word; retain established acronyms and proper names.
+
+  - A name comparison, representative sentence or counterexample can settle a naming question; no fixed worksheet is required.
+
+  ## Check the proposed name
+
+  - Record the name-to-meaning mapping and read it in actual sentences.
+  - Check the Knowledge's Scope before applying a naming convention beyond it.
+  - A proposed rename does not authorize a public contract change.
+  - Explore provisional labels while meaning is unsettled; resolve identity and ownership before committing a canonical name or applying a rename.
+  - Use the rename command for a real identity change; changing only the declaration leaves references behind.
+  - Escape a hypothetical Term token or write it as ordinary words; do not create unresolved references for examples.
+.reminder
+  - Provisional labels can aid exploration; settle identity before committing a rename.
+  - Name the Definition's subject; preserve one canonical name per meaning.
+  - Assume project purpose and core concepts are known; keep core names short and supporting roles unambiguous.
+  - Check initial names together before propagating their pattern; retain meaningful modifiers without repeating context.
+  - Retain the meaningful head even when Term Kind or sentence context suggests it.
+
+  > One authoritative owner per obligation: Ownership — BAD; Single Owner Principle — GOOD.
+
+  - Settle disputed meaning and ownership before committing a canonical name or applying a rename; use the rename command for identity changes.
+}
+
+skill _Corpus_Reading_Skill_ = {
+  A Skill for reading, finding and tracing Terms within an explicitly selected corpus.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  derived_from _aterm:Jq_Query_
+  derived_from _aterm:Corpus_JSON_
+  requires _Aterm_Basics_Skill_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Query_Selection_Guidance_
+  derived_from _aterm:Relation_Semantics_Guide_
+  derived_from _aterm:Command_Reference_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Search_Intent_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Query_Selection_Guidance_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Search_Intent_
+  derived_from _aterm:Discover_Terms_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Search_Intent_
+  derived_from _aterm:Task_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Runtime_Configuration_Guidance_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Configuration_
+  derived_from _aterm:HTTP_Server_
+  derived_from _aterm:MCP_Server_
+  derived_from _aterm:Skill_Installation_Management_Procedure_
+  derived_from _aterm:Guidance_Catalog_
+  derived_from _aterm:Query_Selection_Guidance_
+  derived_from _aterm:Semantic_Search_Guide_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Semantic_Search_Guide_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Task_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Migration_Planning_Guidance_
+  derived_from _aterm:Corpus_Inspection_Guidance_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Corpus_Inspection_Guidance_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Change_Set_
+  references _Runtime_Management_Skill_
+.description
+  Use to read Terms, search names or text, discover concepts from intent, or analyze change impact with CLI or GraphQL.
+.body
+  - Choose the query or comparison that answers the question. A focused lookup need not become an exhaustive audit; state limits when claiming coverage.
+
+  ## Select the question first
+
+  - Use a name query for canonical spellings and a text query for literal content.
+
+  ```sh
+  aterm term list '*Task*'
+  aterm corpus search 'completion'
+  ```
+
+  - Use discovery for an intent; use graph relations and occurrences for dependency effects.
+
+  ```sh
+  aterm corpus discover 'reopen completed work' --mode lexical
+  aterm graph relations _vending_machine:Slot_
+  aterm term occurrences _vending_machine:Slot_
+  ```
+
+  - Names, globs, section keys and literal text ignore case by default; output retains canonical spelling.
+
+  ```sh
+  aterm term list '*task*'
+  aterm corpus search 'Completion' --case-sensitive
+  aterm term view _inventory:Stock_Item_ --section DEFINITION
+  ```
+
+  - Use --case-sensitive when exact case matters or case-only Term names are ambiguous.
+  - Preserve exact returned names for authored references and writes; read matching never changes identity.
+  - Quote globs; record the selected Home, Knowledge, Viewpoints, relation filters, case mode and external sources.
+  - An empty result is evidence only about that examined selection.
+
+  > No matches in one filtered Knowledge, therefore no such concept exists — BAD.
+  >
+  > No matches in the named Knowledge under the recorded filters — GOOD.
+
+  - Read the complete owner before treating a hit or section excerpt as a contract.
+  - For authoring, read writer Scope explicitly; reader Description is not its substitute.
+
+  ```sh
+  aterm term view _vending_machine:Slot_ --detail
+  ```
+
+  - A Term has one Term Declaration with one Term Kind; that declaration owns its sections and outgoing declarations.
+  - A reference mentions another Term; a Relation asserts a connection; neither performs an action.
+  - has_state lists permitted States, not the active State. Follow incoming derived_from edges to find affected explanations.
+
+  ## Project only the necessary fields
+
+  - Select a small GraphQL projection when the task needs an inventory or a bounded traversal.
+
+  ```sh
+  aterm corpus query '{ knowledges { nodes { id description } pageInfo { hasNextPage endCursor } } }'
+  aterm corpus query '{ __type(name: "Term") { fields { name } } }'
+  ```
+
+  > Fetch every Term Declaration to list Knowledge names — BAD.
+  >
+  > Select Knowledge id and description — GOOD.
+
+  - MCP uses `graphql({query: "{ knowledges { nodes { id description } pageInfo { hasNextPage endCursor } } }"})`.
+  - Traverse term.outgoing with target, or term.incoming with source; choose phrase, origin and structural filters deliberately.
+  - GraphQL selector fields accept caseSensitive: true; CLI corpus query --case-sensitive supplies their default. A field override affects only that field.
+  - origin relation selects declarations; origin reference selects body references. Viewpoint and phrase filters accept quoted globs.
+  - `termDeclarations(termKind: "specification.concept")` returns the single Term Declaration if its Term Kind matches; omission returns that Term Declaration without filtering.
+  - Read exact section content with `sections(keys: ["definition"]) { key format content }`; JSON/YAML bodies remain strings.
+  - Follow pageInfo.hasNextPage with after: endCursor. first defaults to 20 and accepts 1–100.
+  - On a stale cursor, restart the collection; never combine pages from different corpus versions.
+  - Inspect GraphQL errors even after HTTP 200; CLI errors exit 1 and MCP errors set isError.
+  - A projection is an excerpt: read full owners and required context before asserting complete obligations.
+  - GraphQL does not write or rank semantic matches; use authoring commands or corpus discover.
+
+  ## Filter and sort typed GraphQL collections
+
+  - Use terms, relations, knowledges, viewpoints or termKinds as the root for a typed query.
+  - All five collections return nodes, totalCount and pageInfo, including nested viewpoints and termKinds.
+  - where receives one candidate object and must return one boolean; do not start with .[].
+  - Term objects use @term, @knowledge, @termKind and parsed section fields, as in corpus jq.
+
+  ```graphql
+  {
+    terms(knowledge: "japan_trip", termKind: "trip.transport",
+      where: ".schedule.date == \"2026-10-28\" and .booking.status != \"confirmed\"",
+      orderBy: [{key: ".schedule.date"}, {key: ".schedule.departure"}], first: 20) {
+      nodes { id termDeclarations { definition sections(keys: ["schedule"]) { key content } } }
+      totalCount
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+  ```
+
+  - Field names and status values above are examples; inspect the selected Viewpoint and actual sections first.
+  - Missing status matches != "confirmed"; add .booking.status != null to exclude missing status.
+  - Each orderBy key must emit one scalar or null; direction is ASC by default or DESC, nulls is LAST by default or FIRST.
+  - Multiple keys sort in order; ties retain default order. Filter and sort precede pagination.
+  - Relations expose source and target Term records to predicates; e.g. .target.schedule.date == "2026-10-28".
+  - Knowledge predicates use .id; Viewpoint predicates use .name and .knowledge.id; Term Kind predicates use .name, .qualifiedName and .viewpoint.knowledge.id.
+  - Root Viewpoints and Term Kinds are bindings per Knowledge; identical names across Knowledges are not merged.
+  - A request permits four jq evaluations total, counting root jq and each collection using where/orderBy.
+  - Use root jq for transformations or aggregation; typed collections preserve GraphQL field selection and traversal.
+
+  ## Pass reusable parameters
+
+  - Supply GraphQL variables separately from the document; a variable inside a quoted jq expression is not substituted by GraphQL.
+  - Use bindings on the field that evaluates jq to pass typed JSON values; do not build a predicate by interpolating user text.
+
+  ```graphql
+  query TripDate($knowledge: ID!, $date: String!, $after: String) {
+    terms(knowledge: $knowledge, where: ".schedule.date == $date",
+      bindings: {date: $date}, first: 20, after: $after) {
+      nodes { id termDeclarations { definition } }
+      pageInfo { hasNextPage endCursor }
+    }
+  }
+  ```
+
+  ```json
+  {"knowledge": "japan_trip", "date": "2026-10-28"}
+  ```
+
+  - Run the saved document with a variables object, or send the same query/variables envelope through MCP graphql or POST /graphql.
+
+  ```sh
+  aterm corpus query --file trip-date.graphql --variables '{"knowledge":"japan_trip","date":"2026-10-28"}'
+  ```
+
+  - bindings also works with orderBy and root jq; nested fields need their own bindings.
+  - Binding names match [A-Za-z_][A-Za-z0-9_]*; the serialized object must fit 64 KiB. Null or omission supplies no bindings.
+  - Omit a GraphQL variable to use its query default; explicit null is a value and is invalid for a non-null variable.
+  - Keep parameters unchanged while paging; after changing a binding, restart without the old cursor.
+  - For connected Terms, filter relations on .source or .target section values and select source { id } and target { id }; direct connections are not recursive closure.
+
+  > A date-matched Term plus one returned Relation proves the whole day's model was read — BAD.
+  >
+  > State the date predicate, direct-connection boundary and any remaining pages — GOOD.
+
+  ## Query section values with jq
+
+  - Use corpus jq for text conditions, JSON/YAML fields and cross-Knowledge aggregation.
+
+  ```sh
+  aterm corpus jq '.[] | select(.definition | contains("payment")) | .["@term"]'
+  aterm corpus jq '.[] | select(.schedule.stay_booking_status == "confirmed") | {term: .["@term"], date: .schedule.date}' --knowledges japan_trip
+  ```
+
+  - Input is one array of Terms; @term and @knowledge identify each record, and sections are its other properties.
+  - JSON/YAML sections become values; other sections remain text. Missing sections are absent.
+  - Use optional access for sparse nested data and grouping for aggregate questions.
+
+  ```sh
+  aterm corpus jq '.[] | select(any(.schedule.draft_plan.events[]?; .kind == "meal")) | .["@term"]' --knowledges japan_trip
+  aterm corpus jq 'group_by(.["@knowledge"]) | map({knowledge: .[0]["@knowledge"], count: length})'
+  ```
+
+  - jq keeps its own case rules; use `test("payment"; "i")` for insensitive text matching.
+  - GraphQL exposes the same evaluator, including the knowledge array.
+
+  ```graphql
+  { jq(knowledge: ["japan_trip"], program: ".[] | select(.schedule.stay_booking_status == \"confirmed\") | .[\"@term\"]") }
+  ```
+
+  - Output is the array of jq emissions: empty emits [], null emits [null], and map emits one nested array.
+  - Omit knowledge to read the whole admitted corpus; [] selects no Terms. This input is not paginated.
+  - Execution is bounded: 64 KiB program, 16 MiB input, 2 MiB output and 5 seconds. Select fewer Knowledges or return fewer fields after a limit failure.
+  - A failure provides no partial jq result; the program cannot read host files or environment variables.
+
+  ## Match names or literal text
+
+  1. Obtain the query, intended Home, eligible scope, filters and external source selection.
+  2. Confirm whether the task asks for names or literal text; route intent to the “Choose retrieval deliberately” section and dependency effects to the “Trace change impact” section.
+  3. Execute the name or text query using the command examples, quoted globs and case rules in Select the question first.
+
+  4. Return matching canonical identities and source evidence, or an explicit empty result with the effective filters and sources.
+
+  Completion: the result answers the search question in the intended Home without inventing matches or silently widening scope.
+
+  ## Choose retrieval deliberately
+
+  1. Obtain the intent, selected Home, eligible sections and filters.
+  2. Choose lexical, semantic or hybrid mode before ranking; lexical needs no embedding model.
+  - --case-sensitive controls selectors and lexical matching; it does not turn vector similarity into a literal case filter.
+
+  ```sh
+  aterm corpus discover 'reopen completed work' --mode lexical --search-in definition --detail
+  ```
+
+  3. For semantic or hybrid retrieval, inspect index readiness for the selected Home, corpus and model before relying on results.
+
+  ```sh
+  aterm corpus index status
+  ```
+
+  4. If the required model/index is unavailable, read _Runtime_Management_Skill_ (“Select the environment before changing it” and “Prepare and verify the selected search mode”). Prepare the selected Home, then retry with the same intent, mode and source selection; report preparation failure if it remains unavailable.
+
+  > Semantic preparation failed, so silently return lexical results — BAD.
+  >
+  > Report the preparation failure or prepare and retry the requested mode — GOOD.
+
+  5. Inspect candidate Definitions or source evidence and read full owners before relying on their contracts.
+
+  > score = probability that the concept is correct — BAD.
+  >
+  > score ranks leads within the selected retrieval scope — GOOD.
+
+  Return ranked leads, selection and supporting evidence. Scores are neither confidence nor established Relations.
+
+  ## Read the complete owner
+
+  1. Obtain target selectors and reading purpose; resolve ambiguity rather than guessing a Knowledge.
+  2. Read the complete Term Declaration and required context for the canonical identity. term view follows whole-Term daggers transitively, once per identity; a bounded GraphQL excerpt does not establish that this context was read.
+
+  ```sh
+  aterm term view _vending_machine:Slot_ --detail
+  ```
+
+  3. Use GraphQL for a bounded excerpt or traversal when appropriate; inspect errors and pagination using the “Project only the necessary fields” section.
+  4. Read current Scope explicitly for authoring or implementation; distinguish obligations, explanations and unresolved questions.
+
+  > Treat a matching Definition or selected section as the entire contract — BAD.
+  >
+  > Read the complete owner and required context before asserting its obligations — GOOD.
+
+  Return exact qualified Terms and Term Kinds read, applicable boundaries and unresolved required context. An excerpt or summary never establishes that all obligations were read.
+
+  ## Trace change impact
+
+  ```sh
+  aterm term occurrences _inventory:Stock_Item_
+  aterm graph relations _inventory:Stock_Item_
+  ```
+
+  1. Record the proposed change, baseline identities and effective corpus/external source selection.
+  2. Configured externalSources apply by default to rename; explicit source selection replaces that configuration.
+  3. Read complete owners and related Terms; inspect mixed responsibilities, duplication, contradictions and missing obligations.
+  4. Trace declarations, references, callers and selected external occurrences using both baseline and proposed identities, including moved or removed targets.
+
+  > Count matching spellings as affected identities — BAD.
+  >
+  > Resolve qualified identity and preserve a same-spelled Term in another Knowledge — GOOD.
+
+  5. Follow incoming derived_from Relations; include affected rewritten guidance in the same review.
+  6. Separate direct evidence from inferred effects; record each inference path and its assumptions.
+  7. Distinguish intended semantic changes from meaning that must remain stable.
+  8. Assign each affected use a preservation or migration decision and define verification evidence.
+
+  A source you did not inspect remains explicitly uninspected. Report evidence paths for inferred effects.
+  Return the affected-use inventory, inspected selection, compatibility decisions and verification plan.
+  Impact analysis alone does not authorize or apply changes.
+
+.reminder
+  - Match query breadth to the question; a focused result does not prove exhaustive coverage.
+  - Choose names, literal text, intent or dependency effects deliberately.
+  - Record Home, filters and sources; an empty filtered result is not universal absence.
+  - Read full owners and writer Scope before relying on obligations.
+  - Inspect GraphQL errors and pagination; never mix corpus versions.
+  - Use where/orderBy for typed collection filters and sorting; use root jq for aggregation. Preserve jq case rules and follow pagination.
+  - Pass changing jq values with field-local bindings; restart pagination after parameter changes.
+  - Verify the requested retrieval mode and index; scores rank leads, not confidence.
+  - For impact, trace old/new identities and incoming derivations; separate observed, inferred and uninspected effects.
+  - Return affected-use decisions and verification evidence; analysis alone applies nothing.
+}
+
+skill _Corpus_Authoring_Skill_ = {
+  A Skill for expressing supported knowledge as valid TRM and applying verified corpus changes.
+.relations
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Aterm_Basics_Skill_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Corpus_Notation_Reference_
+  derived_from _aterm:Knowledge_Template_
+  derived_from _aterm:Term_Declaration_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:TRM_Syntax_Reference_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Edit_Protocol_
+  derived_from _aterm:Corpus_Change_Procedure_
+  derived_from _aterm:Obligation_Statement_Rule_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Structural_Validation_Guidance_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Draft_
+  references _Specification_Implementation_Skill_
+  references _Modeling_Skill_
+.description
+  Use for TRM syntax, Term Declarations, structural validation and guarded corpus writes; decide meaning before writing.
+.body
+  ## Choose the applicable authoring work
+
+  - For an accepted Term Declaration, wording or Group change, use the syntax and guarded-write sections; do not manufacture a Modeling Report.
+  - Use Fill the model from supported answers only when converting Modeling results into Term Declarations.
+  - If subject meaning or ownership is unsettled, read _Modeling_Skill_ (“Choose the entry condition” through “Return a consistent final state”). Return with settled identities, supported answers and closure evidence before final authoring.
+  - If the task includes any code update, read _Specification_Implementation_Skill_ (“Resolve the intended behavior” and “Implement and verify both sides”) before coding. It owns code/specification synchronization, including behavior-preserving fixes; use this Skill for its corpus writes.
+
+  ## Apply the selected vocabulary
+
+  - Read the selected Viewpoint's complete Markdown before drafting; its explanation and authoring criteria take precedence over this Skill's general guidance.
+  - Use its actual Term Kinds and section purposes. Examples below demonstrate source operations, not a universal content schema.
+  - Follow Viewpoint-specific authoring and review instructions where applicable; retain required repository review for Aterm-provided Skill changes.
+
+  > Author a Skill through the common write commands after reading `aterm viewpoint view skill`; its description/body/reminder belong to that vocabulary.
+
+  ## Write source, not a rendered view
+
+  - Keep one .trm file per Knowledge: @knowledge first, then @viewpoints, then optional Description and Scope before Term Declarations.
+  - Filenames do not define identity or vocabulary; use bound Viewpoint names and a unique lowercase_snake_case Knowledge ID.
+  - Description tells readers what is inside; Scope tells writers what belongs, what must be covered and what belongs elsewhere.
+
+  ```trm
+  @knowledge inventory
+  @viewpoints specification
+  @description {
+    Stock positions and Product kinds.
+  }
+  @scope {
+    Define stock identity, quantity and Product association; omit screen layout.
+  }
+  concept _Slot_ in stock = {
+    A stock position for one _Product_ kind.
+  .relations
+    contains _Product_
+  .contract
+    - Stock count must not be negative.
+  }
+  concept _Product_ = {
+    A kind of item identified by name.
+  }
+  ```
+
+  - Header blocks need nonempty two-space-indented bodies and column-zero closing braces.
+  - A Term Declaration declares a local Term name, optional `in group.path` and its Term Kind at column zero.
+  - The unheaded body is Definition. Put later sections in Schema order; indent their content two spaces.
+  - Rendered // Knowledge, // Viewpoint and // Scope annotations are not source directives.
+
+  > Copy a multi-Knowledge read view into one source file — BAD.
+  >
+  > Write each Knowledge separately and qualify cross-Knowledge references — GOOD.
+
+  ## Preserve identity and organization
+
+  - The unique identity of both Term and Term Declaration is Knowledge ID + local Term name.
+  - Each Term has exactly one Term Declaration with one Term Kind and optional Group. A second declaration is always an error; remove the retired allowMultipleEntriesPerTerm setting.
+  - A short and qualified spelling of the same Term Kind do not create distinct Term Declarations.
+  - Only use a short Term Kind when one declared Viewpoint owns it; qualification does not import a Viewpoint.
+  - Classification text does not choose a declaration Term Kind.
+
+  > Generic classification says procedure, so declare Term Kind procedure — BAD.
+  >
+  > Declare generic's `term` Term Kind and put procedure in classification — GOOD.
+
+  - Use dot-separated lowercase_snake_case Group paths for authored organization, not structural Relations invented for display.
+
+  ```sh
+  aterm term list --knowledge inventory --tree
+  ```
+
+  - The tree is File / Group / Term Declaration; derived part Groups and temporary Hidden Groups are not authored Groups.
+  - Change a Group through a complete-Term Declaration term edit; term move transfers the Term Declaration to a compatible Knowledge.
+
+  ```diff
+  *** Begin Patch
+  *** Update Term: _inventory:Stock_Item_
+  @@
+  -entity _Stock_Item_ in stock = {
+  +entity _Stock_Item_ in stock.inventory = {
+     One tracked stock identity.
+   }
+  *** End Patch
+  ```
+
+  - This patch assumes the complete Term Declaration shown by the context; use the target's actual Term Kind and content. Omitting a section suffix selects the complete Term Declaration.
+
+  ## Declare connections and expand only the intended content
+
+  - Every non-self reference needs a target declaration in this Term Declaration's .relations immediately after Definition.
+  - A declaration is one built-in or one-to-five-word phrase and a whole-Term target, without a bullet or source token.
+  - Use references when evidence supports no stronger assertion; built-in underscore names use exact lowercase spelling.
+  - is_a expresses Generalization, has_part Parthood, has_member Membership and has_state permitted State membership.
+  - These Relations do not copy obligations, select a current/initial State, infer transitions or imply lifecycle ownership.
+  - Put cardinality, initial/transition and no-partial-effect requirements in their owning content sections.
+  - References name a whole Term; a section selector must match a present section of its Term Declaration.
+  - A plain section reference does not expand. Put a section dagger alone where its content applies.
+
+  ```trm
+  .relations
+    applies _Shared_Rule_
+  .contract
+    _Shared_Rule_.contract†
+  ```
+
+  > Put the section dagger inside a sentence — BAD.
+  >
+  > Put it alone immediately below the applicable instruction — GOOD.
+
+  - Expansion preserves Knowledge context and adds no heading; missing sections, duplicate Terms and cycles fail checks.
+  - Whole-Term daggers append complete Term Declarations in term view; skill prerequisite reading is instead declared with requires.
+  - Fenced and indented code are opaque; other recognized Term tokens must resolve. Escape hypothetical names and write retired names as plain words.
+
+  ## Fill the model from supported answers
+
+  Apply this section to supported modeling answers and explicit uncertainty. Read _Modeling_Skill_ for unfamiliar distinctions. Save partial knowledge only when authorized and permitted by Scope and Schema; structural validity alone does not settle meaning.
+
+  1. Use retained Terms, selected schemas, retelling and recorded distinctions; write each Definition in one or two sentences.
+  2. Declare retelling Relations on their active side and declare remaining non-self references.
+  3. Validate the candidate using guarded dry-run or an isolated corpus when needed. Settle questions before writing dependent Rules; independent supported content may proceed with explicit uncertainty.
+  4. Put each supported answer and permitted pending question in an appropriate section; a Viewpoint without a Rule section may finish with descriptive content.
+
+  - For supported Generalization, declare is_a and state the difference. When filling supported Rule sections, expand the general Term's relevant Rule section at its point of application using the section dagger taught above; the Relation itself copies nothing.
+
+  5. Write actual obligations with a subject, condition and required behavior; keep descriptions descriptive.
+  6. Put Relation rules on the owning Term Declaration and refusal/no-partial-effect rules on the refusing behavior.
+  7. Record Chosen and Non-goal decisions in a permitted explanatory section; place any resulting obligation on its actual owner too.
+  8. Keep subject wording consistent. Compare Rules and Differs with the filled Term Declarations and resolve omissions.
+  9. Reopen modeling if new answers expose identity or coverage gaps; do not conceal them in Remarks.
+  10. Deliver complete Knowledges, check the final corpus and review Scope coverage again.
+
+  Completion: each answer has a permitted destination, reference closure holds, and the accepted content is represented without disguising pending decisions as commitments.
+
+  ## Preserve identities across commands
+
+  - Qualify Knowledge when a Term name is ambiguous; an optional Term Kind prefix guards the selected Term Declaration's classification; use a full Term Declaration edit for a Group change.
+
+  ```diff
+  *** Begin Patch
+  *** Update Term: skill.procedure _inventory:Stock_Check_.procedure
+  @@
+  -  Read stock.
+  +  Read stock from the selected source.
+  *** End Patch
+  ```
+
+  - External rename replaces exact qualified Term tokens in comments, strings and code; it does not infer code identifiers or replace unqualified literal tokens.
+  - Preview the combined source diff before applying an external rename; selected files must be UTF-8 text and symlinks are not followed.
+  - term move transfers each Term's single Term Declaration to an existing Knowledge with a compatible Viewpoint-qualified Term Kind; it preserves sections and Groups and rewrites incoming, outgoing and configured external references.
+  - A move adds a Term Kind qualifier when the destination makes the old short Term Kind ambiguous. term format only orders Relation declarations.
+
+  ## Check the actual state
+
+  ```sh
+  aterm corpus check
+  ```
+
+  1. Confirm the intended executable, Home and saved content before running the check.
+  2. After writes, confirm the saved bytes independently with file read or local filesystem reading. For server-backed queries, wait for debounce and compare term show (or knowledge list for a new file) with the saved change before running corpus check.
+  3. Recheck if a write occurred during verification. If the published state never catches up, report it as unverified; inspecting bytes alone is not a structural check of those bytes.
+
+  > Check before saving and report the old success after a write — BAD.
+  >
+  > Check the final saved state and report its actual diagnostics — GOOD.
+
+  4. Run corpus check and report diagnostics, validation status and the state verified.
+
+  A successful invocation may still report diagnostics. A caller requiring a valid corpus must resolve them and check again.
+  A clean check establishes syntax, schema and reference validity. It does not prove correct ownership, complete requirements or a useful model.
+
+  ## Prepare and choose the write
+
+  - Keep the intended change, original baseline, complete proposed diff, affected files and effective source selection.
+  - Carry that baseline and verification obligations through corrections; do not replace them with the latest partial result.
+  - Read complete Knowledge source before replacing it and preserve unrelated Term Declarations.
+  - Add, update or delete Term Declarations: term edit with Add Term, Update Term or Delete Term blocks. Identity spelling: term rename.
+  - Whole-Term transfer: term move; the complete Term Declaration moves with its Term. A Group change uses a complete Term Declaration edit.
+  - New Knowledge: knowledge create with a source-relative .trm path and complete source.
+  - New Term Declaration in an existing Knowledge: Add Term with a qualified identity or --knowledge and its complete declaration.
+  - Knowledge header: knowledge edit with Update Knowledge hunks. Send complete source only for deliberate whole-Knowledge replacement.
+  - Viewpoint document and binding: viewpoint create/edit/delete.
+  - Knowledge identity: knowledge rename. Formatting only: term format. Choose operation granularity from the intended change.
+  - Read the selected Term Kind schema; prepare complete declarations and all non-self references.
+  - Default package Knowledge and Viewpoints are read-only unless allowDefaultWrites is true; keep project content in a project Knowledge.
+
+  ```sh
+  aterm term edit --file changes.patch --dry-run
+  aterm term edit --file changes.patch
+  aterm knowledge create inventory --path docs/inventory.trm --file inventory.trm --dry-run
+  ```
+
+  For a header change, run aterm knowledge edit inventory --file headers.patch --dry-run, then repeat without --dry-run. Through MCP, use cmd: "knowledge edit inventory --dry-run" and supply the patch in stdin; omit --file. Read the current header first; optionally use --if-match with the content version from file read.
+
+  ```diff
+  *** Begin Patch
+  *** Update Knowledge: inventory
+  @@
+   @description {
+  -  Inventory concepts.
+  +  Stock identities, quantities and storage positions.
+   }
+  *** End Patch
+  ```
+
+  - Header hunks can edit @description, @scope and @viewpoints; they cannot reach Term bodies or insert declarations.
+  - Changing @viewpoints still validates every existing Term. Use knowledge rename to change @knowledge.
+
+  ```diff
+  *** Begin Patch
+  *** Update Term: _inventory:Stock_Item_.definition
+  @@
+  -  One tracked stock identity.
+  +  One tracked stock identity that survives a label change.
+  *** End Patch
+  ```
+
+  Add and Delete use the same patch envelope. This example assumes Unused_Storage_Bin exists and has no remaining references:
+
+  ```diff
+  *** Begin Patch
+  *** Add Term: _inventory:Storage_Bin_
+  +concept _Storage_Bin_ = {
+  +  A named storage position for stock.
+  +}
+  *** Delete Term: _inventory:Unused_Storage_Bin_
+  *** End Patch
+  ```
+
+  - Add supplies one complete declaration with + on every line; the local declaration name must match the selector.
+  - Add appends to an existing Knowledge; create the Knowledge first when its identity is new.
+  - Delete supplies only the selector; repair remaining references or delete their owners in the same patch.
+  - Combine mutually referring additions and dependent updates in one patch; references are checked on the final candidate.
+
+  > Send the complete large Knowledge to add two Terms — unnecessary replacement.
+  >
+  > Send two Add Term blocks and the needed Update Term blocks — preserves unrelated declarations.
+
+  The patch is appropriate only when that replacement preserves the agreed meaning.
+  Use a complete Term Declaration edit to add sections or change its Group; section patches cannot change delimiters.
+
+  ## Apply and verify
+
+  1. Run the check in Check the actual state on the baseline; resolve diagnostics or report blockers before dependent writes. After a repair, repeat validation on the repaired state.
+  2. Preview the selected operation with --dry-run and inspect the complete proposed diff.
+  3. Verify the baseline is still current; use a content version guard where the command supports it.
+  4. Apply the reviewed operation and inspect saved effects, including partial failures.
+  5. Run the check in Check the actual state on the saved state.
+  6. Compare intended and saved changes; correct through preview, save and validation again.
+  7. Review every derivedImpacts target; update affected guidance or record why it still applies.
+  8. Finish only when the intended final state is saved and checked without unresolved structural diagnostics; otherwise return remaining diagnostics and blockers.
+
+  ## Recovery
+
+  - Use file list/read to inspect malformed source or configuration; file read returns text and a content version.
+  - file write/delete --if-match VERSION refuses stale input. Inspect saved status and diagnostics separately.
+  - A migration may need raw writes across temporarily invalid files; repair all affected files and check before semantic authoring resumes.
+  - knowledge delete refuses references; viewpoint delete refuses Knowledges still using it.
+  - Git metadata and .git pointers are reserved for local Git tooling, including during dry-run.
+  - Compare the saved corpus diff with the requested effect; the code/specification checks selected before coding still apply to behavior-preserving fixes.
+  - A Group-only change preserves Term Declaration identities and Relations; compare the selected tree before and after.
+  - Return the saved changes, reviewed diff and final verification evidence; do not describe a partial save as success.
+.reminder
+  - Use the actual Knowledge boundary and Term Kind schema; declare every non-self reference per Term Declaration.
+  - Resolve questions before writing dependent Rules; preserve supported content and permitted explicit uncertainty.
+  - Preserve the original baseline, source selection, complete diff and unrelated content.
+  - Validate, preview, inspect, save, then validate the final saved snapshot.
+  - Review every derivedImpacts target; update it or explain why it still applies.
+  - Inspect partial saves and final effects; structural validity does not prove semantic coverage.
+}
+
+skill _Corpus_Maintenance_Skill_ = {
+  A Skill for maintaining Knowledge boundaries, Term Declaration wording, names, organization and structural validity.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Corpus_Authoring_Skill_
+  derived_from _aterm:GraphQL_Query_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Corpus_Query_Procedure_
+  derived_from _aterm:Corpus_Notation_Guide_
+  derived_from _aterm:Relation_
+  derived_from _aterm:Search_Space_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Knowledge_Placement_Rule_
+  derived_from _aterm:TRM_Syntax_Reference_
+  derived_from _aterm:Viewpoint_Syntax_Reference_
+  derived_from _aterm:Structural_Validation_Guidance_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Knowledge_Placement_Rule_
+  derived_from _aterm:Knowledge_Template_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Account_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Corpus_Inspection_Guidance_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Migration_Planning_Guidance_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Corpus_Inspection_Guidance_
+  derived_from _aterm:Knowledge_Placement_Rule_
+  derived_from _aterm:TRM_Syntax_Reference_
+  derived_from _aterm:Migration_Planning_Guidance_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Diagnostic_Set_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Account_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Viewpoint_Syntax_Reference_
+  derived_from _aterm:Term_Kind_Syntax_Reference_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Diagnostic_Set_
+  derived_from _aterm:Edit_Protocol_
+  references _Naming_Skill_
+  references _Corpus_Reading_Skill_
+  references _Modeling_Skill_
+  references _Viewpoint_Authoring_Skill_
+  references _Specification_Implementation_Skill_
+.description
+  Use to create or organize Knowledge, clarify text, rename or move Terms, or repair malformed source while preserving supported meaning.
+.body
+  ## Choose the maintenance operation
+
+  - Use only the section matching the requested effect; maintenance does not authorize a meaning change.
+  - For a name change, read _Naming_Skill_ and the change-impact section of _Corpus_Reading_Skill_ before the rename procedure.
+  - For moves, Knowledge boundary changes or schema migration, read the change-impact section of _Corpus_Reading_Skill_, then return with the affected-use inventory.
+  - A wording-only edit or a syntax-only repair does not require a migration exercise. Use the smallest sufficient meaning/impact check; linked Skills provide knowledge, not repeated stages when current evidence already settles the question.
+  - For changed obligations or observable behavior on established subjects, use _Specification_Implementation_Skill_. For unsettled subject meaning, identity or ownership, use _Modeling_Skill_. Return with the accepted change; refresh current context and remaining requested effects while preserving the original baseline and accepted route changes in the combined change set.
+
+  > Clarify a sentence → compare its meaning with the baseline.
+  >
+  > Rename its subject → also trace qualified references and selected external sources.
+
+  ## Define the Knowledge boundary
+
+  1. Perform _Corpus_Authoring_Skill_ (“Check the actual state”); resolve baseline diagnostics before header or configuration writes.
+  2. State the subject, reader Description, writer Scope and intended organization.
+
+  > Choose a filename and assume it supplies Knowledge identity or Scope — BAD.
+  >
+  > Declare @knowledge inventory, selected Viewpoints, Description and Scope explicitly — GOOD.
+
+  3. When existing content or identities cross boundaries, perform _Corpus_Reading_Skill_ (“Trace change impact”).
+  4. Plan the sequence: use knowledge rename for an existing identity; establish compatible Viewpoint bindings and destination Knowledges before moving Terms. If a new vocabulary is needed, perform _Viewpoint_Authoring_Skill_ first, then resume with its evaluated schema.
+  5. Use knowledge create with complete source for a new Knowledge; use knowledge edit with Update Knowledge hunks for header changes. Use term edit for Term changes and complete-source knowledge edit only for deliberate whole-Knowledge replacement. Preserve unrelated content; use guarded file read/write for configuration and verify saved state.
+
+  ```sh
+  aterm knowledge create inventory --path docs/inventory.trm --file inventory.trm --dry-run
+  aterm knowledge rename inventory stock --dry-run
+  ```
+
+  6. When existing Term Declarations, Groups or identities change, perform _Corpus_Authoring_Skill_ (“Apply and verify”).
+  7. Perform _Corpus_Authoring_Skill_ (“Check the actual state”) on the final state and compare its content with Scope and the preservation plan.
+  8. Recheck affected final state after corrections; otherwise return incomplete.
+
+  Completion: the Knowledge matches its Scope and has valid schemas and reference closure. Verify visibility with knowledge list before accepting a server-backed check of a newly saved file.
+
+  ## Preserve the original meaning
+
+  1. Read current Scope, complete target and Term Kind schema; confirm the proposed edit preserves identity, meaning and ownership.
+  2. Prepare the wording or example change in a permitted section.
+
+  > Change only active to every active and call it cosmetic — BAD.
+  >
+  > Recognize the quantifier change and use _Specification_Implementation_Skill_ (“Establish ownership and preserve closure”) — GOOD.
+
+  3. Perform _Corpus_Authoring_Skill_ (“Apply and verify”).
+  4. Compare final text with baseline subjects, quantifiers, exceptions and example behavior.
+  5. If obligations or observable behavior changed, use _Specification_Implementation_Skill_ (“Establish ownership and preserve closure”); if identity or ownership changed, use _Modeling_Skill_ (“Revise an existing model”).
+
+  Completion: the checked Term Declaration says the same thing more clearly. Do not hide a semantic change in an editorial edit.
+
+  ## Rename without changing meaning
+
+  1. Compare the proposed name with the Definition, representative uses and existing vocabulary using _Naming_Skill_.
+  2. Resolve configured versus explicit external source selection before tracing; retain that selection through application and verification.
+  3. Perform _Corpus_Reading_Skill_ (“Trace change impact”) and keep the affected-use inventory.
+  4. Prepare the rename using that same selection.
+
+  ```sh
+  aterm term rename _inventory:Stock_Item_ _Inventory_Item_ --dry-run
+  aterm term rename _inventory:Stock_Item_ _Inventory_Item_
+  ```
+
+  5. Perform _Corpus_Authoring_Skill_ (“Apply and verify”) for the rename.
+  6. Compare the inventory with saved declarations and selected occurrences.
+  7. Verify every intended old target maps to the renamed identity; preserve same-spelled references to other identities.
+
+  Completion: the intended meaning and ownership survive, and no affected reference still targets the retired qualified identity. Same-spelled references to other identities remain valid.
+  If meaning is disputed or affected sources cannot be verified, report that gap rather than claiming a completed rename.
+
+  ## Choose the boundary being changed
+
+  1. Read destination Scope and compatible qualified Term Kind schemas.
+  2. Perform _Corpus_Reading_Skill_ (“Trace change impact”) using the intended corpus and external source selection.
+  3. Choose whole-Term Knowledge transfer or a Term Declaration-specific Group edit; keep that distinction in the change set.
+
+  ```sh
+  aterm term move _inventory:Slot_ --to stock --dry-run
+  ```
+
+  > Invent has_part solely to organize a sidebar — BAD.
+  >
+  > Use an authored Group path; reserve structural Relations for supported meaning — GOOD.
+
+  4. Preserve the impact plan: transfer the complete Term Declaration with its Term; change a Group through the selected complete Term Declaration.
+  5. Perform _Corpus_Authoring_Skill_ (“Apply and verify”).
+  6. Verify the saved schemas, organization and intended reference targets across Knowledge boundaries against the preservation plan.
+
+  A passing structural check does not prove meaning preservation. Return moved Term Declarations and evidence for preserved meaning and reference closure.
+
+  ## Repair from current diagnostics
+
+  1. Run _Corpus_Authoring_Skill_ (“Check the actual state”) and retain the original baseline and current diagnostic locations.
+  2. Classify each diagnostic and read the applicable syntax or reference guidance. For a malformed Viewpoint schema, read _Viewpoint_Authoring_Skill_ (“A complete Viewpoint document”) before repairing it.
+  3. Use file read to obtain the named file and its version even when configuration or Viewpoints do not parse.
+
+  ```sh
+  aterm file read docs/inventory.trm --output json
+  aterm file write docs/inventory.trm --if-match VERSION --file corrected.trm
+  ```
+
+  - Replace VERSION with the observed version; raw writes can save invalid content, so inspect saved status and diagnostics separately.
+
+  > A malformed declaration needs a brace; silently redesign its Rule too — BAD.
+  >
+  > Repair supported syntax, then validate and refresh the parsed context — GOOD.
+
+  4. Repeat _Corpus_Authoring_Skill_ (“Check the actual state”) and inspect the complete diff for meaning changes.
+  5. Repeat classification, repair and validation on further diagnostics, keeping the original baseline.
+  6. After parse recovery, refresh the owners and Scope; recheck any final diff correction.
+  7. If repair changes obligations or behavior, use _Specification_Implementation_Skill_; if it exposes unsettled subject meaning or ownership, use _Modeling_Skill_. Stop with explicit findings when no supported progress remains.
+
+  Completion: diagnostics are resolved and no semantic change is concealed inside the structural repair.
+.reminder
+  - Use the smallest sufficient meaning/impact check; reuse current evidence and preserve unrelated content.
+  - Choose clarification, rename, move, Knowledge organization or structural repair by its actual effect.
+  - For renaming, use Naming Skill; for affected identities, trace impact with Corpus Reading Skill.
+  - Preserve meaning, Scope, compatible Term Kinds, external selection and unrelated content.
+  - Move each Term with its complete Term Declaration; change a Term Declaration Group through a complete Term Declaration edit.
+  - Guard raw repairs with observed versions; saved does not mean valid.
+  - Apply through Corpus Authoring Skill; verify visibility, reference targets and final meaning.
+  - Route changed obligations or behavior to Specification Implementation Skill; route unsettled subject meaning or ownership to Modeling Skill. Report unsupported repairs.
+}
+
+skill _Model_Review_Skill_ = {
+  A Skill for checking evidence, ownership and semantic coverage without accepting or changing the subject.
+.relations
+  references _Modeling_Skill_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Corpus_Reading_Skill_
+  requires _Naming_Skill_
+  derived_from _aterm:Modeling_Evidence_Rule_
+  derived_from _aterm:Modeling_Account_Preparation_Procedure_
+  derived_from _aterm:Modeling_Account_Guide_
+  derived_from _aterm:Account_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Single_Owner_Principle_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Draft_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Account_
+  derived_from _aterm:Draft_
+  derived_from _aterm:Corpus_Inspection_Guidance_
+  derived_from _aterm:Single_Owner_Principle_
+  derived_from _aterm:Modeling_Coverage_Guidance_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Task_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Modeling_Coverage_Guidance_
+.description
+  Use to prepare a faithful account or review complete models, obligations and drafts against source evidence and Scope.
+.body
+  ## Select the review criteria
+
+  - Read the selected Viewpoint Markdown and Knowledge Scope; the Viewpoint's criteria take precedence over general Skill guidance within its vocabulary.
+  - Review descriptive Knowledge as descriptive Knowledge. Ownership checks apply to actual obligations; they do not require every Term to acquire Rules or a contract section.
+
+  ## Prepare a faithful account
+
+  - Preserve access to original sources and their locations. Use a faithful synthesis, quotation, table or other useful account without a sentence-count quota.
+  - Preserve relevant conditions, refusals and distinctions; choose detail to support the review’s claim.
+  - Check each sentence against the source and remove unsupported claims; keep proposed additions separately as Chosen.
+  - Check in the other direction too: trace every relevant source statement to the account or an explicit exclusion with its reason. Keep source locations; mark uninspected or unassessable material explicitly.
+
+  > Quietly add familiar product behavior while paraphrasing a requirement — BAD.
+  >
+  > Preserve the requirement and label the extra decision Chosen — GOOD.
+
+  - Answer from this account, not from what similar systems usually do.
+  - An absent Scope does not grant unlimited implementation freedom.
+
+  ## Keep uncertainty visible
+
+  - Record `nothing` and an Open question when the account does not answer; record `none` only when it explicitly says there is no such thing.
+
+  > Retry is unspecified: none — BAD.
+  >
+  > Retry is unspecified: nothing, with an Open question — GOOD.
+  >
+  > Retry is explicitly prohibited: none — GOOD.
+
+  - Keep every nothing Open until a supported Chosen, Non-goal or Dropped disposition closes it.
+  - Preserve source-supported content excluded from Term admission as Given on its owner.
+  - Preserve material introduced by a chosen name as Chosen, not an account fact.
+  - Trace Given and Rules statements to the account or an explicit method rule.
+  - Do not retain wording merely because it already existed; retain it because an answer needs it.
+  - Ask for decisions that block a dependent operation; continue useful independent work. Partial knowledge can remain Open without making every supported fact unusable.
+
+  ## Check the resulting responsibility
+
+  1. Read proposed obligations with the complete current owners and related Terms.
+  2. Identify each obligation's subject and one authoritative owner.
+  3. Compare the owner's Definition with its complete resulting responsibilities, not only the added bullet.
+
+  > Put account permissions on Task List because its file already exists — BAD.
+  >
+  > Check what Task List denotes and identify the supported permission owner — GOOD.
+
+  4. Return missing subjects, duplicate ownership and boundary conflicts with placement evidence.
+
+  Every proposed obligation needs a justified owner or an explicit unresolved finding. Finding the owner does not itself accept or apply the change.
+
+  ## Review the complete subject
+
+  1. Obtain the source account, Knowledge Scope, complete proposed draft and current related Terms.
+  2. Establish review scope from the account and Scope, including in-scope statements absent from the draft.
+  3. Read whole affected Term Declarations and relevant neighbors, not only changed lines.
+  4. Check identities and distinct meanings; use the “Check the resulting responsibility” section to test each obligation against the complete resulting responsibilities of its owner, then inspect duplication and contradictions.
+  5. Compare the relevant account and Scope with a connected retelling using the model's canonical Terms; use scenarios, tables or diagrams as additional checks. Trace in-scope meaning to supported content, pending questions or explicit boundaries; return gaps without inventing a Term for each noun.
+
+  > The Terms are individually plausible, but the original MCP requirement appears nowhere in their connected account — a coverage gap.
+
+  - For an initial model, check that gap corrections were followed by another whole-model retelling; use _Modeling_Skill_ for the repetition and final reporting criteria.
+  - Distinguish missing source requirements from new requests, unsupported assumptions and optional implementation detail; do not accept every suggested gap as a required feature.
+
+  > Every existing bullet looks sensible, so coverage is complete — BAD.
+  >
+  > A refusal in the source has no owner in the draft — a concrete finding.
+
+  6. Return findings and counterexamples; explicitly mark excluded or unassessable statements with reasons.
+
+  A review returns findings and unresolved decisions. It does not silently accept, edit or approve the subject.
+  The caller resolves findings and repeats affected checks before accepting a final draft.
+
+  - Return findings with their source evidence, affected owners, counterexamples and unresolved decisions. A review does not relabel an incomplete model as valid.
+.reminder
+  - Preserve account facts and source coverage in both directions; label added decisions Chosen and missing evidence Open.
+  - An unspecified answer is `nothing` with an Open question; an explicit absence is `none`.
+  - Check each Definition against its complete resulting responsibilities.
+  - Compare source coverage with the connected Term-based retelling; inspect absent obligations and recheck the corrected whole, not only changed Terms.
+  - Return evidence, counterexamples, unassessable statements and unresolved decisions.
+  - Review neither accepts nor applies the draft; callers resolve findings and repeat affected checks.
+}
+
+skill _Modeling_Skill_ = {
+  A Skill for developing or revising a model through questioning, pruning, retelling and supported closure.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Model_Review_Skill_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Task_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Modeling_Account_Guide_
+  derived_from _aterm:Candidate_Discovery_Guidance_
+  derived_from _aterm:Modeling_Answer_Guide_
+  derived_from _aterm:Modeling_Closure_Rule_
+  derived_from _aterm:Term_Retention_Rule_
+  derived_from _aterm:Modeling_Coverage_Guidance_
+  derived_from _aterm:Single_Owner_Principle_
+  derived_from _aterm:Obligation_Statement_Rule_
+  derived_from _aterm:Account_
+  derived_from _aterm:Model_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Initial_Term_Identification_Procedure_
+  derived_from _aterm:Term_Questioning_Procedure_
+  derived_from _aterm:Modeling_Answer_Interpretation_Procedure_
+  derived_from _aterm:Modeling_Viewpoint_Reference_
+  derived_from _aterm:Candidate_Pruning_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Unnamed_Subject_Detection_Guide_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Modeling_Report_Template_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Account_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Account_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  references _Naming_Skill_
+  references _Corpus_Reading_Skill_
+  references _Corpus_Authoring_Skill_
+  references _Viewpoint_Authoring_Skill_
+.description
+  Use when subjects, meanings, boundaries or obligations are unsettled; develop supported meanings and identify what remains unresolved before dependent Rules or actions.
+.body
+  ## Choose the entry condition
+
+  - For a new model, start with the source account and candidate ideas; for a revision, preserve the original model and affected uses.
+  - Use the sections below as modeling tools. Questions, examples, counterexamples, diagrams and experiments can be combined in a useful order.
+  - A model-only task returns supported identities, answers, boundaries and uncertainty without saving.
+  - Before saving, read _Corpus_Authoring_Skill_ for notation, guarded writes and validation.
+  - If the vocabulary misses a recurring distinction, report it and use _Viewpoint_Authoring_Skill_ when a vocabulary change is in scope; a guidance gap alone does not block useful modeling.
+
+  ## Develop the supported account
+
+  - Obtain the requested outcome, source account, selected Viewpoint and current owners with Scope.
+  - Use _Model_Review_Skill_ to distinguish source facts, observations, Chosen decisions and unknowns.
+  - Preserve access to source evidence; a concise account is sufficient when it retains the relevant meaning.
+  - Choose the question or example most likely to clarify the current boundary; do not replay known answers just to follow a sequence.
+
+  > Task identity is clear, but reopening is unspecified — retain Task and keep reopening Open.
+  >
+  > Copy familiar product behavior into the account as a fact — BAD.
+
+  - Give an obligation one owner whose Definition supports it; an existing Term does not prove ownership.
+  - Check the complete resulting responsibilities when ownership changes.
+
+  > Task Manager hides responsibility — BAD.
+  >
+  > Task owns completion State; Complete Task owns repeated-completion behavior; Task List owns membership — clearer boundaries.
+
+  ## Seed candidates from the selected vocabulary
+
+  - Read the complete selected Viewpoint Markdown: admission, Term Kinds, section purposes, questions, retention and its authoring explanation.
+  - Its guidance takes precedence over this Skill's general guidance; adapt the method to the vocabulary instead of importing another Viewpoint's Rules or sections.
+  - Identify useful subjects and acts from evidence; the first candidate list need not be complete.
+  - Search existing meanings before committing a new identity and use _Naming_Skill_.
+  - For the first vocabulary, use its Establish the naming context section: identify core concepts, then test supporting names together before treating them as examples to copy.
+  - Provisional labels are useful during exploration; settle canonical identity before applying a rename or declaration.
+
+  ```sh
+  aterm viewpoint view domain
+  aterm term list '*Task*'
+  ```
+
+  - Examples demonstrate a vocabulary; they are not facts about the current subject.
+  - Code identifiers are evidence, not authority to copy incidental names.
+
+  ## Use questions to check coverage
+
+  - Use section questions, difference questions and missed-content questions as coverage aids.
+  - Reorder or combine questions and reuse supported answers. Investigate unanswered questions that matter to the intended claim.
+  - A frame helps express an answer and locate its section; it does not prescribe the order of thought.
+  - Add a useful practitioner question when the grid misses something; report recurring gaps without first requiring a new Skill or Viewpoint.
+  - Compare confusable candidates and ask what the chosen method has not exposed.
+
+  > A State Transition diagram reveals the missing cancellation boundary — use it, then check relevant questions.
+  >
+  > A completed review returns findings, therefore the review refused to run — BAD; findings are a result, refusal means it did not run.
+
+  ## Interpret meaning, not surface grammar
+
+  - A Definition’s head noun identifies a category, not automatically a new Term or declaration Term Kind.
+  - Consider whole answers, actual behavior and uses before splitting, merging or introducing a State.
+
+  > A and B can suggest combined responsibilities; an interval’s start and end can still define one subject.
+  >
+  > A that B can suggest a borrowed property; an active subscriber can also be a meaningful role.
+  >
+  > A or B can suggest States; card or cash can instead be payment methods.
+
+  - A substantive subject may earn a candidate; excluded detail stays on its supported owner.
+  - Put actual obligations in Rules with subject, condition and required behavior; declare supported connections as Relations.
+  - `nothing` means the source does not answer; keep it Open. `none` means the source explicitly establishes absence.
+  - Compare duplicate meanings and distinctions; renaming requires supported identity, not a prettier phrase.
+  - Reconcile affected answers and references before relying on or saving the result. Exploratory notes may keep identifiable alternatives.
+
+  ## Prune from substantive answers
+
+  - Apply the Viewpoint’s retention criteria to independent meaning, responsibilities and uses.
+  - Keep a useful subject even when discovering it exposes more questions than it answers.
+
+  > Reservation reveals expiry, cancellation and ownership questions — investigate its value; do not reject it by unknown count.
+
+  - Drop redundant or unsupported candidates with a reason. Move still-relevant obligations and unknowns to their supported owner rather than erasing them.
+  - A category, synonym or rationale alone does not establish independent content.
+
+  > An Explanation is not executable, so drop it — BAD; descriptive knowledge can have independent value.
+
+  ## Inspect whole passes, then repeat
+
+  - Inspect duplicated responsibilities, missing Relations and repeated unexplained conditions as the model evolves.
+  - Repeated actors, places or conditions are clues, not automatic Terms or States.
+  - Revisit questions and affected uses after material identity or boundary changes; avoid repeating unaffected work.
+  - Stability can support confidence, but stable names alone do not settle missing requirements.
+
+  ## Retell and find omissions
+
+  - Retell the whole model within the task's stated Scope using its canonical Terms and explicit connections; compare it with the original account, not only the latest edits.
+  - Use scenarios, tables, diagrams or experiments to discover gaps; preserve a connected Term-based retelling as the inspectable result.
+
+  > Plugin Renderer renders a Document; Document Action reaches Plugin Action Handler, which may change the Document and send a User Message.
+  >
+  > The account requires CLI and MCP, but the retelling reaches only the CLI — investigate the missing MCP path.
+
+  - For an initial model, plan two or three retelling passes; the first draft is a starting point, not completion evidence.
+  - After resolving material gaps, retell the corrected whole again; reviewing only changed Terms can miss their new interactions.
+  - Continue when another pass exposes material gaps; a pass count, stable names, Open: 0 or a clean corpus check does not prove coverage.
+  - Finish the supported scope when the latest retelling and source comparison reveal no unresolved material gap in that claim; expose blocked questions and supported partial results when evidence runs out.
+  - For a revision, bound the retelling to the affected subject and its relevant connections; a wording-only edit does not require rebuilding the model.
+  - Show important subjects and their connections; use precise Relation phrases for supported assertions.
+  - Map relevant source meaning to modeled content, explicit pending questions or justified boundaries.
+  - An unexplained noun may reveal a Term, a field, a Rule or merely ambiguous wording; investigate instead of automatically adding it.
+  - Ask what the whole account is about and what a practitioner might notice beyond the grid.
+  - Label external ideas and adopted design choices rather than presenting them as source facts.
+
+  ## Maintain the Report as the model changes
+
+  - Keep enough evidence to explain supported meaning, important decisions, identity changes and material uncertainty.
+  - A complex revision may benefit from Terms, Relations, Rules, Given, Chosen, Non-goal, Differs, Renamed, Split, Merged, Dropped, Asked and Open records.
+  - A small change can use a concise comparison; the Report is an aid, not a required transcript of thought.
+  - Given records supported facts; Chosen records adopted decisions; Non-goal records a justified boundary; Open records missing knowledge and what it blocks.
+
+  > Open: retry behavior unknown; blocks the retry Rule and implementation — useful.
+  >
+  > Open: 12, all closable — not evidence that anything is settled.
+
+  ## Return a consistent final state
+
+  - State what the result claims to cover and what remains unresolved.
+  - End a modeling report by explaining the resulting connected model to the user with its canonical Terms, including material conditions, outcomes and unresolved boundaries.
+  - A Term inventory, change list or link to a report cannot replace this explanation; ordinary connective prose is welcome.
+
+  > Added Document Action and Plugin Action Handler — a change list.
+  >
+  > A Document Action carries the rendered Document Version to the Plugin Action Handler; a changed version refuses the write — a model explanation.
+
+  - If explaining the result exposes another gap, resolve it and retell the affected whole again, or identify the Open boundary instead of claiming completion.
+  - Settle a question before writing a Rule or performing an operation whose validity depends on its answer.
+  - Supported independent facts and Rules can be saved with explicit uncertainty when authorized and permitted by Scope and Schema.
+  - Preserve structural validation and established behavioral contracts; do not hide required missing behavior in Remarks.
+
+  > Confirmed lodging with pending transport — useful partial knowledge.
+  >
+  > Invent a departure time to make Open: none — BAD.
+
+  - Do not claim whole-model completeness while in-scope questions remain. Ask about consequential blocked choices and continue authorized independent work.
+  - A model-only revision returns its baseline, supported changes and affected-use preservation/migration plan to the applying caller.
+
+  ## Save a new model
+
+  - Draft supported Term Declarations using the selected Knowledge boundaries and Schemas; declare every non-self reference.
+  - Use _Model_Review_Skill_ to check ownership and source coverage. Existing current evidence can satisfy the review without replaying the method.
+  - Resolve findings that undermine the saved claims; keep permitted pending questions explicit.
+  - Validate the candidate with guarded dry-run or an isolated corpus when the change needs it.
+  - Use _Corpus_Authoring_Skill_ to apply the accepted change and verify the saved result.
+  - Return what was saved, its supported boundary, remaining questions and verification limits.
+
+  ## Revise an existing model
+
+  - Preserve the original baseline; examine affected responsibilities and dependencies.
+
+  > Add account permissions to Task List because its file exists — BAD.
+  >
+  > Compare its Definition with the new responsibility and settle the owner — GOOD.
+
+  - Plan splits, merges, renames or moves from supported identities and boundaries.
+  - Use _Corpus_Reading_Skill_ to trace affected uses and _Model_Review_Skill_ to compare meaning and coverage.
+  - Include preservation and migration changes in the accepted draft; a wording-only correction does not require a migration exercise.
+  - Apply through _Corpus_Authoring_Skill_; verify affected saved uses, reference closure and the stated semantic boundary.
+  - Report blockers and partial results precisely; review and structural validity alone do not establish complete knowledge.
+.reminder
+  - Preserve source evidence and baseline; distinguish facts, Chosen decisions and Open questions.
+  - Choose useful questions, examples or experiments; grammar and unknown counts are clues, not decisions.
+  - Retain independent meaning; reconcile identities and check relevant source coverage.
+  - Resolve unknowns before dependent Rules or actions; permitted partial knowledge can remain explicit.
+  - Retell with canonical Terms, compare the original account, resolve gaps and retell the corrected whole; expect two or three passes for a first model.
+  - End the user report with the connected Term-based explanation and Open boundaries; pass counts and clean checks do not prove completeness.
+  - A model-only revision returns its impact plan; authorized writes use Corpus Authoring Skill and verify affected saved uses.
+}
+
+skill _Viewpoint_Authoring_Skill_ = {
+  A Skill for designing, evaluating and maintaining a Viewpoint and its Term Kind schemas.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Naming_Skill_
+  requires _Corpus_Authoring_Skill_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Schema_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Viewpoint_Design_Rule_
+  derived_from _aterm:Viewpoint_Syntax_Reference_
+  derived_from _aterm:Term_Kind_Syntax_Reference_
+  derived_from _aterm:Distinct_Term_Kind_Rule_
+  derived_from _aterm:Section_Purpose_Rule_
+  derived_from _aterm:Question_Design_Rule_
+  derived_from _aterm:Account_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Draft_
+  derived_from _aterm:Viewpoint_Authoring_Method_
+  derived_from _aterm:Term_Kind_Definition_Procedure_
+  derived_from _aterm:Vocabulary_Evaluation_Procedure_
+  derived_from _aterm:Question_Evaluation_Guidance_
+  derived_from _aterm:Evaluation_Evidence_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Schema_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Account_
+  derived_from _aterm:Evaluation_Evidence_
+  derived_from _aterm:Structural_Validation_Guidance_
+  derived_from _aterm:Term_Kind_Definition_Procedure_
+  derived_from _aterm:Vocabulary_Evaluation_Procedure_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Evaluation_Evidence_
+  derived_from _aterm:Term_Kind_Authoring_Guidance_
+  derived_from _aterm:Structural_Validation_Guidance_
+  derived_from _aterm:Term_Kind_Definition_Procedure_
+  derived_from _aterm:Vocabulary_Evaluation_Procedure_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Schema_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Evaluation_Evidence_
+  derived_from _aterm:Term_Kind_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Question_Evaluation_Guidance_
+  derived_from _aterm:Term_Kind_Definition_Procedure_
+  derived_from _aterm:Vocabulary_Evaluation_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Schema_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Viewpoint_Usage_Guide_
+  derived_from _aterm:Schema_
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Evaluation_Evidence_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Question_Evaluation_Guidance_
+  derived_from _aterm:Term_Kind_Definition_Procedure_
+  derived_from _aterm:Vocabulary_Evaluation_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  references _Corpus_Reading_Skill_
+.description
+  Use to create or revise a modeling perspective, Term Kind boundaries, section purposes or questions, including migration of affected Term Declarations.
+.body
+  ## Choose the vocabulary change
+
+  - Use the shared design, Term Kind-definition and evaluation sections for both new and revised vocabulary.
+  - Then choose Create and bind a Viewpoint, Add a Term Kind, Revise a Term Kind, or Revise the perspective.
+  - When existing uses are affected, read the change-impact section of _Corpus_Reading_Skill_ before finalizing migration, then return with preservation decisions.
+  - A vocabulary-only request does not imply modeling every subject it could admit.
+
+  ## Define the perspective
+
+  - Begin with real subjects and questions the current vocabulary cannot express well.
+  - Develop Scope, admission and retention criteria with representative examples. Examples-first exploration and provisional Term Kinds are valid; settle their agreement before accepting the vocabulary.
+
+  > Inventory admits stock identity and stock-change Rules; a screen Widget is outside that perspective unless an inventory Rule depends on it.
+
+  - Do not add a Term Kind for a different spelling of the same role.
+  - A Principle is a decision criterion; a behavior is an act; a reusable Procedure explains how to perform acts.
+  - Names identify subjects independently of declaration Term Kind and surrounding follow/read/invoke.
+
+  ## A complete Viewpoint document
+
+  ```markdown
+  ---
+  name: inventory
+  description: Stock identity and availability.
+  termKinds:
+    - name: item
+      description: A separately tracked stock identity.
+      sections:
+        - name: definition
+          type: md
+          description: What distinguishes this item.
+          question: What makes this item distinct?
+        - name: rules
+          type: md
+          description: Conditions that hold for this stock identity.
+          question: What stays true for this item? The item must ___
+          example: The item keeps its identity when its display label changes.
+  ---
+  Admit separately tracked stock identities.
+  Keep a Term when its stock obligations cannot remain a field on another owner.
+  Exclude screen layout and storage adapters.
+  ```
+
+  - Put the YAML between frontmatter fences; the remaining Markdown teaches admission, retention, examples and Viewpoint-specific authoring instructions.
+  - Keep instructions specific to this vocabulary in this Markdown, not a dedicated operational Skill. Common Skills read and apply it.
+  - State how to write and review its Terms; its guidance takes precedence over general Skill guidance within its vocabulary, while user instructions, Scope and required validation/review remain in force.
+  - In question, text after the first ? is the answer frame; example shows a sample answer. These teach how to answer and do not prefill obligations on every Term Declaration. Refusal conditions belong on the refusing behavior, not on this identity-only Term Kind.
+  - Viewpoint names use letters, digits and hyphens, beginning with a letter; Knowledge IDs use lowercase_snake_case.
+  - `viewpoint create inventory` creates and binds the document; `viewpoint edit inventory` replaces it.
+  - A Knowledge opts in with @viewpoints inventory; a colliding Term Kind is qualified as inventory.item.
+  - Definition is the first section. The reserved relations section is supplied by Aterm; do not declare it.
+  - Use md for prose/examples and yaml/json for structured data; use exact section keys in selectors.
+  - Remarks explain decisions rather than hide operational obligations.
+
+  ## Questions that earn their place
+
+  - A section owns a distinct question family; one sample heading does not justify a section.
+  - Give each question one destination and inspectable answer, with an applicable frame and example.
+
+  > Describe this — BAD.
+  >
+  > What stays unchanged when this operation fails? — GOOD.
+
+  - Omit sections a Term Kind cannot meaningfully fill.
+  - Test admission, retention, confusable subjects and a nearby subject that should be rejected.
+  - Freeze expectations before a claimed regression comparison; exploratory observations may help discover criteria but are not independent validation of those criteria.
+  - For schema changes, inventory affected Term Declarations and decide what each migration must preserve.
+  - If migration requires invalid intermediate files, use guarded raw writes, repair all affected Knowledges, then check before semantic authoring resumes.
+
+  ## Define each Term Kind
+
+  1. Obtain the task, selected Viewpoint and representative evaluation examples.
+  2. State the Term Kind's meaning and its distinction from neighboring Term Kinds.
+  3. Select sections with distinct, applicable purposes.
+  4. Put each question and its frame in the schema section's question string and its sample answer in example, as shown above; keep admission and retention guidance in the Markdown body.
+  5. Test representative Terms for meaningful answers and missing distinctions.
+
+  Return a Term Kind schema with Definition, sections, questions and examples.
+  Completion: the Term Kind has an explicit boundary and every section has a meaningful purpose.
+  A spelling change alone is not evidence for a new Term Kind.
+
+  ## Evaluate against expectations
+
+  1. Obtain the proposed vocabulary, representative accounts and relevant boundary/regression cases.
+  2. For a regression claim, record source-grounded expectations or a supported baseline before evaluating. For exploration, record what examples teach, then use separate cases to check the resulting criteria.
+  3. Apply the draft under its intended perspective.
+  4. Compare discovered subjects and question yield with those recorded expectations.
+
+  > Approve because every question got an answer — BAD.
+  >
+  > A payment refusal in the account was missed: identify whether admission, Term Kind Definition or a question failed — GOOD.
+
+  5. Separate definition/admission misses from questions that produce no substantive content.
+  6. Return findings, observed evidence and proposed corrections; identify unavailable evidence explicitly.
+
+
+  This evaluation returns findings before the draft is accepted. The caller resolves them and repeats affected cases on the final draft.
+  Claims are limited to observed results; a single successful example does not establish general quality.
+
+  ## Create and bind a Viewpoint
+
+  1. Obtain the task, intended Home, source accounts and expected evaluation results.
+  2. Define perspective, Scope, admission and retention criteria using the “Define the perspective” section.
+
+  > An inventory perspective admits Item identity and stock-change Rules; it rejects a screen Widget unless inventory behavior requires that identity.
+
+  3. Follow the “Define each Term Kind” section for every intended Term Kind.
+  4. Assemble the complete Viewpoint document and intended Home binding as a draft.
+  5. Follow the “Evaluate against expectations” section.
+  6. Resolve findings and repeat affected cases after corrections; accept only the final evaluated draft.
+  7. Preview viewpoint create NAME with complete Markdown on stdin or --file, then apply it.
+
+  ```sh
+  aterm viewpoint create inventory --file inventory.md --dry-run
+  aterm viewpoint create inventory --file inventory.md
+  aterm viewpoint view inventory
+  ```
+
+  8. Perform _Corpus_Authoring_Skill_ (“Check the actual state”) on the final saved state.
+  9. Require both successful structural validation and evidence for the stated vocabulary purpose; return unsupported decisions or blocking diagnostics as incomplete.
+
+
+  Return the bound Viewpoint, Term Kind schemas and evaluation evidence.
+  A structurally valid vocabulary without evidence for its intended distinctions is not a completed result.
+
+  ## Add a Term Kind
+
+  1. Read the current Viewpoint and obtain the task and representative evaluation expectations.
+  2. Follow the “Define each Term Kind” section.
+
+  > A single sample has a new heading, so add a Term Kind — BAD.
+  >
+  > Repeated questions about inputs, repeat behavior and refusal justify a behavior-oriented distinction; test Complete Task against Task identity — GOOD.
+
+  3. Follow the “Evaluate against expectations” section; resolve findings and repeat affected cases after correction.
+  4. Accept only the final evaluated draft; add the Term Kind to its owning Viewpoint without a conflicting meaning.
+
+  ```sh
+  aterm viewpoint edit inventory --file inventory.md --dry-run
+  ```
+
+  5. Apply the reviewed complete document and perform _Corpus_Authoring_Skill_ (“Check the actual state”) on the final state.
+  6. Require evidence for admission, distinction and section purposes; return unsupported decisions or blocking diagnostics as incomplete.
+
+  ## Revise a Term Kind and migrate its uses
+
+  1. Record the original baseline and preliminary affected uses.
+  2. Follow the “Define each Term Kind” section and the “Evaluate against expectations” section.
+  3. Resolve findings and repeat affected cases; accept only the final evaluated draft and return unsupported decisions explicitly.
+  4. Plan a compatible sequence of schema and Term Declaration changes.
+
+  > Split contract into two sections and check only the new schema — BAD.
+  >
+  > Map every old obligation and section reference to its new destination — GOOD.
+
+  5. Update the change set from the accepted draft and original baseline, including revised identities, boundaries and source selection.
+  6. Perform _Corpus_Reading_Skill_ (“Trace change impact”) and finalize preservation/migration verification.
+  7. Apply the revised Term Kind and migrate Term Declarations in the planned order using guarded whole-Viewpoint, Term Declaration or raw-file operations as appropriate; record intended meaning changes.
+  8. Perform _Corpus_Authoring_Skill_ (“Check the actual state”); require successful final validation and evidence for the vocabulary purpose.
+  9. Execute the preservation plan against saved schemas and Term Declarations; reopen impact review if later corrections change affected uses.
+
+  Completion: the observed problem is addressed without undisposed compatibility or coverage gaps; otherwise return incomplete.
+
+  ## Revise the perspective
+
+  1. Record the original baseline and preliminary affected uses before deciding the final migration.
+  2. Locate the issue in purpose, definitions, admission, retention, sections or questions.
+
+  > Expand inventory into purchasing and silently reinterpret Item — BAD.
+  >
+  > State the new boundary and identify every affected Term Declaration — GOOD.
+
+  3. When a Term Kind Definition or its sections need revision, follow the “Define each Term Kind” section.
+  4. Draft changes on the owning guidance, making intended changes explicit.
+  5. Follow the “Evaluate against expectations” section; resolve findings and repeat affected cases after corrections.
+  6. Accept only the final evaluated draft; plan a compatible sequence of schema, Term Declaration and configuration changes.
+  7. Update the change set from that draft and the original baseline, including identity, boundary and source-selection changes.
+  8. Perform _Corpus_Reading_Skill_ (“Trace change impact”) and finalize the migration verification plan.
+  9. Apply the sequence with the appropriate guarded source or Term-addressed operation at each stage.
+  10. Perform _Corpus_Authoring_Skill_ (“Check the actual state”); require successful validation and evidence for the vocabulary purpose.
+  11. Check preservation against saved schemas and Term Declarations; reopen impact review if corrections change affected uses.
+
+  Return the revised Viewpoint, migration results and comparative evidence. Every affected use must remain valid or be migrated, and the motivating findings must be addressed; otherwise report incomplete.
+.reminder
+  - Before accepting vocabulary, check agreement among purpose, admission, retention, Term Kinds and sections; exploration may begin with examples.
+  - Give each Term Kind a distinct boundary and each section useful questions and examples.
+  - Freeze expectations before a regression claim; use representative, nearby and rejected subjects to explore and test the vocabulary.
+  - Resolve findings before accepting the final draft; one example does not establish general quality.
+  - For revisions, preserve the baseline and map every affected obligation and section reference.
+  - Apply the compatible sequence through Corpus Authoring Skill; verify saved structure and vocabulary purpose.
+}
+
+skill _Specification_Implementation_Skill_ = {
+  A Skill for changing justified obligations and synchronizing their specification with implementation.
+.relations
+  derived_from _aterm:Viewpoint_
+  derived_from _aterm:Method_Selection_Principle_
+  requires _Corpus_Authoring_Skill_
+  requires _Model_Review_Skill_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Account_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Target_Context_
+  derived_from _aterm:Account_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Source_Authoring_
+  derived_from _aterm:Workspace_File_Access_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Syntax_
+  derived_from _aterm:Edit_Term_Declarations_
+  derived_from _aterm:Rename_Corpus_Identities_
+  derived_from _aterm:Move_Terms_
+  derived_from _aterm:Knowledge_
+  derived_from _aterm:Viewpoint_Input_Contract_
+  derived_from _aterm:Model_
+  derived_from _aterm:Model_Authoring_Guidance_
+  derived_from _aterm:Change_Review_Guidance_
+  derived_from _aterm:Ownership_Check_Procedure_
+  derived_from _aterm:Model_Development_Procedure_
+  derived_from _aterm:Change_Impact_Review_Procedure_
+  derived_from _aterm:Semantic_Review_Procedure_
+  derived_from _aterm:Corpus_Change_Application_Procedure_
+  derived_from _aterm:Modeling_Convergence_Procedure_
+  derived_from _aterm:Model_Term_Declaration_Completion_Procedure_
+  derived_from _aterm:Modeling_Coverage_Check_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  derived_from _aterm:Consistent_Naming_Principle_
+  derived_from _aterm:Semantic_Review_Guidance_
+  derived_from _aterm:Corpus_Validation_Procedure_
+  derived_from _aterm:Specification_Synchronization_Rule_
+  references _Modeling_Skill_
+.description
+  Use to add or revise Rules, implement specified behavior or repair code while preserving justified ownership and Scope coverage.
+.body
+  ## Choose the intended effect
+
+  - A Rule-only change uses the ownership and Rule-writing section below.
+  - An implementation task also uses Resolve the intended behavior and Implement and verify both sides.
+  - Do not infer a code change from a request to discuss or revise a specification alone.
+  - Read the selected Viewpoint Markdown; its guidance takes precedence over general Skill guidance. This Skill does not require the specification Viewpoint or a contract section; use the actual vocabulary for supported obligations.
+  - Choose a reasoning order that clarifies behavior and ownership. Reuse current review evidence across the sections below; a route label does not require a second identical review.
+  - Resolve missing decisions before dependent implementation; supported independent work may continue with explicit pending questions.
+
+  ## Establish ownership and preserve closure
+
+  1. Perform _Model_Review_Skill_ (“Check the resulting responsibility”).
+  2. If a subject is missing, an identity conflicts or ownership is unresolved, use _Modeling_Skill_ (“Choose the entry condition” through “Return a consistent final state”) for a new or revised model without saving. Return with settled owners for the proposed obligations, explicit remaining questions and any revision impact plan; include the accepted model and preservation/migration changes in this task's final change set.
+  3. Write supported obligations on their owners with one obligation per bullet, using _Corpus_Authoring_Skill_.
+
+  > The completion filter requires only active Tasks — incomplete if matches may be omitted.
+  >
+  > The filter returns every active Task and no completed Task; Task owns completion state — precise ownership and coverage.
+
+  4. Perform _Model_Review_Skill_ (“Review the complete subject”) and resolve findings before accepting the draft.
+  5. Repeat affected ownership, semantic and application checks after corrections; derive the change set from the accepted draft and original baseline.
+  6. Return blockers instead of applying an unaccepted state; otherwise perform _Corpus_Authoring_Skill_ (“Apply and verify”).
+
+  After application, verify affected saved uses against any revision impact plan. Return updated Rules and ownership/coverage evidence. Completion requires that obligations are neither duplicated across owners nor unsupported by their Definitions.
+
+  ## Resolve the intended behavior
+
+  1. Read complete owners and Knowledge Scope before coding; obtain the account, current implementation and proposed change.
+  2. Perform _Model_Review_Skill_ (“Check the resulting responsibility”) and compare code, specification and intended behavior.
+  3. Choose whether code or specification must change from user intent and evidence; existing code alone cannot justify weakening a contract.
+
+  > A filter drops a matching Task; weaken the every-match requirement — BAD.
+  >
+  > Preserve the requirement, fix the filter and test the omitted-match case — GOOD.
+
+  - Treat missing in-scope requirements as specification gaps. Add supported requirements and record new decisions as Chosen.
+  - Do not infer Scope from filenames, silently widen it or turn incidental implementation details into obligations.
+  - Expose consequential unresolved choices; if identity or ownership is unsettled, use the model-only route in _Modeling_Skill_ and resume dependent implementation when its identities and required decisions are supported.
+
+  ## Implement and verify both sides
+
+  4. When required behavior changes, follow the “Establish ownership and preserve closure” section.
+  5. Implement the agreed behavior and synchronize its owning specification in the same task.
+  6. For unchanged intended behavior, preserve the contract and record correction rationale and verification in its explanatory section.
+
+  > Invent a behavioral requirement just to obtain a SPEC diff — BAD.
+  >
+  > Record the behavior-preserving fix and the scenario that verifies it — GOOD.
+
+  7. Describe changed inputs, defaults, conditions, refusals, result information and state changes; form any additional specification change set.
+  8. Review additional specification changes with _Model_Review_Skill_ (“Check the resulting responsibility” and “Review the complete subject”). Resolve findings and repeat affected checks before accepting the draft; only then perform _Corpus_Authoring_Skill_ (“Apply and verify”).
+  9. Perform _Model_Review_Skill_ (“Review the complete subject”) and _Corpus_Authoring_Skill_ (“Check the actual state”); run implementation tests that can contradict the claimed behavior.
+  10. Compare code/specification diffs and Scope coverage. Resolve findings that undermine behavior, ownership or consistency; rebuild and refresh affected checks after correction.
+  11. If required evidence is unavailable or blocking findings remain, report incomplete with affected Term Declarations and unresolved gaps. Otherwise report the verified behavior, synchronized Term Declarations and evidence.
+
+  Completion: evidence supports the implemented behavior and its specification has justified ownership. A clean corpus check alone does not establish semantic or implementation correctness.
+.reminder
+  - Justify one owner per obligation; unresolved meaning returns to Modeling Skill.
+  - Compare intent, complete owners, Scope and code; code alone cannot weaken a contract.
+  - Write one supported obligation per bullet; resolve semantic findings before saving.
+  - Synchronize implementation and specification in the same task when code changes.
+  - Explain behavior-preserving fixes without inventing requirements.
+  - Test scenarios that could contradict the claim; compare both diffs and final coverage.
+}
+
+
+skill _Runtime_Management_Skill_ = {
+  A Skill for configuring Aterm, preparing its services and search, and managing installed Skill connections.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  derived_from _aterm:Usage_Log_
+  requires _Aterm_Basics_Skill_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Configuration_
+  derived_from _aterm:HTTP_Server_
+  derived_from _aterm:MCP_Server_
+  derived_from _aterm:Skill_Installation_Management_Procedure_
+  derived_from _aterm:Guidance_Catalog_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Runtime_Configuration_Guidance_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Configuration_
+  derived_from _aterm:HTTP_Server_
+  derived_from _aterm:MCP_Server_
+  derived_from _aterm:Skill_Installation_Management_Procedure_
+  derived_from _aterm:Guidance_Catalog_
+  derived_from _aterm:Runtime_Configuration_Guidance_
+  derived_from _aterm:Server_Configuration_Procedure_
+  derived_from _aterm:Configuration_
+  derived_from _aterm:Task_
+  derived_from _aterm:Environment_
+  derived_from _aterm:Change_Set_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Skill_Installation_Guidance_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:Configuration_
+  derived_from _aterm:HTTP_Server_
+  derived_from _aterm:MCP_Server_
+  derived_from _aterm:Skill_Installation_Management_Procedure_
+  derived_from _aterm:Guidance_Catalog_
+  derived_from _aterm:Skill_Installation_Guidance_
+  derived_from _aterm:Skill_Installation_Management_Procedure_
+  derived_from _aterm:Change_Set_
+.description
+  Use for Home and source configuration, server or MCP lifecycle, search preparation, and managed Skill install, update or uninstall.
+.body
+  ## Choose the runtime operation
+
+  - Select the intended environment before configuration, service, index or installation work.
+  - Run only the applicable operation; configuring a Home does not require restarting a server or reinstalling Skills.
+  - If the requested mode is unavailable, explain the limitation and propose a supported alternative. Use it only when it satisfies the authorized outcome; do not silently change the target environment or bypass lifecycle constraints.
+
+  ## Select the environment before changing it
+
+  - Obtain the requested outcome, intended executable, Home and current effective settings.
+  - For a persistent edit, save the original baseline and proposed diff; preparation-only work does not require an invented source change.
+  - Configuration lives in the selected .aterm/aterm.yaml. Sources and externalSources resolve from its Workspace; Viewpoint bindings resolve from Home.
+
+  ```yaml
+  sources: [docs]
+  useDefaultKnowledge: true
+  useViewpoints: [specification, generic, domain, skill]
+  allowDefaultWrites: false
+  externalSources:
+    core: packages/core/src/**/*.ts
+  server:
+    host: 127.0.0.1
+    port: 43127
+    debounceMs: 200
+    watchExternal: true
+  ```
+
+  - Confirm path bases before moving configuration between projects.
+
+  > `.aterm/aterm.yaml` + `sources: [docs]` selects Workspace/docs — GOOD.
+  >
+  > Assume the same source selects Workspace/.aterm/docs — BAD.
+
+  - externalSources participates in search and rename even without a server; named matches appear as ext.core.
+  - After init, packaged Skills are available without adding package docs to sources.
+  - After changing source, inspect recorded ownership in “Establish what is managed”, then “Choose the lifecycle operation”: install for an absent managed installation, update for an existing one.
+  - useDefaultKnowledge: false hides implicit package Knowledge from ordinary corpus queries; Skill reading still use packaged guidance.
+  - useViewpoints selects the built-in specification, generic, domain and skill vocabularies; omit it for all four, or use [] for none. Custom viewpoints bindings add or override names.
+  - Packaged Knowledge and Viewpoints are read-only unless allowDefaultWrites is true; explicit source paths do not bypass protection.
+
+  > Hide defaults: useDefaultKnowledge: false + useViewpoints: [] — skill view still reads packaged guidance.
+  >
+  > Author a project Knowledge with project content; opt into default writes only when editing the package itself.
+  - Do not silently widen source selection or replace a global installation while configuring one project.
+
+  ## Run the intended service
+
+  ```sh
+  aterm --home /work/project/.aterm corpus check
+  # Choose one startup mode; these are alternatives.
+  aterm --home /work/project/.aterm server run
+  aterm --home /work/project/.aterm mcp run
+  aterm --home /work/project/.aterm mcp run --with-server
+  ```
+
+  - --home applies to one invocation; keep it on each command when working outside the target Workspace.
+  - Standalone mcp run is client-managed stdio: normal server discovery for reads, otherwise direct filesystem access.
+  - --with-server hosts stdio and HTTP in one process, requires a configured or explicit port, refuses an occupied port and stops HTTP when stdio closes.
+  - server run serves remote MCP at /mcp. Remote paths refer to that server's Workspace.
+  - Stdio stdout carries only MCP protocol; diagnostics belong on stderr.
+  - Server reads use a watched snapshot; debounceMs batches filesystem changes. watchExternal: false disables background external-source watching, not explicit source queries.
+  - Automatic local CLI and standalone stdio writes go directly to files; allow debounce or verify the final filesystem state.
+  - Hosted stdio, remote HTTP MCP and explicit --server writes publish before completion.
+  - host: 127.0.0.1 is local-only; 0.0.0.0 listens on IPv4 interfaces; :: selects IPv6 interfaces.
+  - For external controllers, configure a controlToken of at least 32 characters and provide it to the client; use a proxy for HTTPS and authentication.
+  - Set publicOrigin to the externally presented origin behind a proxy. Public corpus reads and authenticated controls have different access rules.
+  - Inspect the current server identity before restarting it. New installed code and changed host, port or token need a restart.
+
+  > CLI --version changed, therefore an old running server has new code — BAD.
+  >
+  > Restart the intended server and verify its health and behavior — GOOD.
+
+  - If another Home owns the port, select a free server.port; do not stop that unrelated server.
+  - Recovery can start with explicit --home and --port; inspect invalid configuration through file read/write with content-version guards.
+
+  ## Investigate a slow or unanswered request
+
+  - Read usage.jsonl inside the selected Home; logging is automatic for CLI, MCP and HTTP execution.
+  - Match requestId across HTTP, MCP tool and command spans; spanId identifies one layer.
+  - Compare start, phase and finish records before retrying a write.
+
+  > Last phase input: input has not finished reading. Last phase publish: the write returned and snapshot publication is pending.
+  >
+  > HTTP disconnected: read the current version and saved content before deciding whether another write is needed.
+
+  ```sh
+  tail -n 40 /work/project/.aterm/usage.jsonl
+  ```
+
+  - HTTP responses expose X-Aterm-Request-Id; inputBytes and output byte counts identify large payloads without recording their contents.
+  - The file stays within 5 MiB by retaining roughly the newest 4 MiB of complete records; old request records can disappear.
+  - A missing finish does not prove an unsaved write; a missing start does not prove the request never arrived if logging failed or records were removed.
+  - Log failure produces a bounded stderr warning and does not change the operation result. Stdio stdout remains MCP protocol only.
+
+  ## Prepare and verify the selected search mode
+
+  ```sh
+  aterm corpus index build
+  aterm corpus index status
+  ```
+
+  - Native embedding preparation may download a model; later semantic searches reuse local model and index data.
+  - Check readiness for the actual Home, sources, model and selected search mode.
+  - After preparation, return to the original discovery request with the same intent, mode and source selection.
+  - Do not silently replace semantic or hybrid discovery with lexical search when preparation fails.
+  - Confirm effective source selection, server behavior or index readiness as applicable; report unsuccessful and unverified effects explicitly.
+  - Installation, synchronization and server/MCP lifecycle management are local-only operations. Remote corpus and index commands remain available.
+
+  ## Establish what is managed
+
+  - Read the authoritative Skill sources, managed-name manifest, current generated documents and configured Agent connections.
+  - Retain the original baseline, intended changes, proposed diff, affected files, selected sources and verification obligations through installation retries.
+  - Skill discovery, reading, MCP and installation share one package-plus-Home catalog, independently of ordinary default-resource visibility.
+  - Names derive from complete qualified Terms, lowercased with underscores and the namespace separator changed to hyphens; invalid or colliding names are refused.
+  - Run skill update to replace the previous managed set; configured sync/uninstall commands update Agent connections and remove stale managed names.
+  - Change authoritative corpus content; installed SKILL.md files are snapshots.
+
+  > Fix a generated SKILL.md and lose the change at update — BAD.
+  >
+  > Fix the corpus source, inspect its rendered output, then update — GOOD.
+
+  - Each installed SKILL.md contains the exact generated TOC; other Term Kinds are not installed merely because they are referenced.
+  - Inventory presence does not prove installation, synchronization or activation in an already running Agent.
+
+  ## Choose the lifecycle operation
+
+  ```sh
+  aterm skill list
+  aterm skill install
+  aterm skill update
+  aterm skill uninstall
+  ```
+
+  - Use install when no managed installation is recorded; use update to synchronize changed content and removed names from an existing recorded installation.
+  - uninstall removes the recorded managed names; do not infer ownership from a matching directory name.
+  - Aterm stages generated content under .aterm/skills and tracks ownership and pending synchronization in its manifest.
+  - Inspect complete generated Markdown, current and removed names, manifest membership and each synchronization outcome.
+  - Preserve user-modified, unmanaged and legacy files when an ownership guard refuses the operation; resolve the conflict before retrying.
+
+  > A directory has the right Skill name, so overwrite it — BAD.
+  >
+  > Verify its recorded ownership and current content first — GOOD.
+
+  ## Synchronize the intended Agents
+
+  - skills.sync and skills.uninstall must be supplied together or omitted together; they are Bash commands; read their current templates and documented environment before changing them.
+  - init supplies project-scoped npx skills connections for Claude Code and Codex; these commands may need network access.
+  - Default removal covers managed names across all Agents so stale shared-directory links do not remain.
+  - That removal can affect another Agent's connection to the same managed name; inspect the intended name set before running it.
+  - The synchronization environment supplies absolute paths and current/removed Skill-name lists; preserve those meanings when customizing commands.
+  - Without configured synchronization, generated local documents do not imply Agent connections.
+  - On partial failure, preserve the recorded recovery state, inspect completed effects and retry the intended pending operation.
+  - An Agent that already read an older Skill does not automatically replace that conversation context after filesystem update.
+
+  Completion: source targets, complete generated documents, manifest membership and applicable Agent synchronization match the request. Report failures and pending or unverified effects explicitly. Run this lifecycle locally; remote MCP does not install Skills on the client machine.
+.reminder
+  - An unavailable mode calls for an explicit supported alternative, not a silent environment change.
+  - Confirm executable, Home and effective settings; preserve the edit baseline.
+  - Sources are Workspace-relative; Viewpoint bindings are Home-relative.
+  - Verify the intended server and published state; account for debounce and occupied ports.
+  - Prepare the requested discovery mode and current index without silently changing modes.
+  - Change authoritative Skill sources; select lifecycle operations from recorded ownership.
+  - Verify generated TOCs, manifest and Agent synchronization; preserve modified files and pending recovery state.
+  - Installation does not replace context already read by a running Agent.
+}
+
+skill _Explorer_Presentation_Skill_ = {
+  A Skill for presenting Terms, a Working Set and explanatory Notes in an intended browser Session.
+.relations
+  derived_from _aterm:Method_Selection_Principle_
+  derived_from _aterm:GraphQL_Workspace_
+  derived_from _aterm:Saved_GraphQL_Query_
+  requires _Corpus_Reading_Skill_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:UI_Session_
+  derived_from _aterm:Control_UI_
+  derived_from _aterm:Markdown_Note_
+  derived_from _aterm:Environment_
+  derived_from _aterm:UI_Context_
+  derived_from _aterm:Aterm_Basics_Guide_
+  derived_from _aterm:Explorer_Control_Guidance_
+  derived_from _aterm:Query_Selection_Guidance_
+  derived_from _aterm:Command_Invocation_Guide_
+  derived_from _aterm:UI_Session_
+  derived_from _aterm:Control_UI_
+  derived_from _aterm:Markdown_Note_
+  derived_from _aterm:Explorer_Control_Guidance_
+  derived_from _aterm:Explorer_Presentation_Procedure_
+  derived_from _aterm:UI_Context_
+  references _Runtime_Management_Skill_
+.description
+  Use when an Agent should show or explain corpus information in an already connected Aterm browser.
+.body
+  ## Select the intended Session
+
+  ```sh
+  aterm ui session list
+  aterm ui session view SESSION
+  ```
+
+  - Obtain the intended server and browser Session, requested UI outcome and exact qualified Term identities.
+  - If the intended Home has no running server and the task requires starting it, use _Runtime_Management_Skill_ (“Select the environment before changing it” and “Run the intended service”). Then refresh Session discovery; starting a server does not create the intended browser Session.
+  - Session UUIDs survive reconnects; a prefix of at least six characters must identify one Session uniquely.
+  - Inspect location, readiness and visibility; last activity and heartbeat/last-seen time answer different questions.
+  - Session ordering alone does not identify the user's intended browser.
+  - If no intended connected Session is available, report unavailable and offer a useful alternative such as a Markdown explanation. Do not claim UI success, open another browser or choose a different Session silently.
+  - Resolve exact qualified Terms before sending UI commands; these commands do not use selector globs or --knowledge to resolve ambiguity.
+
+  ## Choose the state to change
+
+  | Command | Effect |
+  |---|---|
+  | ui open TERM --session SESSION | Replace the Working Set with one Term and show Term Declarations with Context. |
+  | ui explore set TERM... --session SESSION | Replace the Working Set and arrange/fit it in Explore. |
+  | ui explore add TERM... --session SESSION | Add Terms; retain surviving positions and camera. |
+  | ui explore remove TERM... --session SESSION | Remove Terms; retain surviving positions and camera. |
+  | ui explore clear --session SESSION | Empty the Working Set; keep Context and camera. |
+  | ui note send --session SESSION --file NOTE.md | Cache the Markdown Note and open Note; preserve the main view. |
+
+  - Term Declarations, References and Graph Explore share an ordered Working Set; Structure shows the corpus hierarchy.
+  - Tree Term-name clicks replace membership; checkboxes toggle it; Knowledge/Group checkboxes include matching collapsed descendants.
+  - Reader links open Context; dragging a Term into the main view adds membership.
+  - Working Set, Context, Note and graph Selection are independent states; choose commands by the requested effect.
+
+  > Send a Note and claim the graph's Working Set changed — BAD.
+  >
+  > Apply the Explore set, confirm it, then send the explanation Note — GOOD.
+
+  ```sh
+  aterm ui explore set _vending_machine:Slot_ _vending_machine:Product_ --session SESSION
+  aterm ui note send --session SESSION --file explanation.md
+  ```
+
+  ## Reuse a Query in the browser
+
+  - For an interactive query task, open GraphQL in the intended browser's application menu; its route is /queries.
+  - This section describes browser controls. The ui command vocabulary above does not open the Query editor, save Queries or run them.
+  - Use the prerequisite Corpus Reading Skill's “Pass reusable parameters” section for variables and bindings.
+  - Choose Trip date and related Terms, then set $knowledge and $date under Parameters.
+
+  > $knowledge = japan_trip; $date = 2026-10-28 — finds matching structured scalar dates and directly connected Terms.
+
+  - Inspect actual section values first; the example matches exact values, not dates inferred from names or prose, and does not compute recursive closure.
+  - A parameter checkbox supplies or omits that variable; Variables JSON handles null, lists and objects. Select an operation name for a multi-operation document.
+  - Run query executes the current values; changing parameters invalidates results. Cancel prevents a late response from replacing the current view.
+  - Name and Save a reusable Query. Reload it from Saved queries; Save a copy creates a separate preset. Editing the name and saving renames it; deletion requires confirmation.
+  - Saving or loading does not run the Query. Unsaved edits require an explicit discard when switching documents.
+  - Saved Queries belong to this browser origin and Home; they do not synchronize to another device or become corpus Terms.
+  - If storage fails or another tab changed the saved record, retain the draft and resolve the failure or save a copy; do not claim it was saved.
+  - Include canonical Term id fields in the response to enable View Terms or Explore. Both replace Working Set membership; View Terms opens Term Declarations and Explore opens the returned Terms in Explore.
+
+  > Click a result Term to read Context; choose View Terms to compare the returned Terms together.
+
+  - Inspect errors and pageInfo before presenting results; when more pages remain, supply the corresponding endCursor parameter and rerun. Each run represents its returned pages, not an accumulated complete set.
+  - Returning to Explorer preserves the Working Set; returning to GraphQL within the same browser session retains the editor draft. Save before closing the browser if the Query must be reusable.
+
+  ## Confirm the supported outcome
+
+  1. Send the command and retain its command UUID and acknowledgement.
+  2. For an unknown outcome, inspect ui command view before retrying.
+  3. Reuse --command-id with the same payload to avoid duplicate delivery; do not reuse that ID for a different command.
+  4. After expiration or server restart, compare current state before creating a fresh command ID.
+  5. Treat rejected, failed, disconnected and unavailable outcomes explicitly; an HTTP success alone is not proof that the browser applied the command.
+  6. Compare the acknowledged guarantees and observable final state with every requested UI effect; report unconfirmed when evidence cannot establish it.
+
+  - Explore commands activate Explore, preserve Context and support Undo; they do not add neighbors automatically.
+  - Check the ordered terms and view/mode separately from term, the independent Context target. A Session UUID does not persist graph geometry.
+  - After a busy or disconnected outcome, inspect readiness before another request.
+  - An applied Note acknowledgement confirms caching and the reader update; it does not prove an asynchronous Mermaid diagram has finished rendering.
+  - Note text uses --file or stdin; qualified Term tokens become links and unqualified tokens stay literal. Notes do not update the corpus.
+  - Notes retain up to ten items in browser local storage for that origin and Home. Reading an older Note does not restore its previous graph.
+  - After presenting a graph, send a concise Markdown explanation when requested; preserve the selected browser's independent state.
+.reminder
+  - When presentation is unavailable, offer an explicit alternative without claiming UI success.
+  - Select the intended connected Session by identity and readiness, not ordering alone.
+  - Resolve qualified Terms; distinguish Working Set, Context, Note and graph Selection.
+  - Retain command IDs; inspect unknown outcomes before retrying the same payload.
+  - Saved Queries are browser/Home-local; inspect errors and remaining pages before replacing the Working Set.
+  - Verify acknowledged and observable effects; applied Note does not prove Mermaid finished rendering.
+}

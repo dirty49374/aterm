@@ -1,0 +1,4 @@
+*
+!Dockerfile
+!bootstrap.mjs
+!entrypoint.sh

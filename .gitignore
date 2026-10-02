@@ -1,0 +1,40 @@
+# Dependencies and generated build artifacts
+node_modules/
+dist/
+*.tsbuildinfo
+coverage/
+packages/core/webapp/
+packages/*/LICENSE
+packages/*/THIRD_PARTY_NOTICES.md
+
+# Local evidence, experiments, notes and archived configuration
+.local/
+trials/
+tmp/
+
+# Credentials and machine-specific settings (including nested copies)
+.npmrc
+.env
+.env.*
+*.pem
+*.key
+.claude/settings.local.json
+.codex/config.toml
+.vscode/
+.idea/
+.obsidian/
+.playwright-mcp/
+.DS_Store
+*.sw[a-p]
+
+# Runtime state and generated Agent Skill installations
+.aterm/cache/
+.aterm/backups/
+.aterm/skills/
+.aterm/usage.jsonl
+.aterm/.aterm-usage-*
+.aterm-write-*
+.agents/skills/
+.claude/skills/
+.codex/skills/
+skills-lock.json

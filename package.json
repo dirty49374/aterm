@@ -1,0 +1,52 @@
+{
+  "name": "aterm",
+  "version": "0.0.13",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.26.2",
+  "bin": {
+    "aterm": "packages/cli/dist/entry.js"
+  },
+  "scripts": {
+    "aterm": "node packages/cli/dist/entry.js",
+    "build": "tsc -b && tsx tooling/executable.ts && tsx tooling/webapp.ts",
+    "release:pack": "pnpm build && pnpm --filter @aterm/core --filter @aterm/cli -r pack --pack-destination dist",
+    "check": "tsc -b && tsc -p tsconfig.tests.json",
+    "format": "prettier --write 'packages/**/*.{ts,json}' 'tooling/**/*.ts' '*.{json,ts,yaml,md}' 'docs/**/*.md' --ignore-path .gitignore",
+    "test": "pnpm build && vitest run",
+    "complexity": "node tooling/complexity/report.mjs",
+    "test:complexity": "vitest run tooling/complexity/report.test.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/shell-quote": "1.7.5",
+    "@types/ws": "8.18.1",
+    "cytoscape": "3.34.3",
+    "cytoscape-cise": "2.0.1",
+    "cytoscape-fcose": "2.2.0",
+    "elkjs": "0.12.0",
+    "esbuild": "0.28.2",
+    "graphql": "16.14.2",
+    "highlight.js": "11.12.0",
+    "markdown-it": "15.0.2",
+    "markdown-it-task-lists": "2.1.1",
+    "mermaid": "12.0.0",
+    "prettier": "3.6.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-router": "8.4.0",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2",
+    "vitest": "5.0.0",
+    "zod": "4.5.4"
+  },
+  "license": "0BSD",
+  "homepage": "https://github.com/dirty49374/aterm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dirty49374/aterm.git"
+  }
+}
