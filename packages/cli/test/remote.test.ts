@@ -11,7 +11,7 @@ import {
   AtermServer,
   SkillCatalog,
   WorkspaceFiles,
-} from '@aterm/core';
+} from '@agent-workshop/aterm-core';
 import { CommandEndpoint } from '../src/mcp-module/endpoint.js';
 import { remoteCommand, remoteSelection } from '../src/mcp-module/client.js';
 import { CommandRunner, commandArguments, type ICommandResult } from '../src/command-runner.js';
@@ -464,7 +464,7 @@ test('MCP UI commands wait for the selected browser acknowledgement and forward 
   await f.run('knowledge create todo --path docs/todo.trm', knowledgeSource);
   const { WebSocket } = await import('ws');
   const { randomUUID } = await import('node:crypto');
-  const { serverProtocol } = await import('@aterm/core');
+  const { serverProtocol } = await import('@agent-workshop/aterm-core');
   const health = await (await fetch(f.server.url + '/api/health')).json();
   const id = randomUUID();
   const state = {

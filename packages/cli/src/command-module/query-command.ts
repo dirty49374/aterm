@@ -1,4 +1,4 @@
-import { graphqlRequest, type AtermQuery } from '@aterm/core';
+import { graphqlRequest, type AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class QueryCommand implements ICommandDefinition {

@@ -1,4 +1,4 @@
-import { shippedConfig, type AtermQuery, type IAtermConfig } from '@aterm/core';
+import { shippedConfig, type AtermQuery, type IAtermConfig } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition } from '../contracts.js';
 
 export class SkillTocCommand implements ICommandDefinition {

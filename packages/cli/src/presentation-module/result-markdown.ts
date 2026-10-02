@@ -3,7 +3,7 @@ import { skillText } from './skill-text.js';
 import { DiscoveryText } from './discovery-text.js';
 import { ListTable } from './list-table.js';
 import { alignedTable } from './table.js';
-import type { AtermResult, IViewpointResult } from '@aterm/core';
+import type { AtermResult, IViewpointResult } from '@agent-workshop/aterm-core';
 import { TermDeclarationMarkdown } from './term-declaration-markdown.js';
 import { TermDeclarationText } from './term-declaration-text.js';
 import type { IResultContext } from './output.js';

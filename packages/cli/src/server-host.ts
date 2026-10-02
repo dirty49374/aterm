@@ -4,7 +4,7 @@ import {
   AtermError,
   serverSettingsSchema,
   type IAtermHome,
-} from '@aterm/core';
+} from '@agent-workshop/aterm-core';
 import { CommandEndpoint } from './mcp-module/endpoint.js';
 
 /** Shared _aterm:HTTP_Server_ construction for HTTP-only and hosted stdio processes. */

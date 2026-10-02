@@ -7,7 +7,7 @@ Requires Node.js 24 or later.
 For the `aterm` executable and MCP service:
 
 ```sh
-npm install -g @aterm/cli
+npm install -g @agent-workshop/aterm
 ```
 
 The CLI depends on the exact corresponding Core release. Both packages target

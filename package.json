@@ -13,7 +13,7 @@
   "scripts": {
     "aterm": "node packages/cli/dist/entry.js",
     "build": "tsc -b && tsx tooling/executable.ts && tsx tooling/webapp.ts",
-    "release:pack": "pnpm build && pnpm --filter @aterm/core --filter @aterm/cli -r pack --pack-destination dist",
+    "release:pack": "pnpm build && pnpm --filter @agent-workshop/aterm-core --filter @agent-workshop/aterm -r pack --pack-destination dist",
     "check": "tsc -b && tsc -p tsconfig.tests.json",
     "format": "prettier --write 'packages/**/*.{ts,json}' 'tooling/**/*.ts' '*.{json,ts,yaml,md}' 'docs/**/*.md' --ignore-path .gitignore",
     "test": "pnpm build && vitest run",

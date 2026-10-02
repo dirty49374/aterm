@@ -1,4 +1,4 @@
-import type { ITermDeclarationResult, IKnowledgeResult, IViewpointResult } from '@aterm/core';
+import type { ITermDeclarationResult, IKnowledgeResult, IViewpointResult } from '@agent-workshop/aterm-core';
 import type { ITable } from './table.js';
 
 /** Lists share their columns and rows across terminal and Markdown output. */

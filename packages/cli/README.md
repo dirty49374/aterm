@@ -6,7 +6,7 @@ Graph in the browser, and expose the same commands through MCP.
 Requires Node.js 24 or later.
 
 ```sh
-npm install -g @aterm/cli
+npm install -g @agent-workshop/aterm
 aterm init
 aterm corpus check
 aterm skill list
@@ -15,7 +15,7 @@ aterm skill view _aterm_skills:Aterm_Basics_Skill_
 aterm skill remind _aterm_skills:Aterm_Basics_Skill_
 ```
 
-The executable is `aterm`. The exact matching `@aterm/core` release supplies the
+The executable is `aterm`. The exact matching `@agent-workshop/aterm-core` release supplies the
 shipped Knowledge, Viewpoints, Skills and browser assets. Packaged Skills remain
 readable when `useDefaultKnowledge` or `useViewpoints` hides their vocabulary from
 ordinary queries. Read unfamiliar prerequisite Skills with `skill view`.

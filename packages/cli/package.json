@@ -1,5 +1,5 @@
 {
-  "name": "@aterm/cli",
+  "name": "@agent-workshop/aterm",
   "version": "0.0.13",
   "description": "Aterm CLI, MCP and Web UI for modeling connected Terms.",
   "license": "0BSD",
@@ -20,7 +20,7 @@
     "aterm": "./dist/entry.js"
   },
   "dependencies": {
-    "@aterm/core": "workspace:*",
+    "@agent-workshop/aterm-core": "workspace:*",
     "@modelcontextprotocol/sdk": "1.30.1",
     "commander": "15.0.0",
     "shell-quote": "1.10.0",

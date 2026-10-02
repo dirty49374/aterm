@@ -1,5 +1,5 @@
 {
-  "name": "@aterm/complexity-tooling",
+  "name": "@agent-workshop/aterm-complexity-tooling",
   "private": true,
   "type": "module",
   "scripts": {

@@ -8,7 +8,7 @@ import { CommandInvocation } from '../src/invocation.js';
 import { AtermProgram } from '../src/program.js';
 import type { ICommandInputContext } from '../src/contracts.js';
 import { installedPaths, packagedSkillNames } from '../../core/test/skill-fixture.js';
-import { viewpointSource } from '@aterm/core';
+import { viewpointSource } from '@agent-workshop/aterm-core';
 
 const sample =
   'concept _Slot_ = {\n  A position that holds a stock of one _Product_ at one price.\n.relations\n  contains _Product_\n.contract\n  - A _Slot_ must contain at most one _Product_ kind.\n}\n\nconcept _Product_ = {\n  A kind of item the machine can dispense, identified by name.\n}\n';

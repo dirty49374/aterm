@@ -1,5 +1,5 @@
 {
-  "name": "@aterm/core",
+  "name": "@agent-workshop/aterm-core",
   "version": "0.0.13",
   "description": "Aterm language, corpus, authoring, server and shipped guidance.",
   "license": "0BSD",

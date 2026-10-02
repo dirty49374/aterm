@@ -7,7 +7,7 @@ import {
   type ISourceAuthoringRequest,
   type IWorkspaceFileResult,
   type ISourceAuthoringResult,
-} from '@aterm/core';
+} from '@agent-workshop/aterm-core';
 import type { ICommandExecutionContext } from './invocation.js';
 import type { CliOutput } from './presentation-module/index.js';
 

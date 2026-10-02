@@ -3,7 +3,7 @@ export function markdownEnd(text: string): string {
   return text.replace(/\s+$/, '') + '\n\n\n';
 }
 
-export { codeBlock } from '@aterm/core';
+export { codeBlock } from '@agent-workshop/aterm-core';
 
 export function table(headers: readonly string[], rows: readonly (readonly string[])[]): string {
   const cell = (text: string) =>

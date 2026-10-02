@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.title="Aterm" \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git tini \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install --prefix /opt/aterm "@aterm/cli@$ATERM_VERSION" \
+    && npm install --prefix /opt/aterm "@agent-workshop/aterm@$ATERM_VERSION" \
          --registry "$NPM_REGISTRY" --omit=dev --no-audit --no-fund \
     && npm cache clean --force \
     && mkdir -p /data/.aterm/cache/semantic \

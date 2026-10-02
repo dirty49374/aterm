@@ -1,7 +1,7 @@
 import { rm, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { afterEach, expect, test, vi } from 'vitest';
-import { AtermHomeDiscovery } from '@aterm/core';
+import { AtermHomeDiscovery } from '@agent-workshop/aterm-core';
 import { fixture } from '../../core/test/fixture.js';
 import { CommandRunner } from '../src/command-runner.js';
 

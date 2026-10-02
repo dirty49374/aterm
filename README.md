@@ -38,11 +38,11 @@ pnpm aterm corpus check
 pnpm aterm term view _aterm:Knowledge_
 ```
 
-The public npm release targets are `@aterm/cli` and `@aterm/core`. After a release
+The public npm release targets are `@agent-workshop/aterm` and `@agent-workshop/aterm-core`. After a release
 is published to npm, install the CLI with:
 
 ```sh
-npm install -g @aterm/cli
+npm install -g @agent-workshop/aterm
 aterm --version
 ```
 

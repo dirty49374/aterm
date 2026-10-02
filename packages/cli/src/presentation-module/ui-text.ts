@@ -1,4 +1,4 @@
-import type { UIResult } from '@aterm/core';
+import type { UIResult } from '@agent-workshop/aterm-core';
 import { alignedTable } from './table.js';
 
 export class UIText {

@@ -1,6 +1,6 @@
 # Aterm server image
 
-This image installs an explicit published `@aterm/cli` version from npm. It does
+This image installs an explicit published `@agent-workshop/aterm` version from npm. It does
 not build the checkout. Publish and verify the npm release before building the
 image; use only `deploy/container` as the build context.
 

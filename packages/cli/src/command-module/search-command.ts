@@ -1,5 +1,5 @@
 import { ExternalOptions } from './external-options.js';
-import type { AtermQuery } from '@aterm/core';
+import type { AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 import { SearchOptions } from './search-options.js';
 

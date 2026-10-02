@@ -5,7 +5,7 @@ import type {
   UIRequest,
   IFileRequest,
   ISourceAuthoringRequest,
-} from '@aterm/core';
+} from '@agent-workshop/aterm-core';
 
 /** File/stdin and process context supplied by the invoking adapter, never read during registration. */
 export interface ICommandInputContext {

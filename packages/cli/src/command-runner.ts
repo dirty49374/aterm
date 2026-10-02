@@ -1,5 +1,5 @@
 import { parse } from 'shell-quote';
-import { AtermError, WorkspaceFiles, type IAtermHome } from '@aterm/core';
+import { AtermError, WorkspaceFiles, type IAtermHome } from '@agent-workshop/aterm-core';
 import { AtermProgram } from './program.js';
 import { CommandInvocation, type ICommandExecutionContext } from './invocation.js';
 import type { ICommandInputContext } from './contracts.js';

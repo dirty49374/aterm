@@ -1,4 +1,4 @@
-import type { ISourceAuthoringRequest } from '@aterm/core';
+import type { ISourceAuthoringRequest } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class ViewpointEditCommand implements ICommandDefinition {

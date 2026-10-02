@@ -1,4 +1,4 @@
-import { jqRequest, type AtermQuery } from '@aterm/core';
+import { jqRequest, type AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class JqCommand implements ICommandDefinition {

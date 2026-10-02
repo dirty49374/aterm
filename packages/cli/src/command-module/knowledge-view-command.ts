@@ -1,4 +1,4 @@
-import type { AtermQuery } from '@aterm/core';
+import type { AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition } from '../contracts.js';
 
 export class KnowledgeViewCommand implements ICommandDefinition {

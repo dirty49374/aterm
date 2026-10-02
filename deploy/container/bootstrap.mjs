@@ -1,6 +1,6 @@
 import { lstat, mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { AtermApplication, AtermInitialization } from '@aterm/core';
+import { AtermApplication, AtermInitialization } from '@agent-workshop/aterm-core';
 import { parseDocument } from 'yaml';
 
 const workspace = '/data';

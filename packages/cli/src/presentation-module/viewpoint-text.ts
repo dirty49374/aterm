@@ -1,4 +1,4 @@
-import { AtermError, type IViewpointResult } from '@aterm/core';
+import { AtermError, type IViewpointResult } from '@agent-workshop/aterm-core';
 import { ListTable } from './list-table.js';
 import { alignedTable } from './table.js';
 

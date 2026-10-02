@@ -1,11 +1,11 @@
 # Releasing Aterm
 
-Publish `@aterm/core` and `@aterm/cli` to `https://registry.npmjs.org` with public
+Publish `@agent-workshop/aterm-core` and `@agent-workshop/aterm` to `https://registry.npmjs.org` with public
 access. Their versions and the private root Workspace version must agree. The
 initial public repository starts from the current 0.0.13 snapshot; it does not
 reuse the previous repository's commit history.
 
-1. Confirm npm ownership of the `@aterm` scope and authenticate using your user
+1. Confirm npm ownership of the `@agent-workshop` scope and authenticate using your user
    configuration or trusted CI publishing. Do not add a repository `.npmrc`.
 2. Check whether the intended version already exists on the public registry.
 3. Build, test and inspect the exact packages before publishing.
@@ -18,14 +18,14 @@ pnpm aterm corpus check
 pnpm release:pack
 ```
 
-Inspect `dist/aterm-core-VERSION.tgz` and `dist/aterm-cli-VERSION.tgz`. Verify the
+Inspect `dist/agent-workshop-aterm-core-VERSION.tgz` and `dist/agent-workshop-aterm-VERSION.tgz`. Verify the
 CLI's dependency is the exact Core version, runtime/browser assets are present,
 licenses and notices are included, and local configuration/evidence is absent.
 Install the tarballs together into a clean directory and test the installed CLI.
 
 ```sh
-npm publish ./dist/aterm-core-VERSION.tgz --access public --registry https://registry.npmjs.org
-npm publish ./dist/aterm-cli-VERSION.tgz --access public --registry https://registry.npmjs.org
+npm publish ./dist/agent-workshop-aterm-core-VERSION.tgz --access public --registry https://registry.npmjs.org
+npm publish ./dist/agent-workshop-aterm-VERSION.tgz --access public --registry https://registry.npmjs.org
 ```
 
 Publish Core first. `pnpm pack` resolves workspace dependencies; do not publish
