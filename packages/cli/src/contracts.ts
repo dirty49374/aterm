@@ -6,6 +6,7 @@ import type {
   IFileRequest,
   ISourceAuthoringRequest,
 } from '@agent-workshop/aterm-core';
+import type { CommandTextInput } from './command-module/text-input.js';
 
 /** File/stdin and process context supplied by the invoking adapter, never read during registration. */
 export interface ICommandInputContext {
@@ -28,6 +29,8 @@ export interface ICommandDefinition {
   readonly action: 'query' | 'initialize' | 'serve' | 'mcp' | 'ui' | 'workspace';
   /** Host installation and process management cannot be invoked through MCP tools. */
   readonly localOnly?: boolean;
+  /** Selects inline text, server/local file input or stdin without reading it. */
+  readonly textInput?: CommandTextInput;
   workspace?(
     args: unknown[],
     options: Record<string, unknown>,

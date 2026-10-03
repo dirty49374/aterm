@@ -5083,11 +5083,16 @@ concept _Remote_Command_Execution_ in operations = {
   uses _MCP_Server_
   follows _Command_Execution_
 .contract
-  - Global --server must select one MCP endpoint URL and call its aterm tool with the same command arguments and stdin.
+  - Global --server must select one MCP endpoint URL and call its aterm tool with the same command arguments and selected stdin content.
+  - Input selection must use the same command declaration as local execution. Read non-interactive stdin only when that command selects stdin; an unused open pipe must not delay execution. Inline text and named --file inputs must not consume local stdin.
+  - Local command parsing, help and version must finish without waiting for stdin or connecting to the endpoint. Commands that execute remotely retain their server Workspace path semantics.
   - Remote selection must require no local Home. Failure must not fall back to local files or another server.
   - Remote stdout, stderr and exitCode must be preserved. The command's --output selector must retain its normal meaning.
   - Paths within the submitted command must identify server Workspace files; upload local content through stdin instead of assuming shared storage.
   - Connection loss or timeout must report uncertainty without retrying a possible write. The operator must read server state before repeating it.
+.remarks
+  Correction: remote bootstrap previously drained every non-TTY stdin before connecting, so Agent-owned open pipes blocked read commands. Shared command text-input selection now controls forwarding; actual stdin payloads remain byte-preserved as UTF-8 text, including empty input. Named input files remain server-side.
+  Verification: remote entrypoint tests leave stdin open for reads, inline GraphQL/jq, server-file input, help and invalid commands, while EOF-delimited query and write payloads still reach the server unchanged.
 }
 
 skill.explanation _Command_Invocation_Guide_ in usage.guidance = {

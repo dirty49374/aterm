@@ -29,7 +29,7 @@ export const homeHelp =
 /** Mechanical Commander construction from each command definition; one action path for all. */
 export class AtermProgram {
   constructor(
-    private readonly invocation: CommandInvocation = new CommandInvocation(
+    private readonly invocation: Pick<CommandInvocation, 'execute'> = new CommandInvocation(
       new CommandInputContext(),
     ),
     private readonly setExitCode: (code: number) => void = (code) => {

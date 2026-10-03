@@ -1,6 +1,6 @@
 {
   "name": "@agent-workshop/aterm",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Aterm CLI, MCP and Web UI for modeling connected Terms.",
   "license": "0BSD",
   "engines": {

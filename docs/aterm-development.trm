@@ -202,6 +202,7 @@ module _Command_Module_ = {
   depends_on _Process_Adapter_
 .contract
   - _Command_Module_ must declare each command's argument syntax, options and help in one place.
+  - Each text-consuming command must declare one input selector shared by local preparation and remote forwarding; inline text, named files and stdin must not have separate adapter-specific selection rules.
   - _Command_Module_ must reach no outside resource except through _Process_Adapter_.
   - _Command_Module_ must not select the home, run a query or render a result.
   - _Command_Module_ must report invalid input by throwing.

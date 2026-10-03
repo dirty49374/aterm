@@ -6,9 +6,9 @@ image; use only `deploy/container` as the build context.
 
 ```sh
 docker build --platform linux/amd64 \
-  --build-arg ATERM_VERSION=0.0.13 \
-  -t aterm:0.0.13 deploy/container
-node deploy/container/smoke.mjs aterm:0.0.13
+  --build-arg ATERM_VERSION=0.0.14 \
+  -t aterm:0.0.14 deploy/container
+node deploy/container/smoke.mjs aterm:0.0.14
 ```
 
 `NPM_REGISTRY` defaults to `https://registry.npmjs.org`. Override it explicitly
@@ -28,7 +28,7 @@ docker run --rm --name aterm --read-only --cap-drop ALL \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,nosuid,nodev \
   --mount type=volume,src=aterm-data,dst=/data \
-  -p 127.0.0.1:43127:43127 aterm:0.0.13
+  -p 127.0.0.1:43127:43127 aterm:0.0.14
 ```
 
 The image runs Linux amd64 / Node 24 as UID/GID 1000. Tini forwards signals to a
@@ -78,7 +78,10 @@ verify a full restore into an isolated location, and validate that restored copy
 with the candidate image. Preserve authored business data, custom Viewpoints and
 Skills. Retain the previous image digest and backup until live checks pass.
 
-0.0.13 uses protocol 24 and needs no data migration from 0.0.12. It includes the
+0.0.14 fixes remote CLI commands waiting for unused stdin. Upgrade CLI clients to
+receive this fix; server-only upgrades cannot fix an older client.
+
+0.0.14 uses protocol 24 and needs no data migration from 0.0.12. It includes the
 GraphQL workspace, reviewed contextual Naming and repeated Term-based Retell
 Skills, and behavior-preserving refactors. Reload clients after upgrading.
 

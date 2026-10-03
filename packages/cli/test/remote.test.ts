@@ -348,7 +348,7 @@ test('MCP semantic edits preserve references across rename and move, and refuse 
   expect((await f.run('corpus check')).exitCode).toBe(0);
 });
 
-test('remote CLI entrypoint works from a directory without Home and forwards stdin exactly', async () => {
+test('remote CLI selects stdin only when needed, without a local Home or local file reads', async () => {
   const f = await fixture();
   const cwd = await mkdtemp(join(tmpdir(), 'aterm-remote-client-'));
   cleanups.push(() => rm(cwd, { recursive: true, force: true }));
@@ -356,7 +356,7 @@ test('remote CLI entrypoint works from a directory without Home and forwards std
   const termDeclaration = new URL('../dist/entry.js', import.meta.url).pathname;
   const env = { ...process.env };
   delete env.ATERM_HOME;
-  async function cli(args: string[], stdin = '') {
+  async function cli(args: string[], stdin: string | null = null) {
     const child = spawn(
       process.execPath,
       [termDeclaration, '--server', f.server.url + '/mcp', ...args],
@@ -373,18 +373,52 @@ test('remote CLI entrypoint works from a directory without Home and forwards std
     child.stderr.on('data', (data) => {
       stderr += data;
     });
-    child.stdin.end(stdin);
+    // Agent harnesses may leave a non-TTY input pipe open indefinitely.
+    if (stdin !== null) child.stdin.end(stdin);
     const exitCode = await new Promise<number | null>((resolve, reject) => {
-      child.once('close', resolve);
-      child.once('error', reject);
+      const deadline = setTimeout(() => {
+        child.kill('SIGKILL');
+        reject(new Error(`Remote command waited for unused stdin: ${args.join(' ')}`));
+      }, 5000);
+      child.once('close', (code) => {
+        clearTimeout(deadline);
+        resolve(code);
+      });
+      child.once('error', (error) => {
+        clearTimeout(deadline);
+        reject(error);
+      });
     });
     return { exitCode, stdout, stderr };
   }
   expect((await cli(['file', 'write', 'note.md'], 'Exact $literal `text`\n\n')).exitCode).toBe(0);
   expect((await cli(['file', 'read', 'note.md'])).stdout).toBe('Exact $literal `text`\n\n');
   expect((await cli(['knowledge', 'list'])).stdout).toBe((await f.run('knowledge list')).stdout);
+  expect((await cli(['corpus', 'check'])).exitCode).toBe(0);
+  const document = '{ knowledges { totalCount } }';
+  const expected = { data: { knowledges: { totalCount: 0 } } };
+  expect(JSON.parse((await cli(['corpus', 'query', document])).stdout)).toEqual(expected);
+  expect(JSON.parse((await cli(['corpus', 'query'], document)).stdout)).toEqual(expected);
+  expect(JSON.parse((await cli(['corpus', 'query', '--file', '-'], document)).stdout)).toEqual(
+    expected,
+  );
+  expect(JSON.parse((await cli(['corpus', 'jq', 'length'])).stdout)).toEqual([0]);
+  expect(JSON.parse((await cli(['corpus', 'jq'], 'length')).stdout)).toEqual([0]);
+  await writeFile(join(f.workspace, 'query.graphql'), document);
+  expect(JSON.parse((await cli(['corpus', 'query', '--file=query.graphql'])).stdout)).toEqual(
+    expected,
+  );
+  expect((await cli(['file', 'write', 'copy.md', '--file', 'note.md'])).exitCode).toBe(0);
+  expect(await readFile(join(f.workspace, 'copy.md'), 'utf8')).toBe('Exact $literal `text`\n\n');
+  expect((await cli(['file', 'write', 'empty.md'], '')).exitCode).toBe(0);
+  expect(await readFile(join(f.workspace, 'empty.md'), 'utf8')).toBe('');
+  expect((await cli(['corpus', 'query', document, '--file', '-'])).stderr).toContain(
+    'Use either an inline',
+  );
+  expect((await cli(['knowledge', 'list', '--help'])).exitCode).toBe(0);
+  expect((await cli(['unknown-command'])).exitCode).toBe(1);
   expect((await cli(['init'])).exitCode).toBe(1);
-}, 30000);
+}, 60000);
 
 test('cold recovery starts through server run with invalid config and validates override settings', async () => {
   const f = await fixture(true);

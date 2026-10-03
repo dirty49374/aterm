@@ -1,7 +1,9 @@
+import { CommandTextInput } from './text-input.js';
 import type { ISourceAuthoringRequest } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class KnowledgeEditCommand implements ICommandDefinition {
+  readonly textInput = new CommandTextInput();
   readonly name = 'knowledge edit';
   readonly argument = '<name>';
   readonly action = 'workspace' as const;
@@ -27,7 +29,7 @@ export class KnowledgeEditCommand implements ICommandDefinition {
     return {
       operation: 'knowledge-edit',
       name: String(args[0]),
-      text: await input.text(options.file ?? '-'),
+      text: await this.textInput.read(args, options, input),
 
       dryRun: options.dryRun === true,
       ifMatch: typeof options.ifMatch === 'string' ? options.ifMatch : undefined,

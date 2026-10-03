@@ -1,7 +1,9 @@
+import { CommandTextInput } from './text-input.js';
 import type { IFileRequest } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class FileWriteCommand implements ICommandDefinition {
+  readonly textInput = new CommandTextInput();
   readonly name = 'file write';
   readonly argument = '<path>';
   readonly action = 'workspace' as const;
@@ -27,7 +29,7 @@ export class FileWriteCommand implements ICommandDefinition {
     return {
       operation: 'file-write',
       path: String(args[0] ?? '.'),
-      text: await input.text(options.file ?? '-'),
+      text: await this.textInput.read(args, options, input),
       dryRun: options.dryRun === true,
       ifMatch: typeof options.ifMatch === 'string' ? options.ifMatch : undefined,
     };

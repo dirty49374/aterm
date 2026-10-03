@@ -1,7 +1,9 @@
+import { CommandTextInput } from './text-input.js';
 import type { AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class EditCommand implements ICommandDefinition {
+  readonly textInput = new CommandTextInput();
   readonly name = 'term edit';
   readonly legacyName = 'edit';
   readonly options = [
@@ -16,13 +18,13 @@ export class EditCommand implements ICommandDefinition {
   };
   readonly action = 'query' as const;
   async prepare(
-    _args: unknown[],
+    args: unknown[],
     options: Record<string, unknown>,
     input: ICommandInputContext,
   ): Promise<AtermQuery> {
     return {
       operation: 'edit',
-      patch: await input.text(options.file ?? '-'),
+      patch: await this.textInput.read(args, options, input),
       ...(options.dryRun ? { dryRun: true } : {}),
     };
   }

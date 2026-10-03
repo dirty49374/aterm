@@ -3,6 +3,26 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { quote } from 'shell-quote';
 import type { ICommandResult } from '../command-runner.js';
 import { packageVersion } from '../package-info.js';
+import { CommandInputContext } from '../input-context.js';
+import type { IInvocationRequest } from '../invocation.js';
+
+/** Parse through the normal registry; only the selected stdin source is read locally. */
+export class RemoteCommandInvocation {
+  constructor(
+    private readonly url: string,
+    private readonly argv: readonly string[],
+  ) {}
+
+  async execute({ definition, args, options }: IInvocationRequest): Promise<number> {
+    const path = definition.textInput?.path(args, options);
+    const stdin =
+      path === '-' && !process.stdin.isTTY ? await new CommandInputContext().text('-') : undefined;
+    const result = await remoteCommand(this.url, this.argv, stdin);
+    process.stdout.write(result.stdout);
+    process.stderr.write(result.stderr);
+    return result.exitCode;
+  }
+}
 
 /** The remote CLI is an MCP client of the same aterm tool, with no local fallback. */
 export async function remoteCommand(

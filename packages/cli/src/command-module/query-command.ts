@@ -1,7 +1,9 @@
+import { CommandTextInput } from './text-input.js';
 import { graphqlRequest, type AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class QueryCommand implements ICommandDefinition {
+  readonly textInput = new CommandTextInput({ index: 0, label: 'GraphQL document' });
   readonly name = 'corpus query';
   readonly argument = '[document]';
   readonly options = [
@@ -24,12 +26,10 @@ export class QueryCommand implements ICommandDefinition {
     options: Record<string, unknown>,
     input: ICommandInputContext,
   ): Promise<AtermQuery> {
-    if (args[0] !== undefined && options.file !== undefined)
-      throw new Error('Use either an inline GraphQL document or --file.');
     return {
       operation: 'graphql',
       graphql: graphqlRequest.parse({
-        query: args[0] ?? (await input.text(options.file ?? '-')),
+        query: await this.textInput.read(args, options, input),
         ...(options.variables !== undefined
           ? { variables: JSON.parse(String(options.variables)) }
           : {}),

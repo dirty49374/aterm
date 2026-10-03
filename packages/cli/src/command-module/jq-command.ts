@@ -1,7 +1,9 @@
+import { CommandTextInput } from './text-input.js';
 import { jqRequest, type AtermQuery } from '@agent-workshop/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class JqCommand implements ICommandDefinition {
+  readonly textInput = new CommandTextInput({ index: 0, label: 'jq program' });
   readonly name = 'corpus jq';
   readonly argument = '[program]';
   readonly options = [
@@ -23,12 +25,10 @@ export class JqCommand implements ICommandDefinition {
     options: Record<string, unknown>,
     input: ICommandInputContext,
   ): Promise<AtermQuery> {
-    if (args[0] !== undefined && options.file !== undefined)
-      throw new Error('Use either an inline jq program or --file.');
     return {
       operation: 'jq',
       jq: jqRequest.parse({
-        program: args[0] ?? (await input.text(options.file ?? '-')),
+        program: await this.textInput.read(args, options, input),
         ...(options.knowledges === undefined ? {} : { knowledge: options.knowledges }),
       }),
     };

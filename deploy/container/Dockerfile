@@ -1,6 +1,6 @@
 FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
 
-ARG ATERM_VERSION=0.0.13
+ARG ATERM_VERSION=0.0.14
 ARG NPM_REGISTRY=https://registry.npmjs.org
 LABEL org.opencontainers.image.title="Aterm" \
       org.opencontainers.image.description="Persistent Aterm Workspace, Web UI, GraphQL and Streamable HTTP MCP" \
