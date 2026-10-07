@@ -1,4 +1,5 @@
 import { createServer } from 'node:net';
+import { getDefaultResultOrder, setDefaultResultOrder } from 'node:dns';
 import { realpath, readFile, rename, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { expect, test, vi } from 'vitest';
@@ -437,22 +438,28 @@ test('wildcard listening accepts network addresses and hostnames, rejects cross-
   }
 });
 
-test('a configured localhost listener uses the same address for CLI discovery', async () => {
-  const { f, config } = await setup();
-  await f.write('.aterm/aterm.yaml', config.replace('server:', 'server:\n  host: localhost'));
-  const app = await f.app();
-  const server = new AtermServer(app.config);
-  await server.start();
-  try {
-    const local = JSON.parse(JSON.stringify(await app.query({ operation: 'list' })));
-    const spy = vi.spyOn(app, 'query');
-    expect(await new AtermDispatch().query(app, { operation: 'list' })).toEqual(local);
-    expect(spy).not.toHaveBeenCalled();
-    spy.mockRestore();
-  } finally {
-    await server.close();
-  }
-});
+test.each(['ipv4first', 'ipv6first'] as const)(
+  'a configured localhost listener supports %s CLI discovery',
+  async (order) => {
+    const { f, config } = await setup();
+    await f.write('.aterm/aterm.yaml', config.replace('server:', 'server:\n  host: localhost'));
+    const app = await f.app();
+    const server = new AtermServer(app.config);
+    const previousOrder = getDefaultResultOrder();
+    setDefaultResultOrder(order);
+    try {
+      await server.start();
+      const local = JSON.parse(JSON.stringify(await app.query({ operation: 'list' })));
+      const spy = vi.spyOn(app, 'query');
+      expect(await new AtermDispatch().query(app, { operation: 'list' })).toEqual(local);
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    } finally {
+      setDefaultResultOrder(previousOrder);
+      await server.close();
+    }
+  },
+);
 
 test.each([
   ['::', 'http://[::1]:43127'],

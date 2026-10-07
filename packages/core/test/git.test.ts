@@ -60,7 +60,7 @@ test.each(['clean', 'process'])(
   async (filter) => {
     const f = await repository();
     const extra = join(f.workspace, 'included.config');
-    await writeFile(extra, `[filter "trap"]\n${filter} = ${f.command}\n`);
+    await writeFile(extra, `[filter "trap"]\n${filter} = ${f.command}\nrequired = true\n`);
     f.git('config', 'include.path', extra);
     await writeFile(join(f.workspace, '.gitattributes'), '*.trm filter=trap\n');
     if (filter === 'process')

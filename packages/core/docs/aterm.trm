@@ -3066,6 +3066,7 @@ concept _HTTP_Server_ in operations = {
   Chosen: packaged markdown.js and mermaid.js use the same fixed-asset allowlist. Image policy permits HTTP(S) images and embedded image data while scripts and application modules remain same-origin.
   Chosen: external access is opt-in through server.host; wildcard listening permits any valid Host on this port while Origin remains same-origin. The service has no authentication and exposes its configured corpus and source snippets to clients that can reach it. Authentication and TLS termination belong to a proxy; server.publicOrigin permits an explicit proxy origin. A daemon manager remains outside scope.
   Chosen: resource command migration preserves existing query semantics and adds Knowledge and Skill discovery. CLI examples, generated Skill documents, local/HTTP reads and refusal behavior are verified together.
+  Correction: hostname listeners resolve using the address families available to Node HTTP clients. With IPv6 only on loopback, localhost must not bind to an address that automatic discovery excludes; both DNS result orders are verified without changing explicit IPv4 or IPv6 bindings.
 }
 
 

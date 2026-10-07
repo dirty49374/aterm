@@ -1,4 +1,6 @@
 import { fileURLToPath } from 'node:url';
+import { ADDRCONFIG } from 'node:dns';
+import { lookup } from 'node:dns/promises';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { FileAccess, UsageLog } from '../file-module/index.js';
 import { AtermError } from '../error.js';
@@ -72,9 +74,12 @@ export class AtermServer {
     this.ui = new UIService(this.config, this.identity, this.snapshot);
     this.ui.attach(this.listener);
     try {
+      // Match Node HTTP clients' address-family filtering when resolving hostnames.
+      // Explicit IP literals (including IPv6 wildcards) retain their address.
+      const { address } = await lookup(this.host, { hints: ADDRCONFIG });
       await new Promise<void>((resolve, reject) => {
         this.listener.once('error', reject);
-        this.listener.listen(this.port, this.host, () => {
+        this.listener.listen(this.port, address, () => {
           this.listener.off('error', reject);
           resolve();
         });

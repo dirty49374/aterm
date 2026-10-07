@@ -191,6 +191,7 @@ adapter _Git_Adapter_ = {
   - How the process is spawned is unconstrained; callers must not depend on it.
 .remarks
   Behavior preservation: isolated repository preparation separates the filtered process environment, validated primary configuration and metadata copying. The private control directory, read budgets, disabled hooks/includes/protocols, object format checks and cleanup remain unchanged.
+  Verification: executable filter probes declare themselves required before asserting a failed process exit. Optional process-filter failure can be nonfatal in Git; marker creation verifies the control probe ran, and marker absence after isolated comparison verifies execution was prevented.
 }
 
 module _Command_Module_ = {
