@@ -196,7 +196,8 @@ export class GitRepository {
   private async copy(root: string, name: string, target: string, replace = false): Promise<void> {
     const source = await this.files.guard(root, join(root, name));
     if (!(await this.files.exists(source))) return;
-    if ((await this.files.stat(source)).isDirectory()) {
+    const stat = await this.files.stat(source);
+    if (stat.isDirectory()) {
       await this.files.ensureDirectory(join(target, name));
       for (const entry of await this.files.directoryEntries(source))
         await this.copy(root, join(name, entry.name), target, replace);
@@ -208,6 +209,13 @@ export class GitRepository {
           ? await this.files.readBytes(destination)
           : undefined;
       await this.files.write(destination, bytes, before && this.files.hash(before));
+      // Git's racy-clean check depends on the index file's timestamp, not just
+      // its bytes. Round down rather than move that boundary into the future.
+      await this.files.setTimes(
+        destination,
+        Math.floor(stat.atimeMs / 1000),
+        Math.floor(stat.mtimeMs / 1000),
+      );
     }
   }
 

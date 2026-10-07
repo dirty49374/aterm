@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { lstat, mkdir, readFile, rm, symlink, utimes, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { afterEach, expect, test, vi } from 'vitest';
 import { TermDeclarationChanges } from '../src/authoring-module/changes.js';
@@ -132,6 +133,59 @@ test('a Workspace inside its repository retains Workspace-relative diff paths', 
   expect(result.files).toEqual(['old.trm']);
   expect(result.diff).toContain('--- a/old.trm\n+++ b/old.trm');
 });
+
+test.each(['sha1', 'sha256'])(
+  'isolated %s index copies retain detection of racily clean edits',
+  async (format) => {
+    const f = await repository(format);
+    const source = join(f.docs, 'old.trm');
+    const indexPath = join(f.workspace, '.git/index');
+    await writeFile(source, 'Before\n');
+    f.git('read-tree', '--empty');
+    f.git('add', 'docs/old.trm');
+    f.git('update-index', '--index-version', '2');
+    await writeFile(source, 'Linked\n');
+    const timestamp = Math.floor(Date.now() / 1000) - 60;
+    await utimes(source, timestamp, timestamp);
+
+    // Construct the exact stat-cache collision of a same-size edit within clock
+    // resolution, without depending on which wall-clock second the test runs in.
+    // Keep the cached blob as Before, but make its stat match the Linked file.
+    const stat = await lstat(source, { bigint: true });
+    const index = await readFile(indexPath);
+    expect(index.readUInt32BE(4)).toBe(2);
+    expect(index.readUInt32BE(8)).toBe(1);
+    const billion = 1000000000n;
+    const fields = [
+      stat.ctimeNs / billion,
+      stat.ctimeNs % billion,
+      stat.mtimeNs / billion,
+      stat.mtimeNs % billion,
+      stat.dev,
+      stat.ino,
+      stat.mode,
+      stat.uid,
+      stat.gid,
+      stat.size,
+    ];
+    fields.forEach((value, i) => index.writeUInt32BE(Number(value & 0xffffffffn), 12 + i * 4));
+    const hashSize = format === 'sha256' ? 32 : 20;
+    createHash(format)
+      .update(index.subarray(0, -hashSize))
+      .digest()
+      .copy(index, index.length - hashSize);
+    await writeFile(indexPath, index);
+    await utimes(indexPath, timestamp, timestamp);
+
+    expect(
+      f.git('-c', 'diff.autoRefreshIndex=false', 'diff', 'HEAD', '--', 'docs/old.trm'),
+    ).toContain('-Before\n+Linked');
+    const before = await lstat(indexPath, { bigint: true });
+    expect((await f.compare()).diff).toContain('-Before\n+Linked');
+    expect(await readFile(indexPath)).toEqual(index);
+    expect((await lstat(indexPath, { bigint: true })).mtimeNs).toBe(before.mtimeNs);
+  },
+);
 
 test('SHA-256 repository storage is retained without importing executable config', async () => {
   const f = await repository('sha256');

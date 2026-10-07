@@ -174,6 +174,7 @@ adapter _File_Adapter_ = {
 .remarks
   Naming this the only gate is the point. A module that opens a file itself is the defect
   this Term exists to make visible.
+  Private metadata copies can set access and modification times through the same path and reserved-metadata guards; updates use a file handle that refuses a symbolic link. This primitive is not an operator-addressed authoring command.
 }
 
 adapter _Git_Adapter_ = {
@@ -186,12 +187,14 @@ adapter _Git_Adapter_ = {
   - The source repository's config, includes, hooks and attributes must not become executable settings. Only validated storage-format metadata may be retained from the primary config; attribute-driven conversions must be disabled in the private context.
   - Subprocesses must receive a constructed environment, without inherited Git configuration, repository overrides, trace destinations or dynamic-loader hooks. Executable search must exclude the selected repository, including path aliases. Global/system config, replacement objects, lazy fetch, interactive prompts and optional repository locks must be disabled.
   - _Git_Adapter_ must return standard output unchanged and report a failure by throwing.
+  - Copied control metadata must retain the index timestamp boundary needed to detect racily clean working-tree edits; isolation must not make a changed tracked file appear unchanged.
 
   ### Deliberately unconstrained
   - How the process is spawned is unconstrained; callers must not depend on it.
 .remarks
   Behavior preservation: isolated repository preparation separates the filtered process environment, validated primary configuration and metadata copying. The private control directory, read budgets, disabled hooks/includes/protocols, object format checks and cleanup remain unchanged.
   Verification: executable filter probes declare themselves required before asserting a failed process exit. Optional process-filter failure can be nonfatal in Git; marker creation verifies the control probe ran, and marker absence after isolated comparison verifies execution was prevented.
+  Correction: copying index bytes with a fresh modification time can hide same-size edits whose cached stat data still matches. Preserve control-file timestamps, rounding down to whole seconds so precision conversion cannot move the racy-clean boundary forward. Deterministic SHA-1 and SHA-256 index fixtures verify the diff and unchanged source index bytes and modification time.
 }
 
 module _Command_Module_ = {

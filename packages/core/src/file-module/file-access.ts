@@ -1,4 +1,4 @@
-import { watch, type FSWatcher } from 'node:fs';
+import { constants, watch, type FSWatcher } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import {
   readdir,
@@ -91,6 +91,17 @@ export class FileAccess implements IFileAccess {
   }
   stat(path: string) {
     return lstat(path);
+  }
+  /** Set access and modification times in Unix seconds on an owned regular file. */
+  async setTimes(path: string, accessed: number, modified: number): Promise<void> {
+    this.assertWritable(path);
+    await this.guard(dirname(path), path);
+    const handle = await open(path, constants.O_RDWR | constants.O_NOFOLLOW);
+    try {
+      await handle.utimes(accessed, modified);
+    } finally {
+      await handle.close();
+    }
   }
   directoryEntries(path: string) {
     return readdir(path, { withFileTypes: true });
