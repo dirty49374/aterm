@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { isIP } from 'node:net';
 import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { request } from 'node:http';
@@ -65,7 +66,7 @@ async function health() {
   return response.json();
 }
 async function start(origin) {
-  docker('run', '-d', '--name', name, '--read-only', '--cap-drop', 'ALL',
+  docker('run', '-d', '--name', name, '--network', 'bridge', '--read-only', '--cap-drop', 'ALL',
     '--security-opt', 'no-new-privileges', '--tmpfs', '/tmp:rw,nosuid,nodev',
     // Model the nested emptyDir used with an NFS Workspace in k3s.
     '--tmpfs', '/data/.aterm/cache/semantic:rw,uid=1000,gid=1000,nosuid,nodev',
@@ -73,7 +74,9 @@ async function start(origin) {
     '-e', `ATERM_PUBLIC_ORIGIN=${origin}`, image);
   containerExists = true;
   // Reach only the private Docker bridge; do not publish a host port.
-  url = `http://${JSON.parse(docker('inspect', name))[0].NetworkSettings.IPAddress}:43127`;
+  const address = JSON.parse(docker('inspect', name))[0].NetworkSettings.Networks.bridge?.IPAddress;
+  assert.equal(isIP(address ?? ''), 4, 'Smoke container needs an IPv4 address on the bridge network');
+  url = `http://${address}:43127`;
   let connected = false;
   for (let i = 0; i < 100; i++) {
     try { await health(); connected = true; break; } catch { await delay(100); }

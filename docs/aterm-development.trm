@@ -432,6 +432,7 @@ specification.concept _Repository_Development_Policy_ in policies = {
   - Verification correction: an unchanged latest tag does not establish that no rollout occurred. Release 0.0.5 triggered Keel configured with force and no match-tag despite only its version tag being pushed. Check effective deployment automation before publication and distinguish registry state from observed runtime state; a matching version tag can also be a rollout trigger.
   - Verification correction: the 0.0.8 image smoke uses unified Skill TOCs, protocol 23, termKinds and GraphQL termDeclarations. It also verifies the packaged jq worker, collection where/orderBy, Viewpoint/Term Kind connections and updated reading Skill. It retains fresh bootstrap, persistent writes, recovery and Git isolation checks; prior API spellings are not release compatibility requirements.
   - Chosen: this existing deployment upgrade requires a complete persistent Workspace backup and restoration check, isolated candidate validation, and the previous immutable image digest before live replacement. Migration must preserve authored project content and declare intentional configuration or vocabulary changes.
+  - Verification correction: container smoke explicitly selects the bridge network and reads its per-network address. It rejects a missing address before polling health, avoiding obsolete Docker inspect fields without an alternate legacy path.
 }
 
 concept _Markdown_Example_ in examples = {
