@@ -4,6 +4,7 @@ dist/
 *.tsbuildinfo
 coverage/
 packages/core/webapp/
+deploy/container/npm/
 packages/*/LICENSE
 packages/*/THIRD_PARTY_NOTICES.md
 

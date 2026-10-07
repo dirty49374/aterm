@@ -5,7 +5,7 @@ import type {
   UIRequest,
   IFileRequest,
   ISourceAuthoringRequest,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import type { CommandTextInput } from './command-module/text-input.js';
 
 /** File/stdin and process context supplied by the invoking adapter, never read during registration. */

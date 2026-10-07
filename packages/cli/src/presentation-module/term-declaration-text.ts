@@ -6,7 +6,7 @@ import {
   type ITermDeclarationResult,
   type ITermDeclarationDiff,
   type IAtermEditResult,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import { TermDeclarationTree } from './term-declaration-tree.js';
 type TermDeclaration = ITermDeclarationResult['termDeclarations'][number];
 type Edge = ITermDeclarationResult['edges'][number];

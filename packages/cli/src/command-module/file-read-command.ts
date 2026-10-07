@@ -1,4 +1,4 @@
-import type { IFileRequest } from '@agent-workshop/aterm-core';
+import type { IFileRequest } from '@garage49/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class FileReadCommand implements ICommandDefinition {

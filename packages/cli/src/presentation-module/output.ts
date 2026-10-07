@@ -2,12 +2,12 @@ import { UIText } from './ui-text.js';
 import { skillText } from './skill-text.js';
 import { DiscoveryText } from './discovery-text.js';
 import { markdownEnd } from './markdown.js';
-import type { UIResult, IWorkspaceFileResult, ISourceAuthoringResult } from '@agent-workshop/aterm-core';
+import type { UIResult, IWorkspaceFileResult, ISourceAuthoringResult } from '@garage49/aterm-core';
 import { alignedTable } from './table.js';
 import { KnowledgeText } from './knowledge-text.js';
 import { ResultMarkdown } from './result-markdown.js';
 import { stringify } from 'yaml';
-import { AtermError, type AtermResult } from '@agent-workshop/aterm-core';
+import { AtermError, type AtermResult } from '@garage49/aterm-core';
 import { TermDeclarationText } from './term-declaration-text.js';
 import { ViewpointText } from './viewpoint-text.js';
 

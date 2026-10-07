@@ -1,4 +1,4 @@
-import type { AtermQuery, ISkillInstallationRequest } from '@agent-workshop/aterm-core';
+import type { AtermQuery, ISkillInstallationRequest } from '@garage49/aterm-core';
 import type { ICommandDefinition } from '../contracts.js';
 
 export class SkillUninstallCommand implements ICommandDefinition {

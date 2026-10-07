@@ -10,7 +10,7 @@ import {
   type ITermDeclarationResult,
   type ITermDeclarationView,
   type IGroupTreeNode,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import type { IResultContext } from './output.js';
 import { codeBlock, table } from './markdown.js';
 

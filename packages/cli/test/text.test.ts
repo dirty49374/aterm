@@ -4,7 +4,7 @@ import {
   AtermSchema,
   TermDeclarationProjection,
   type ITermDeclarationResult,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import { TermDeclarationText } from '../src/presentation-module/index.js';
 
 class AtermParser extends SourceParser {

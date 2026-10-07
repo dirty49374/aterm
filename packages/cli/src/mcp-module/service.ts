@@ -17,7 +17,7 @@ import {
   type IAtermHome,
   type AtermServer,
   type ISkillDocument,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import { CommandRunner, commandArguments, type ICommandResult } from '../command-runner.js';
 import { packageVersion } from '../package-info.js';
 

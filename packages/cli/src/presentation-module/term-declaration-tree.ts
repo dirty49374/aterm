@@ -1,4 +1,4 @@
-import { byText, groupTree, type ITermDeclarationView, type IGroupTreeNode } from '@agent-workshop/aterm-core';
+import { byText, groupTree, type ITermDeclarationView, type IGroupTreeNode } from '@garage49/aterm-core';
 
 interface ITreeRow {
   readonly label: string;

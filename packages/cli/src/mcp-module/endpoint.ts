@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import type { IAtermHome, AtermServer, IServerExtension } from '@agent-workshop/aterm-core';
+import type { IAtermHome, AtermServer, IServerExtension } from '@garage49/aterm-core';
 import { CommandConnection, CommandService } from './service.js';
 
 /** _aterm:MCP_Server_: HTTP lifetime around the shared MCP service. */

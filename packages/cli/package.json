@@ -1,6 +1,6 @@
 {
-  "name": "@agent-workshop/aterm",
-  "version": "0.0.14",
+  "name": "@garage49/aterm",
+  "version": "0.1.0",
   "description": "Aterm CLI, MCP and Web UI for modeling connected Terms.",
   "license": "0BSD",
   "engines": {
@@ -20,7 +20,7 @@
     "aterm": "./dist/entry.js"
   },
   "dependencies": {
-    "@agent-workshop/aterm-core": "workspace:*",
+    "@garage49/aterm-core": "workspace:*",
     "@modelcontextprotocol/sdk": "1.30.1",
     "commander": "15.0.0",
     "shell-quote": "1.10.0",
@@ -31,10 +31,13 @@
   "devDependencies": {
     "ws": "8.21.3"
   },
-  "homepage": "https://github.com/dirty49374/aterm#readme",
+  "homepage": "https://github.com/garage49/aterm#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dirty49374/aterm.git",
+    "url": "git+https://github.com/garage49/aterm.git",
     "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/garage49/aterm/issues"
   }
 }

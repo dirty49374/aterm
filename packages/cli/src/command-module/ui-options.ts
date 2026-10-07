@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { AtermError, uiRequest, type UIRequest } from '@agent-workshop/aterm-core';
+import { AtermError, uiRequest, type UIRequest } from '@garage49/aterm-core';
 
 export const uiTargetOptions = [
   ['--session <id>', 'Target Session UUID or unique prefix of at least six hexadecimal characters'],

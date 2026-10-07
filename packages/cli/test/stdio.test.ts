@@ -16,7 +16,7 @@ import {
   SkillCatalog,
   serverProtocol,
   viewpointSource,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import { CommandEndpoint } from '../src/mcp-module/endpoint.js';
 import type { ICommandResult } from '../src/command-runner.js';
 

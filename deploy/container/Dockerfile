@@ -1,16 +1,19 @@
 FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
 
-ARG ATERM_VERSION=0.0.14
-ARG NPM_REGISTRY=https://registry.npmjs.org
+ARG VERSION
 LABEL org.opencontainers.image.title="Aterm" \
       org.opencontainers.image.description="Persistent Aterm Workspace, Web UI, GraphQL and Streamable HTTP MCP" \
-      org.opencontainers.image.version=$ATERM_VERSION
+      org.opencontainers.image.version=$VERSION
 
-RUN apt-get update \
+COPY npm/ /tmp/npm/
+RUN test -n "$VERSION" \
+    && apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates git tini \
     && rm -rf /var/lib/apt/lists/* \
-    && npm install --prefix /opt/aterm "@agent-workshop/aterm@$ATERM_VERSION" \
-         --registry "$NPM_REGISTRY" --omit=dev --no-audit --no-fund \
+    && npm install --prefix /opt/aterm /tmp/npm/*.tgz \
+         --registry https://registry.npmjs.org --omit=dev --no-audit --no-fund \
+    && test "$(/opt/aterm/node_modules/.bin/aterm --version)" = "$VERSION" \
+    && rm -rf /tmp/npm \
     && npm cache clean --force \
     && mkdir -p /data/.aterm/cache/semantic \
     && chown -R node:node /data

@@ -1,6 +1,6 @@
 {
   "name": "aterm",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -13,7 +13,7 @@
   "scripts": {
     "aterm": "node packages/cli/dist/entry.js",
     "build": "tsc -b && tsx tooling/executable.ts && tsx tooling/webapp.ts",
-    "release:pack": "pnpm build && pnpm --filter @agent-workshop/aterm-core --filter @agent-workshop/aterm -r pack --pack-destination dist",
+    "release:pack": "pnpm build && pnpm --filter @garage49/aterm-core --filter @garage49/aterm -r pack --pack-destination dist",
     "check": "tsc -b && tsc -p tsconfig.tests.json",
     "format": "prettier --write 'packages/**/*.{ts,json}' 'tooling/**/*.ts' '*.{json,ts,yaml,md}' 'docs/**/*.md' --ignore-path .gitignore",
     "test": "pnpm build && vitest run",
@@ -44,9 +44,12 @@
     "zod": "4.5.4"
   },
   "license": "0BSD",
-  "homepage": "https://github.com/dirty49374/aterm#readme",
+  "homepage": "https://github.com/garage49/aterm#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dirty49374/aterm.git"
+    "url": "git+https://github.com/garage49/aterm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/garage49/aterm/issues"
   }
 }

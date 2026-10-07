@@ -3,7 +3,7 @@ import {
   AtermError,
   type IAtermOpenOptions,
   type AtermServer,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import { runForeground } from './foreground.js';
 import type { CommandConnection } from './mcp-module/service.js';
 import type { CommandEndpoint } from './mcp-module/endpoint.js';

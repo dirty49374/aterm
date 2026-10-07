@@ -6,7 +6,7 @@ Graph in the browser, and expose the same commands through MCP.
 Requires Node.js 24 or later.
 
 ```sh
-npm install -g @agent-workshop/aterm
+npm install -g @garage49/aterm
 aterm init
 aterm corpus check
 aterm skill list
@@ -15,7 +15,7 @@ aterm skill view _aterm_skills:Aterm_Basics_Skill_
 aterm skill remind _aterm_skills:Aterm_Basics_Skill_
 ```
 
-The executable is `aterm`. The exact matching `@agent-workshop/aterm-core` release supplies the
+The executable is `aterm`. The exact matching `@garage49/aterm-core` release supplies the
 shipped Knowledge, Viewpoints, Skills and browser assets. Packaged Skills remain
 readable when `useDefaultKnowledge` or `useViewpoints` hides their vocabulary from
 ordinary queries. Read unfamiliar prerequisite Skills with `skill view`.
@@ -39,6 +39,6 @@ Use `term edit` patches for Term changes, and Knowledge context patches for
 metadata changes. Read command `--help`, preview writes and inspect saved status
 and corpus diagnostics separately.
 
-See the [repository](https://github.com/dirty49374/aterm) for usage, configuration
+See the [repository](https://github.com/garage49/aterm) for usage, configuration
 and build instructions. Original Aterm code is 0BSD; dependencies retain their
 own licenses, described in THIRD_PARTY_NOTICES.md.

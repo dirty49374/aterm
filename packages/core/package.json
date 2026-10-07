@@ -1,6 +1,6 @@
 {
-  "name": "@agent-workshop/aterm-core",
-  "version": "0.0.14",
+  "name": "@garage49/aterm-core",
+  "version": "0.1.0",
   "description": "Aterm language, corpus, authoring, server and shipped guidance.",
   "license": "0BSD",
   "engines": {
@@ -35,10 +35,13 @@
     "yaml": "2.9.0",
     "zod": "4.5.4"
   },
-  "homepage": "https://github.com/dirty49374/aterm#readme",
+  "homepage": "https://github.com/garage49/aterm#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dirty49374/aterm.git",
+    "url": "git+https://github.com/garage49/aterm.git",
     "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/garage49/aterm/issues"
   }
 }

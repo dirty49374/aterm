@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { fixture } from '../../core/test/fixture.js';
 import { CliOutput, outputSelection } from '../src/presentation-module/output.js';
-import type { AtermResult } from '@agent-workshop/aterm-core';
-import { AtermParser, AtermSchema, TermDeclarationProjection } from '@agent-workshop/aterm-core';
+import type { AtermResult } from '@garage49/aterm-core';
+import { AtermParser, AtermSchema, TermDeclarationProjection } from '@garage49/aterm-core';
 
 function render(result: AtermResult, options = {}): string {
   let text = '';

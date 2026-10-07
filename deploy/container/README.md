@@ -1,19 +1,27 @@
 # Aterm server image
 
-This image installs an explicit published `@agent-workshop/aterm` version from npm. It does
-not build the checkout. Publish and verify the npm release before building the
-image; use only `deploy/container` as the build context.
+This image installs the exact `@garage49/aterm-core` and `@garage49/aterm` tarballs
+produced by the build. It does not compile source or fetch those packages from the
+registry. Release and snapshot images use the same path; third-party dependencies
+come from npm. Use only `deploy/container` as the build context.
 
 ```sh
+pnpm release:pack
+mkdir -p deploy/container/npm
+# Keep npm/ limited to the two tarballs for this version.
+cp dist/garage49-aterm-core-0.1.0.tgz dist/garage49-aterm-0.1.0.tgz deploy/container/npm/
 docker build --platform linux/amd64 \
-  --build-arg ATERM_VERSION=0.0.14 \
-  -t aterm:0.0.14 deploy/container
-node deploy/container/smoke.mjs aterm:0.0.14
+  --build-arg VERSION=0.1.0 \
+  -t aterm:0.1.0 deploy/container
+node deploy/container/smoke.mjs aterm:0.1.0
 ```
 
-`NPM_REGISTRY` defaults to `https://registry.npmjs.org`. Override it explicitly
-only when using a different registry. The Node base is digest-pinned; npm and
-Debian dependencies are resolved at build time. Record the resulting image digest.
+The shared workflow populates ignored `deploy/container/npm/` and supplies `VERSION`.
+The build refuses an absent version or a CLI version that differs from the label.
+The smoke script requires Node 24+, npm and Docker; it installs the same tarballs
+into a disposable test runtime and does not require checkout dependencies or a
+local build. The Node base is digest-pinned; third-party npm and Debian dependencies
+are resolved at build time. Record the resulting image digest.
 
 Tag the tested image for your registry and push it only after checking deployment
 automation. A new version tag can trigger rollout even when `latest` is unchanged.
@@ -28,7 +36,7 @@ docker run --rm --name aterm --read-only --cap-drop ALL \
   --security-opt no-new-privileges \
   --tmpfs /tmp:rw,nosuid,nodev \
   --mount type=volume,src=aterm-data,dst=/data \
-  -p 127.0.0.1:43127:43127 aterm:0.0.14
+  -p 127.0.0.1:43127:43127 aterm:0.1.0
 ```
 
 The image runs Linux amd64 / Node 24 as UID/GID 1000. Tini forwards signals to a
@@ -77,6 +85,11 @@ Before changing a live mount, quiesce writes, back up the complete Workspace,
 verify a full restore into an isolated location, and validate that restored copy
 with the candidate image. Preserve authored business data, custom Viewpoints and
 Skills. Retain the previous image digest and backup until live checks pass.
+
+0.1.0 changes npm package scope to `@garage49` and installs packed build artifacts
+in the image. It retains protocol 24 and the same persistent data format. The
+localhost listener also uses the address families available to HTTP clients so
+automatic discovery reaches it on systems with IPv6 only on loopback.
 
 0.0.14 fixes remote CLI commands waiting for unused stdin. Upgrade CLI clients to
 receive this fix; server-only upgrades cannot fix an older client.

@@ -1,17 +1,36 @@
-// Run from the checkout after building deploy/container. Own resources are removed.
+// Verify an image against the same npm/ artifacts it installs; no checkout build is needed.
 import assert from 'node:assert/strict';
-import { serverProtocol } from '../../packages/core/dist/index.js';
 import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { request } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
 
-const requireCLI = createRequire(new URL('../../packages/cli/package.json', import.meta.url));
-const { Client } = await import(pathToFileURL(requireCLI.resolve('@modelcontextprotocol/sdk/client/index.js')));
-const { StreamableHTTPClientTransport } = await import(pathToFileURL(requireCLI.resolve('@modelcontextprotocol/sdk/client/streamableHttp.js')));
 const image = process.argv[2];
 if (!image) throw new Error('Usage: node deploy/container/smoke.mjs IMAGE');
+async function installSmokeRuntime() {
+  const directory = mkdtempSync(join(tmpdir(), 'aterm-smoke-runtime-'));
+  try {
+    const artifacts = fileURLToPath(new URL('./npm/', import.meta.url));
+    const tarballs = readdirSync(artifacts).filter(name => name.endsWith('.tgz'));
+    assert.equal(tarballs.length, 2, 'npm/ must contain exactly the Core and CLI tarballs');
+    execFileSync('npm', ['install', '--prefix', directory, '--registry', 'https://registry.npmjs.org',
+      '--omit=dev', '--no-audit', '--no-fund', ...tarballs.map(name => join(artifacts, name))],
+      { encoding: 'utf8', timeout: 180000, maxBuffer: 16 * 1024 * 1024 });
+    const requireCLI = createRequire(join(directory, 'node_modules/@garage49/aterm/package.json'));
+    const { serverProtocol } = await import(pathToFileURL(requireCLI.resolve('@garage49/aterm-core')));
+    const { Client } = await import(pathToFileURL(requireCLI.resolve('@modelcontextprotocol/sdk/client/index.js')));
+    const { StreamableHTTPClientTransport } = await import(pathToFileURL(requireCLI.resolve('@modelcontextprotocol/sdk/client/streamableHttp.js')));
+    return { directory, serverProtocol, Client, StreamableHTTPClientTransport };
+  } catch (error) {
+    rmSync(directory, { recursive: true, force: true });
+    throw error;
+  }
+}
+const { directory: runtimeDirectory, serverProtocol, Client, StreamableHTTPClientTransport } = await installSmokeRuntime();
 const name = `aterm-container-smoke-${process.pid}`;
 const volume = `${name}-data`;
 const docker = (...args) => execFileSync('docker', args, {
@@ -100,8 +119,10 @@ concept _Visibility_ = {
 concept _Hidden_ = { The content is hidden. }
 `;
 
-docker('volume', 'create', volume);
+let volumeExists = false;
 try {
+  docker('volume', 'create', volume);
+  volumeExists = true;
   await start('http://aterm.example.test');
   const expectedVersion = JSON.parse(docker('image', 'inspect', image))[0].Config.Labels['org.opencontainers.image.version'];
   assert.ok(expectedVersion);
@@ -346,7 +367,11 @@ try {
   try { console.error(docker('logs', name)); } catch {}
   throw error;
 } finally {
-  await client?.close().catch(() => {});
-  if (containerExists) docker('rm', '-f', name);
-  docker('volume', 'rm', volume);
+  try {
+    await client?.close().catch(() => {});
+    if (containerExists) docker('rm', '-f', name);
+    if (volumeExists) docker('volume', 'rm', volume);
+  } finally {
+    rmSync(runtimeDirectory, { recursive: true, force: true });
+  }
 }

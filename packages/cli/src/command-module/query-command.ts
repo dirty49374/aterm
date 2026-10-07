@@ -1,5 +1,5 @@
 import { CommandTextInput } from './text-input.js';
-import { graphqlRequest, type AtermQuery } from '@agent-workshop/aterm-core';
+import { graphqlRequest, type AtermQuery } from '@garage49/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from '../contracts.js';
 
 export class QueryCommand implements ICommandDefinition {

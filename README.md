@@ -29,7 +29,7 @@ term _Order_ = {
 Requires Node.js 24 or later and pnpm 10.26.2.
 
 ```sh
-git clone https://github.com/dirty49374/aterm.git
+git clone https://github.com/garage49/aterm.git
 cd aterm
 pnpm install --frozen-lockfile
 pnpm build
@@ -38,11 +38,11 @@ pnpm aterm corpus check
 pnpm aterm term view _aterm:Knowledge_
 ```
 
-The public npm release targets are `@agent-workshop/aterm` and `@agent-workshop/aterm-core`. After a release
+The public npm release targets are `@garage49/aterm` and `@garage49/aterm-core`. After a release
 is published to npm, install the CLI with:
 
 ```sh
-npm install -g @agent-workshop/aterm
+npm install -g @garage49/aterm
 aterm --version
 ```
 

@@ -16,7 +16,7 @@ import {
   SkillInstallation,
   type ISkillInstallationRequest,
   type IAtermOpenOptions,
-} from '@agent-workshop/aterm-core';
+} from '@garage49/aterm-core';
 import type { ICommandDefinition, ICommandInputContext } from './contracts.js';
 import { CliOutput, type ICliStreams } from './presentation-module/index.js';
 

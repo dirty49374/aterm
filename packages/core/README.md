@@ -7,11 +7,11 @@ Requires Node.js 24 or later.
 For the `aterm` executable and MCP service:
 
 ```sh
-npm install -g @agent-workshop/aterm
+npm install -g @garage49/aterm
 ```
 
 The CLI depends on the exact corresponding Core release. Both packages target
-the official npm registry. See the [repository](https://github.com/dirty49374/aterm)
+the official npm registry. See the [repository](https://github.com/garage49/aterm)
 for building from source and working with Terms.
 
 Original Aterm code is 0BSD. Dependencies retain their licenses; browser bundles

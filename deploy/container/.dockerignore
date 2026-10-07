@@ -2,3 +2,5 @@
 !Dockerfile
 !bootstrap.mjs
 !entrypoint.sh
+!npm/
+!npm/*.tgz

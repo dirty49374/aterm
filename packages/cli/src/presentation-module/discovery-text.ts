@@ -1,4 +1,4 @@
-import type { IDiscoveryResult, ISemanticIndexResult } from '@agent-workshop/aterm-core';
+import type { IDiscoveryResult, ISemanticIndexResult } from '@garage49/aterm-core';
 import { alignedTable } from './table.js';
 
 /** Ranked summaries share the table renderer; Definitions and evidence are opt-in. */

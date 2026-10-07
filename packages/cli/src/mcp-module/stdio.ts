@@ -1,5 +1,5 @@
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import type { IAtermHome } from '@agent-workshop/aterm-core';
+import type { IAtermHome } from '@garage49/aterm-core';
 import type { CommandEndpoint } from './endpoint.js';
 import { CommandConnection, CommandService } from './service.js';
 

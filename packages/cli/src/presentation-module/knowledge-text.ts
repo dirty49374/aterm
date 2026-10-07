@@ -1,4 +1,4 @@
-import type { IKnowledgeResult } from '@agent-workshop/aterm-core';
+import type { IKnowledgeResult } from '@garage49/aterm-core';
 import { ListTable } from './list-table.js';
 import { alignedTable } from './table.js';
 
