@@ -1,0 +1,17 @@
+# Built by the shared garage49 node workflow (rules: garage49/.github RULES.md).
+# main push -> checks + packed tarballs (snapshot version) as workflow artifacts
+# tag vX.Y.Z (== package versions, on main) -> publish core, then cli, to npmjs; GitHub Release
+# The container (deploy/container) joins once its Dockerfile installs the tarballs from npm/.
+name: build
+on:
+  push: { branches: [main], tags: ['v*'] }
+  pull_request: {}
+  workflow_dispatch: {}
+permissions: { contents: write, id-token: write }
+jobs:
+  npm:
+    uses: garage49/.github/.github/workflows/node-build.yml@main
+    with:
+      packages: '["packages/core","packages/cli"]'
+      checks: 'pnpm check && pnpm test && pnpm aterm corpus check'
+    secrets: inherit
